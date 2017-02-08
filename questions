@@ -1,0 +1,2 @@
+Récupérer coords d'un widget : event.widget.coords("current")
+Récupérer width et height : ???
