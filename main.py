@@ -2,7 +2,11 @@ import tkinter as tk
 import highlight as m_highlight
 import layout as m_layout
 
+def main_loop():
 
+    highlight.find()
+
+    root.after(50, main_loop)
 
 if __name__ == "__main__":
     root = tk.Tk()
@@ -11,8 +15,10 @@ if __name__ == "__main__":
 
     #classes
     highlight = m_highlight.Highlight(cav)
-    
+
     layout = m_layout.Layout(cav, highlight)
     layout.display("test")
+
+    main_loop()
 
     root.mainloop()

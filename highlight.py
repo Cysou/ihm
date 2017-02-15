@@ -1,4 +1,5 @@
 import tkinter as tk
+from PIL import Image, ImageTk
 import copy
 import os
 
@@ -15,17 +16,23 @@ class Highlight():
     def load_img(self):
         for i in range(self.nb_img):
             path="img/highlight" + str(i) + ".png"
-            self.img.append(tk.PhotoImage(file=path))
-            
+            pilimg = Image.open(path)
+            tkimg = ImageTk.PhotoImage(pilimg)
+            self.img.append(tkimg)
+
 
     def get_center(self, idd):
         return self.cav.coords(idd)
 
 
-    def create_text(self, x, y, text, fill, font):
-        self.cav.create_text(x, y, text=text, tags="highlight_text", fill=fill, font=font)
-        self.cav.tag_bind("highlight_text", "<Enter>", lambda event: self.start(event))
-        self.cav.tag_bind("highlight_text", "<Leave>", lambda event: self.stop(event))
+    def create_text(self, x, y, text, fill, font, size):
+        idd = self.cav.create_text(int(x), int(y), text=text, fill=fill, font=(font, int(size)), tags="highlight_text")
+        self.cav.tag_bind(idd, "<Enter>", lambda event: self.start(event))
+        self.cav.tag_bind(idd, "<Leave>", lambda event: self.stop(event))
+
+
+    def delete_highlight_text(self):
+        self.cav.delete("highlight_text")
 
 
     def start(self, event):
@@ -88,7 +95,7 @@ class Highlight():
             if self.dico[idd][0] == -1:
                 #print("last", self.dico)
                 self.delete(idd)
-                
+
 
 def main_loop():
 
@@ -106,7 +113,7 @@ if __name__ == "__main__":
 
     highlight.create_text(500, 300, "Bonjour", "white", ("Arial", 20))
     highlight.create_text(500, 350, "Salut", "white", ("Arial", 20))
-    
+
     main_loop()
 
     root.mainloop()
