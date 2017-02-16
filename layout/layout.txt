@@ -1,11 +1,10 @@
-*test
+*home
 fun highlight.delete_highlight_text
 img 100 100 highlight9.png
 img 200 200 highlight5.png #self.display:test1
-img 300 300 highlight1.png #self.display:test
-*test1
-img 150 150 highlight9.png #self.display:test1
+img 300 300 highlight1.png
+*map
+fun highlight.delete_highlight_text
+img 150 150 highlight9.png
 img 250 250 highlight5.png #self.display:test
 img 350 350 highlight1.png
-fun highlight.create_text 500 300 Bonjour white Arial 20
-fun highlight.create_text 500 350 Salut white Arial 20

@@ -71,6 +71,7 @@ class Layout():
         self.delete_actual()
         self.actual = layout_name
         self.display_objects()
+        print(1)
         self.launch_functions()
 
 
