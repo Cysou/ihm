@@ -1,9 +1,10 @@
 *home
-fun highlight.create_text 150 150 Jouer white Verdana 20
-fun highlight.create_text 150 175 Tuto white Verdana 20
-fun highlight.create_text 150 200 Editeur white Verdana 20
-fun highlight.create_text 150 225 Aide white Verdana 20
-fun highlight.create_text 150 250 Option white Verdana 20
-fun highlight.create_text 150 275 Quitter white Verdana 20
+rec 0 0 1200 675 black
+fun highlight.create_text 150 150 Jouer white Verdana 15 #display:game
+fun highlight.create_text 150 175 Tuto white Verdana 15
+fun highlight.create_text 150 200 Editeur white Verdana 15
+fun highlight.create_text 150 225 Aide white Verdana 15
+fun highlight.create_text 150 250 Option white Verdana 15
+fun highlight.create_text 150 275 Quitter white Verdana 15
 *game
 rec 1100 0 1200 100 grey90

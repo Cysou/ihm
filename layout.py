@@ -9,10 +9,12 @@ class Layout():
         self.actual = " "
         self.cav = cav
         self.know_types = {"img": self.add_img, "fun": self.add_functions, "rec": self.add_rec}
-        self.know_commands = {"self.display": self.display}
+        self.know_commands = {"display": self.display}
 
         self.dico_functions = {}
-        self.know_functions = {"highlight.create_text": highlight.create_text, "highlight.delete_highlight_text": highlight.delete_highlight_text}
+        self.know_functions = {"highlight.create_text": highlight.create_text,
+                               "highlight.delete_highlight_text": highlight.delete_highlight_text,
+                               "display" : self.display}
 
         self.img = {}
         self.load_img()

@@ -89,7 +89,6 @@ class Highlight():
 
 
     def anim(self, idd):
-        print(self.dico)
         if self.dico[idd][1] == "start":
             #print(self.dico)
             self.img_delete(idd)

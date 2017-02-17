@@ -10,7 +10,7 @@ def main_loop():
 
 if __name__ == "__main__":
     root = tk.Tk()
-    cav = tk.Canvas(root, width=1200, height=675, highlightthickness=0, bg="black")
+    cav = tk.Canvas(root, width=1200, height=675, highlightthickness=0)
     cav.pack()
 
     #classes
