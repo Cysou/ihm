@@ -25,11 +25,23 @@ class Highlight():
         return self.cav.coords(idd)
 
 
-    def create_text(self, x, y, text, fill, font, size):
+    def create_text(self, x, y, text, fill, font, size, command=None):
         idd = self.cav.create_text(int(x), int(y), text=text, fill=fill, font=(font, int(size)), tags="highlight_text")
         self.cav.tag_bind(idd, "<Enter>", lambda event: self.start(event))
         self.cav.tag_bind(idd, "<Leave>", lambda event: self.stop(event))
+        self.bind_command(command, idd)
 
+    def bind_command(self, command, idd):
+        if command:
+            command = self.get_command(command)
+            if len(command) > 1:
+                self.cav.tag_bind(idd, "<Button-1>", lambda event: self.know_commands[command[0]](*command[1:]))
+            else:
+                self.cav.tag_bind(idd, "<Button-1>", self.know_commands[command[0]])
+
+    def get_command(self, pcommand):
+        command = pcommand[1:]
+        return command.split(":")
 
     def delete_highlight_text(self):
         self.cav.delete("highlight_text")
@@ -77,6 +89,7 @@ class Highlight():
 
 
     def anim(self, idd):
+        print(self.dico)
         if self.dico[idd][1] == "start":
             #print(self.dico)
             self.img_delete(idd)
@@ -111,8 +124,8 @@ if __name__ == "__main__":
 
     highlight = Highlight(cav)
 
-    highlight.create_text(500, 300, "Bonjour", "white", ("Arial", 20))
-    highlight.create_text(500, 350, "Salut", "white", ("Arial", 20))
+    highlight.create_text(500, 300, "Bonjour", "white", "Arial", 20)
+    highlight.create_text(500, 350, "Salut", "white", "Arial", 20)
 
     main_loop()
 

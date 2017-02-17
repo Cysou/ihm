@@ -10,14 +10,14 @@ def main_loop():
 
 if __name__ == "__main__":
     root = tk.Tk()
-    cav = tk.Canvas(root, width=1200, height=675, bg="black")
+    cav = tk.Canvas(root, width=1200, height=675, highlightthickness=0, bg="black")
     cav.pack()
 
     #classes
     highlight = m_highlight.Highlight(cav)
 
     layout = m_layout.Layout(cav, highlight)
-    layout.display("test")
+    layout.display("home")
 
     main_loop()
 

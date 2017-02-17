@@ -8,7 +8,7 @@ class Layout():
         self.dico_objects = {" ": []}
         self.actual = " "
         self.cav = cav
-        self.know_types = {"img": self.add_img, "fun": self.add_functions}
+        self.know_types = {"img": self.add_img, "fun": self.add_functions, "rec": self.add_rec}
         self.know_commands = {"self.display": self.display}
 
         self.dico_functions = {}
@@ -50,6 +50,11 @@ class Layout():
         self.dico_objects[actual].append(idd)
         self.bind_command(command, idd)
 
+    def add_rec(self, fields, actual):
+        params, command = self.get_params_command(fields)
+        idd = self.cav.create_rectangle(int(params[0]), int(params[1]), int(params[2]), int(params[3]), fill=params[4], state="hidden")
+        self.dico_objects[actual].append(idd)
+        self.bind_command(command, idd)
 
     def get_params_command(self, fields):
         if fields[-1][0] == "#":
@@ -71,7 +76,6 @@ class Layout():
         self.delete_actual()
         self.actual = layout_name
         self.display_objects()
-        print(1)
         self.launch_functions()
 
 
@@ -87,7 +91,11 @@ class Layout():
     # launch direct functions
     def launch_functions(self):
         for group in self.dico_functions[self.actual]:
-            self.know_functions[group[0]](*group[1:])
+            if len(group) > 1:
+                print(group)
+                self.know_functions[group[0]](*group[1:])
+            else:
+                self.know_functions[group[0]]()
 
 
     def add_functions(self, fields, actual):
@@ -100,6 +108,6 @@ if __name__ == "__main__":
     cav.pack()
 
     layout = Layout(cav)
-    layout.display("test")
+    layout.display("home")
 
     root.mainloop()
