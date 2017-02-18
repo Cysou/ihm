@@ -13,8 +13,7 @@ class Layout():
 
         self.dico_functions = {}
         self.know_functions = {"highlight.create_text": highlight.create_text,
-                               "highlight.delete_highlight_text": highlight.delete_highlight_text,
-                               "display" : self.display}
+                               "highlight.delete_highlight_text": highlight.delete_highlight_text}
 
         self.img = {}
         self.load_img()
@@ -64,7 +63,6 @@ class Layout():
         else:
             return fields[1:], None
 
-
     def bind_command(self, command, idd):
         if command:
             if len(command) > 1:
@@ -92,16 +90,25 @@ class Layout():
 
     # launch direct functions
     def launch_functions(self):
-        for group in self.dico_functions[self.actual]:
-            if len(group) > 1:
-                print(group)
-                self.know_functions[group[0]](*group[1:])
+        for fields in self.dico_functions[self.actual]:
+            print(fields)
+            params, command = self.get_params_command(fields)
+            print(params, command)
+            command[0] = self.know_commands[command[0]]
+            if len(params) > 1:
+                if command:
+                    self.know_functions[params[0]](*params[1:], command)
+                else:
+                    self.know_functions[params[0]](*params[1:])
             else:
-                self.know_functions[group[0]]()
+                if command:
+                    self.know_functions[params[0]](command)
+                else:
+                    self.know_functions[params[0]]()
 
 
     def add_functions(self, fields, actual):
-        self.dico_functions[actual].append(fields[1:])
+        self.dico_functions[actual].append(fields)
 
 
 if __name__ == "__main__":
