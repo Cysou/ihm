@@ -40,6 +40,7 @@ class Highlight():
 
     def delete_highlight_text(self):
         self.cav.delete("highlight_text")
+        self.delete_all()
 
 
     def start(self, event):
@@ -64,7 +65,7 @@ class Highlight():
 
     def delete_all(self):
         for idd in self.dico:
-            delete(idd)
+            self.delete(idd)
 
 
     def delete(self, idd):
