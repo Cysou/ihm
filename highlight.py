@@ -33,15 +33,10 @@ class Highlight():
 
     def bind_command(self, command, idd):
         if command:
-            command = self.get_command(command)
             if len(command) > 1:
-                self.cav.tag_bind(idd, "<Button-1>", lambda event: self.know_commands[command[0]](*command[1:]))
+                self.cav.tag_bind(idd, "<Button-1>", lambda event: command[0](*command[1:]))
             else:
-                self.cav.tag_bind(idd, "<Button-1>", self.know_commands[command[0]])
-
-    def get_command(self, pcommand):
-        command = pcommand[1:]
-        return command.split(":")
+                self.cav.tag_bind(idd, "<Button-1>", command[0])
 
     def delete_highlight_text(self):
         self.cav.delete("highlight_text")

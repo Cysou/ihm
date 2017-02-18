@@ -32,12 +32,13 @@ class Layout():
         with open("layout/layout.txt", 'r') as fd:
             actual = None
             for line in fd:
-                if line[0] == "*":
-                    actual = line[1:].strip()
-                    self.dico_objects[actual] = []
-                    self.dico_functions[actual] = []
-                else:
-                    self.add(line.strip().split(), actual)
+                if line !="\n" and line[0] != "#":
+                    if line[0] == "*":
+                        actual = line[1:].strip()
+                        self.dico_objects[actual] = []
+                        self.dico_functions[actual] = []
+                    else:
+                        self.add(line.strip().split(), actual)
 
     def add(self, fields, actual):
         for ktype in self.know_types:
@@ -53,7 +54,7 @@ class Layout():
 
     def add_rec(self, fields, actual):
         params, command = self.get_params_command(fields)
-        idd = self.cav.create_rectangle(int(params[0]), int(params[1]), int(params[2]), int(params[3]), fill=params[4], state="hidden")
+        idd = self.cav.create_rectangle(int(params[0]), int(params[1]), int(params[2]), int(params[3]), fill=params[4], width=0, state="hidden")
         self.dico_objects[actual].append(idd)
         self.bind_command(command, idd)
 
@@ -91,17 +92,16 @@ class Layout():
     # launch direct functions
     def launch_functions(self):
         for fields in self.dico_functions[self.actual]:
-            print(fields)
             params, command = self.get_params_command(fields)
-            print(params, command)
-            command[0] = self.know_commands[command[0]]
             if len(params) > 1:
                 if command:
+                    command[0] = self.know_commands[command[0]]
                     self.know_functions[params[0]](*params[1:], command)
                 else:
                     self.know_functions[params[0]](*params[1:])
             else:
                 if command:
+                    command[0] = self.know_commands[command[0]]
                     self.know_functions[params[0]](command)
                 else:
                     self.know_functions[params[0]]()
