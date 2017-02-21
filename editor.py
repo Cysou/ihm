@@ -62,7 +62,8 @@ class Editor:
     def bind(self):
         self.cav.bind("<Button-1>", self.place)
         self.cav.bind("<Button-3>", self.remove)
-        #self.cav.bind("<B1-Motion>", self.place)
+        self.cav.bind("<B1-Motion>", self.place)
+        self.cav.bind("<B3-Motion>", self.remove)
         
     def place(self, event):
         if self.detect_grid(event.x, event.y):
@@ -70,9 +71,14 @@ class Editor:
             self.display_circle(x, y)
 
     def remove(self, event):
-        idd = self.cav.find_withtag("current")
-        self.cav.itemconfig(idd, fill="white")
-        self.remove_matrix(event.x, event.y)
+        if self.detect_grid(event.x, event.y):
+            x, y = self.find_closest(event.x, event.y)
+            self.remove_circle(x, y)
+
+    def remove_circle(self, x, y):
+        i, j = self.get_index(x, y)
+        self.matrix_delete(i ,j)
+        self.update_around_inv(i, j)
     
     def get_index(self, x, y):
         return (y-editor_grid_y1)//editor_grid_square, (x-editor_grid_x1)//editor_grid_square
@@ -90,11 +96,12 @@ class Editor:
 
     def display_circle(self, x, y):
         i, j = self.get_index(x, y)
-        if self.matrix[i][j] == 0:
-            self.first_place(i, j, x, y)
-            #self.update_around(i, j)
+        if 0 <= i < len(self.matrix) and 0 <= j < len(self.matrix):
+            if self.matrix[i][j] == 0:
+                self.first_place(i, j)
+                self.update_around(i, j)
 
-    def first_place(self, i, j, x, y):
+    def first_place(self, i, j):
         corners = [0,0,0,0]
         li = [i-1, i, i+1, i]
         lj = [j, j-1, j, j+1]
@@ -102,46 +109,36 @@ class Editor:
         a = 0
         N = len(self.matrix)
         while a < 4:
-            print(1)
             if 0 <= li[a] < N and 0 <= lj[a] < N:
-                print(2)
                 if self.matrix[li[a]][lj[a]] != 0:
-                    print(3)
                     self.update_corners(corners, lc[a])
-                    print(corners, a)
             a += 1
-        print(corners)
         self.matrix[i][j] = [0, corners]
         name_img = self.get_name_img(self.matrix[i][j][1])
+        y = (i * editor_grid_square) + editor_grid_y1
+        x = (j * editor_grid_square) + editor_grid_x1
         idd = self.cav.create_image(x, y, anchor="nw", image=self.img[name_img])
-        self.matrix[i][j] = [idd, [0,0,0,0]]
+        self.matrix[i][j][0] = idd
 
     def update_around(self, i, j):
-        print(i-1, j)
         self.update(i-1, j, (0,0,1,1))
-        print(i, j-1)
-        self.update(i, j-1, (1,0,0,1))
-        print(i+1, j)
+        self.update(i, j-1, (0,1,1,0))
         self.update(i+1, j, (1,1,0,0))
-        print(i, j+1)
-        self.update(i, j+1, (0,1,1,0))
+        self.update(i, j+1, (1,0,0,1))
 
     def update(self, i, j, corners):
         if 0 <= i < len(self.matrix) and 0 <= j < len(self.matrix):
             if self.matrix[i][j] != 0:
-                print("!=")
-                print(i, j, "here")
                 self.cav.delete(self.matrix[i][j][0])
                 self.update_corners(self.matrix[i][j][1], corners)
                 name_img = self.get_name_img(self.matrix[i][j][1])
-                x = (i * editor_grid_square) + editor_grid_x1
-                y = (j * editor_grid_square) + editor_grid_y1
+                y = (i * editor_grid_square) + editor_grid_y1
+                x = (j * editor_grid_square) + editor_grid_x1
                 idd = self.cav.create_image(x, y, anchor="nw", image=self.img[name_img])
                 self.matrix[i][j][0] = idd
 
     def update_corners(self, actual, corners):
         i = 0
-        print(5)
         while i < 4:
             if actual[i] == 0:
                 actual[i] += corners[i]
@@ -150,8 +147,26 @@ class Editor:
     def get_name_img(self, corners):
         string = str(corners[0]) + str(corners[1]) + str(corners[2]) + str(corners[3])
         return self.dico_name_img[string]
-        
 
+    def update_around_inv(self, i, j):
+        if self.matrix_delete(i-1, j):
+            self.first_place(i-1, j)
+        if self.matrix_delete(i, j-1):
+            self.first_place(i, j-1)
+        if self.matrix_delete(i+1, j):
+            self.first_place(i+1, j)
+        if self.matrix_delete(i, j+1):
+            self.first_place(i, j+1)
+
+    def matrix_delete(self, i, j):
+        if 0 <= i < len(self.matrix) and 0 <= j < len(self.matrix):
+            if self.matrix[i][j] != 0:
+                self.cav.delete(self.matrix[i][j][0])
+                self.matrix[i][j] = 0
+                return True
+        return False
+    
+    
 if __name__ == '__main__':
     root = tk.Tk()
     root.resizable(width="false", height="false")
