@@ -25,18 +25,22 @@ class Highlight():
         return self.cav.coords(idd)
 
 
-    def create_text(self, x, y, text, fill, font, size, command=None):
+    def create_text(self, x, y, text, fill, font, size, commands=None):
         idd = self.cav.create_text(int(x), int(y), text=text, fill=fill, font=(font, int(size)), tags="highlight_text")
         self.cav.tag_bind(idd, "<Enter>", lambda event: self.start(event))
         self.cav.tag_bind(idd, "<Leave>", lambda event: self.stop(event))
-        self.bind_command(command, idd)
+        self.bind_command(commands, idd)
 
-    def bind_command(self, command, idd):
-        if command:
-            if len(command) > 1:
-                self.cav.tag_bind(idd, "<Button-1>", lambda event: command[0](*command[1:]))
+    def bind_command(self, commands, idd):
+        if commands:
+            self.cav.tag_bind(idd, "<Button-1>", lambda event: self.binding_commands(commands))
+
+    def binding_commands(self, commands):
+        for com in commands:
+            if len(com) > 1:
+                com[0](*com[1:])
             else:
-                self.cav.tag_bind(idd, "<Button-1>", command[0])
+                com[0]()
 
     def delete_highlight_text(self):
         self.cav.delete("highlight_text")
@@ -64,7 +68,8 @@ class Highlight():
 
 
     def delete_all(self):
-        for idd in self.dico:
+        dico_copy = copy.deepcopy(self.dico)
+        for idd in dico_copy:
             self.delete(idd)
 
 
@@ -79,7 +84,7 @@ class Highlight():
 
 
     def find(self):
-        dico_copy = copy.copy(self.dico)
+        dico_copy = copy.deepcopy(self.dico)
         for idd in dico_copy:
             self.anim(idd)
 

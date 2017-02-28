@@ -4,16 +4,25 @@ import os
 
 
 class Layout():
-    def __init__(self, cav, highlight):
+    def __init__(self, cav, highlight, editor):
         self.dico_objects = {" ": []}
         self.actual = " "
+        self.actual_cover = None
         self.cav = cav
+        editor.set_layout_uncover(self.uncover)
         self.know_types = {"img": self.add_img, "fun": self.add_functions, "rec": self.add_rec}
-        self.know_commands = {"display": self.display}
+        self.know_commands = {"display": self.display,
+                              "highlight.delete_highlight_text": highlight.delete_highlight_text,
+                              "editor.start": editor.start,
+                              "cover": self.cover,
+                              "uncover": self.uncover,
+                              "editor.delete_popup": editor.delete_popup}
 
         self.dico_functions = {}
         self.know_functions = {"highlight.create_text": highlight.create_text,
-                               "highlight.delete_highlight_text": highlight.delete_highlight_text}
+                               "editor.start": editor.start,
+                               "editor.map_manager_delete": editor.map_manager_delete,
+                               "editor.map_manager_open": editor.map_manager_open}
 
         self.img = {}
         self.load_img()
@@ -47,62 +56,89 @@ class Layout():
 
 
     def add_img(self, fields, actual):
-        params, command = self.get_params_command(fields)
+        params, commands = self.get_params_command(fields)
         idd = self.cav.create_image(int(params[0]), int(params[1]), image = self.img[params[2]], state="hidden")
-        self.dico_objects[actual].append(idd)
+        if len(params) == 4:
+            self.dico_objects[actual].append((idd,1))
+        else:
+            self.dico_objects[actual].append(idd,0)
         self.bind_command(command, idd)
 
     def add_rec(self, fields, actual):
-        params, command = self.get_params_command(fields)
+        params, commands = self.get_params_command(fields)
         idd = self.cav.create_rectangle(int(params[0]), int(params[1]), int(params[2]), int(params[3]), fill=params[4], width=0, state="hidden")
-        self.dico_objects[actual].append(idd)
-        self.bind_command(command, idd)
+        if len(params) == 6:
+            self.dico_objects[actual].append((idd,1))
+        else:
+            self.dico_objects[actual].append((idd,0))
+        self.bind_command(commands, idd)
 
     def get_params_command(self, fields):
         if fields[-1][0] == "#":
-            return fields[1:-1], fields[-1][1:].split(":")
+            commands = fields[-1][1:].split("+")
+            for i, c in enumerate(commands):
+                commands[i] = c.split(":")
+            return fields[1:-1], commands
         else:
             return fields[1:], None
 
-    def bind_command(self, command, idd):
-        if command:
-            if len(command) > 1:
-                self.cav.tag_bind(idd, "<Button-1>", lambda event: self.know_commands[command[0]](*command[1:]))
-            else:
-                self.cav.tag_bind(idd, "<Button-1>", self.know_commands[command[0]])
+    def bind_command(self, commands, idd):
+        if commands:
+            self.cav.tag_bind(idd, "<Button-1>", lambda event: self.binding_commands(commands))
 
+    def binding_commands(self, commands):
+        for com in commands:
+            if len(com) > 1:
+                self.know_commands[com[0]](*com[1:])
+            else:
+                self.know_commands[com[0]]()
 
     # Manage
     def display(self, layout_name):
-        self.delete_actual()
+        self.delete_layout(self.actual)
         self.actual = layout_name
-        self.display_objects()
-        self.launch_functions()
+        self.display_objects(self.actual)
+        self.launch_functions(self.actual)
 
 
-    def display_objects(self):
-        for idd in self.dico_objects[self.actual]:
-            self.cav.itemconfig(idd, state="normal")
+    def display_objects(self, layout_name):
+        for idd in self.dico_objects[layout_name]:
+            if idd[1]:
+                self.cav.lift(idd[0])
+            self.cav.itemconfig(idd[0], state="normal")
 
 
-    def delete_actual(self):
-        for idd in self.dico_objects[self.actual]:
-            self.cav.itemconfig(idd, state="hidden")
+    def delete_layout(self, layout_name):
+        for idd in self.dico_objects[layout_name]:
+            self.cav.itemconfig(idd[0], state="hidden")
+
+    def cover(self, layout_name):
+        self.actual_cover = layout_name
+        self.display_objects(self.actual_cover)
+        self.launch_functions(self.actual_cover)
+
+    def uncover(self):
+        self.delete_layout(self.actual_cover)
+        self.actual_cover = None
+        self.display(self.actual)
+
 
     # launch direct functions
-    def launch_functions(self):
-        for fields in self.dico_functions[self.actual]:
-            params, command = self.get_params_command(fields)
+    def launch_functions(self, layout_name):
+        for fields in self.dico_functions[layout_name]:
+            params, commands = self.get_params_command(fields)
             if len(params) > 1:
-                if command:
-                    command[0] = self.know_commands[command[0]]
-                    self.know_functions[params[0]](*params[1:], command)
+                if commands:
+                    for com in commands:
+                        com[0] = self.know_commands[com[0]]
+                    self.know_functions[params[0]](*params[1:], commands)
                 else:
                     self.know_functions[params[0]](*params[1:])
             else:
-                if command:
-                    command[0] = self.know_commands[command[0]]
-                    self.know_functions[params[0]](command)
+                if commands:
+                    for com in enumerate(commands):
+                        com[0] = self.know_commands[com[0]]
+                    self.know_functions[params[0]](com)
                 else:
                     self.know_functions[params[0]]()
 

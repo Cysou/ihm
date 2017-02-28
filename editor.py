@@ -22,9 +22,14 @@ class Editor:
                               "0110": "circle7.png",
                               "0011": "circle8.png",
                               "1111": "circle9.png"}
+        self.idd_popup = []
+        self.indicator_popup = 0
         
-        self.create()
-        self.bind()
+        self.funcid = []
+        self.layout_uncover = None
+
+    def set_layout_uncover(self, func):
+        self.layout_uncover = func
 
     def create_matrix(self):
         i = editor_grid_height//editor_grid_square
@@ -40,8 +45,13 @@ class Editor:
             self.img[path] = tkimg
 
     def start(self):
-        self.create()
         self.bind()
+        if self.indicator_popup == 0:
+            self.create()
+        elif self.indicator_popup != "notouch":
+            self.delete_all_circle()
+            self.create_map()
+        self.indicator_popup = 0
 
     def create(self):
         x1 = editor_grid_x1
@@ -49,7 +59,7 @@ class Editor:
         x2 = editor_grid_x1 + editor_grid_square
         y2 = editor_grid_y1 + editor_grid_square
         while (y2 <= editor_grid_height + editor_grid_y1):
-            self.cav.create_rectangle(x1, y1, x2, y2, outline="grey60", fill="white", tags="square")
+            self.cav.create_rectangle(x1, y1, x2, y2, outline="grey60", fill="grey80", tags="square")
             if x2 >= editor_grid_width + editor_grid_x1:
                 x1 = editor_grid_x1
                 y1 += editor_grid_square
@@ -59,11 +69,47 @@ class Editor:
                 x1 += editor_grid_square
                 x2 += editor_grid_square
 
+    def create_map(self):
+        with open(self.indicator_popup, "r") as fd:
+            i = 0
+            for line in fd:
+                line = line.strip()
+                line = line.split(" ")
+                print(line)
+                j = 0
+                for circle in line:
+                    if circle != "0":
+                        self.first_place(i, j)
+                        self.update_around(i, j)
+                    j += 1
+                i += 1
+
     def bind(self):
-        self.cav.bind("<Button-1>", self.place)
-        self.cav.bind("<Button-3>", self.remove)
-        self.cav.bind("<B1-Motion>", self.place)
-        self.cav.bind("<B3-Motion>", self.remove)
+        self.funcid.append(self.cav.bind("<Button-1>", self.place))
+        self.funcid.append(self.cav.bind("<Button-3>", self.remove))
+        self.funcid.append(self.cav.bind("<B1-Motion>", self.place))
+        self.funcid.append(self.cav.bind("<B3-Motion>", self.remove))
+
+    def stop(self):
+        self.unbind()
+        self.delete_all_circle()
+
+    def unbind(self):
+        self.cav.unbind("<Button-1>", self.funcid[0])
+        self.cav.unbind("<Button-3>", self.funcid[1])
+        self.cav.unbind("<B1-Motion>", self.funcid[2])
+        self.cav.unbind("<B3-Motion>", self.funcid[3])
+        self.funcid = []
+
+    def delete_all_circle(self):
+        N = len(self.matrix)
+        i = 0
+        while i < N:
+            j = 0
+            while j < N:
+                self.matrix_delete(i, j)
+                j += 1
+            i += 1
         
     def place(self, event):
         if self.detect_grid(event.x, event.y):
@@ -165,6 +211,70 @@ class Editor:
                 self.matrix[i][j] = 0
                 return True
         return False
+
+    # map manager
+    def map_manager_delete(self):
+        self.indicator_popup = "notouch"
+        self.unbind()
+        self.display_delete()
+        """
+        if fd:
+            for i in self.matrix:
+                fd.write(str(i)+"\n")
+            fd.close()"""
+
+    def map_manager_open(self):
+        self.indicator_popup = "notouch"
+        self.unbind()
+        self.display_open()
+
+    def display_delete(self):
+        i = 0
+        listdir = os.listdir("map/custom")
+        while i < len(listdir):
+            x = (width // 2) - editor_delete_gap_x
+            y = editor_delete_first_y + (i * editor_delete_gap_x)
+            idd = self.cav.create_text(x, y, text=listdir[i], font=("Arial",13))
+            self.idd_popup.append(idd)
+
+            x = (width // 2) + editor_delete_gap_x
+            y = editor_delete_first_y + (i * editor_delete_gap_x)
+            idd = self.cav.create_rectangle(x, y, x+30, y+15, fill="red")
+            self.cav.tag_bind(idd, "<Button-1>", lambda event, i=i: self.delete_map(i))
+            self.idd_popup.append(idd)
+            i += 1
+
+    def display_open(self):
+        i = 0
+        listdir = os.listdir("map/custom")
+        while i < len(listdir):
+            x = (width // 2) - editor_open_gap_x
+            y = editor_open_first_y + (i * editor_open_gap_x)
+            idd = self.cav.create_text(x, y, text=listdir[i], font=("Arial",13))
+            self.idd_popup.append(idd)
+
+            x = (width // 2) + editor_open_gap_x
+            y = editor_open_first_y + (i * editor_open_gap_x)
+            idd = self.cav.create_rectangle(x, y, x+30, y+15, fill="green")
+            self.cav.tag_bind(idd, "<Button-1>", lambda event, i=i: self.open_map(i))
+            self.idd_popup.append(idd)
+            i += 1
+
+    def delete_popup(self):
+        for idd in self.idd_popup:
+            self.cav.delete(idd)
+        self.idd_popup = []
+
+    def delete_map(self, i):
+        print(os.listdir("map/custom")[i], "removed")
+        #os.remove("map/custom/" + os.listdir("map/custom")[i])
+        self.delete_popup()
+        self.display_delete()
+
+    def open_map(self, i):
+        self.indicator_popup = "map/custom/" + os.listdir("map/custom")[i]
+        self.delete_popup()
+        self.layout_uncover()
     
     
 if __name__ == '__main__':
@@ -175,6 +285,9 @@ if __name__ == '__main__':
     cav.pack()
 
     editor = Editor(cav)
-    #editor.start()
+    editor.start()
+
+    idd=cav.create_rectangle(0,0,50,50,fill="blue")
+    cav.tag_bind(idd,"<1>",lambda event: editor.save())
 
     root.mainloop()
