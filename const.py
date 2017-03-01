@@ -24,3 +24,16 @@ editor_delete_gap_y = 50
 editor_open_first_y = 100
 editor_open_gap_x = 50
 editor_open_gap_y = 50
+
+# gates.py
+# la taille des portes doit être impaire
+dico_gates = {}
+dico_gates["gate_or"] = (5, 3, "or", "blue")
+dico_gates["gate_and"] = (5, 3, "and", "red")
+dico_gates["gate_not"] = (5, 3, "not", "purple")
+dico_gates["gate_xor"] = (5, 3, "xor", "seagreen")
+
+# grid.py
+grid_width = 900    # Il faut que grid_width % grid_squares = 0
+grid_height = 550   # Il faut que grid_height % grid_squares = 0
+grid_squares = 10
