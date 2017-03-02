@@ -34,6 +34,6 @@ dico_gates["gate_not"] = (5, 3, "not", "purple")
 dico_gates["gate_xor"] = (5, 3, "xor", "seagreen")
 
 # grid.py
-grid_width = 900    # Il faut que grid_width % grid_squares = 0
-grid_height = 550   # Il faut que grid_height % grid_squares = 0
-grid_squares = 10
+grid_width = 900  # Il faut que grid_width % grid_squares = 0
+grid_height = 550  # Il faut que grid_height % grid_squares = 0
+grid_squares = 10  # ne pas changer a cause des images

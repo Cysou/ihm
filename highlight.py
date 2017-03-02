@@ -8,14 +8,14 @@ class Highlight():
     def __init__(self, cav):
         self.dico = {}
         self.img = []
-        self.nb_img = len(os.listdir("img"))
+        self.nb_img = len(os.listdir("highlight/img"))
         self.cav = cav
         self.load_img()
 
 
     def load_img(self):
         for i in range(self.nb_img):
-            path="img/highlight" + str(i) + ".png"
+            path="highlight/img/highlight" + str(i) + ".png"
             pilimg = Image.open(path)
             tkimg = ImageTk.PhotoImage(pilimg)
             self.img.append(tkimg)

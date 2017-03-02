@@ -1,18 +1,18 @@
 import tkinter as tk
 from const import *
 from gates import *
-from line import *
+from wire import *
 from robot import *
 
 
 class Grid:
 
-    def __init__(self, cav, gate, line, robot):
+    def __init__(self, cav, gate, wire, robot):
         self.matrice = []
         self.create_matrice()
         self.cav = cav
         self.gate = gate
-        self.line = line
+        self.wire = wire
         self.robot = robot
 
     def create_matrice(self):
@@ -54,11 +54,11 @@ class Grid:
             else:
                 x1 += grid_squares
                 x2 += grid_squares
-        self.cav.tag_bind("square", "<Button-1>", self.line.init_line)
-        self.cav.tag_bind("square", "<B1-Motion>", self.line.draw_line)
-        self.cav.tag_bind("square", "<ButtonRelease-1>", self.line.end_line)
-        self.cav.tag_bind("square", "<Button-3>", self.line.init_delete)
-        self.cav.tag_bind("square", "<B3-Motion>", self.line.init_delete)
+        self.cav.tag_bind("square", "<Button-1>", self.wire.init_wire)
+        self.cav.tag_bind("square", "<B1-Motion>", self.wire.draw_wire)
+        self.cav.tag_bind("square", "<ButtonRelease-1>", self.wire.end_wire)
+        self.cav.tag_bind("square", "<Button-3>", self.wire.init_delete)
+        self.cav.tag_bind("square", "<B3-Motion>", self.wire.init_delete)
 
     def placement(self, x, y, gate_key, sens):
         """ Fonction permettant de placer la porte sur la grille. """
@@ -140,7 +140,7 @@ class Grid:
             self.gate.enter_exit(x_matrice - lengthx, y_matrice - lengthy)
             self.gate.enter_exit(x_matrice - lengthx, y_matrice + lengthy)
             self.gate.enter_exit(x_matrice + lengthx, y_matrice)
-        print(self.matrice)
+        #print(self.matrice)
 
     def check_placement(self, x, y, gate_key, sens):
         """ Fonction vérifiant si le placement de la porte est valide. """
@@ -207,6 +207,15 @@ class Grid:
         y2 = grid_height
         return (x1 <= x < x2) and (y1 <= y < y2)
 
+    def detect_grid_ij(self, i, j):
+        """ Fonction permettant de savoir si i, j
+        dans la matrice ou pas. """
+        x1 = 0
+        y1 = 0
+        x2 = len(self.matrice[0])
+        y2 = len(self.matrice)
+        return (x1 <= i < x2) and (y1 <= j < y2)
+
     def delete_matrice(self, id_gate):
         """ Fonction supprimant la porte dans la matrice. """
         coord = self.cav.coords(id_gate)
@@ -230,10 +239,10 @@ if __name__ == '__main__':
     grid = Grid(cav, None, None, None)
 
     gate = Gate(cav, grid)
-    line = Line(cav, grid)
+    wire = Wire(cav, grid)
     robot = Robot(cav, grid)
     grid.gate = gate
-    grid.line = line
+    grid.wire = wire
     grid.robot = robot
     grid.create()
 
