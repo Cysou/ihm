@@ -1,20 +1,21 @@
 import tkinter as tk
+from PIL import Image, ImageTk
 import os
 
 
 class Button():
     def __init__(self, cav):
-        self.dico = {}
         self.dico_img = {}
         self.cav = cav
         self.load_img()
         print(self.dico_img)
+        self.clicked = None
 
 
     def load_img(self):
         for img in os.listdir("button/img"):
             actual = self.get_name(img)
-            if not img_is_loaded(actual):
+            if not self.img_is_loaded(actual):
                 self.dico_img[actual] = []
                 self.load_actual(actual)
 
@@ -34,20 +35,40 @@ class Button():
             i += 1
         return img[:i]
 
-    def create_text(self, x, y, text, fill, font, size, commands=None):
-        idd = self.cav.create_text(int(x), int(y), text=text, fill=fill, font=(font, int(size)), tags="highlight_text")
-        self.cav.tag_bind(idd, "<Enter>", lambda event: self.start(event))
-        self.cav.tag_bind(idd, "<Leave>", lambda event: self.stop(event))
-        self.bind_command(commands, idd)
-        self.cav.tag_bind(idd, "<Button-1>", lambda event: self.binding_commands(commands))
+    def create(self, name, x, y, function, *params):
+        idd = self.cav.create_image(x, y, image=self.dico_img[name][0], tags="button")
+        self.cav.tag_bind(idd, "<Enter>", lambda event, idd=idd, name=name: self.modif(idd, name, 1))
+        self.cav.tag_bind(idd, "<Leave>", lambda event, idd=idd, name=name: self.modif(idd, name, 0))
+        self.cav.tag_bind(idd, "<Button-1>", lambda event, idd=idd, name=name: self.modif(idd, name, 2))
+        lol = [idd, name, function, params]
+        self.cav.tag_bind(idd, "<ButtonRelease-1>", lambda event, lol=lol: self.launch_function(event, *lol))
 
 
-    def find(self):
-        dico_copy = copy.deepcopy(self.dico)
-        for idd in dico_copy:
-            self.anim(idd)
+    def modif(self, idd, name, i):
+        if i == 1:
+            if self.clicked == idd:
+                self.cav.itemconfig(idd, image=self.dico_img[name][2])
+            else :
+                self.cav.itemconfig(idd, image=self.dico_img[name][1])
 
+        elif i == 2:
+            self.clicked = idd
+            self.cav.itemconfig(idd, image=self.dico_img[name][2])
 
+        else:
+            self.cav.itemconfig(idd, image=self.dico_img[name][0])
+
+    def launch_function(self, event, idd, name, functions, params):
+        self.clicked = None
+        bbox = self.cav.bbox(idd)
+        if self.in_bbox(event.x, event.y, bbox):
+            self.cav.itemconfig(idd, image=self.dico_img[name][1])
+            functions(*params)
+        else:
+            self.cav.itemconfig(idd, image=self.dico_img[name][0])
+
+    def in_bbox(self, x, y, bbox):
+        return (bbox[0] < x < bbox[2]) and (bbox[1] < y < bbox[3])
 
 def main_loop():
 
@@ -63,7 +84,8 @@ if __name__ == "__main__":
 
     button = Button(cav)
 
-    #button.create()
+    button.create("delete", 400, 300, print, "delete")
+    button.create("up", 450, 300, print, "up")
 
     #main_loop()
 
