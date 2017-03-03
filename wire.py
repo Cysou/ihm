@@ -86,8 +86,6 @@ class Wire:
             self.direction = "horizontal"
 
     def end_wire(self, event):
-        """ Fonction réinitialisant les variables
-        après avoir fini de tracer une ligne. """
         self.idd_actual = []
         self.first = None
         self.second = None
