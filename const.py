@@ -39,4 +39,15 @@ grid_height = 550  # Il faut que grid_height % grid_squares = 0
 grid_squares = 10  # ne pas changer a cause des images
 
 # wire.py
-dico_wire = {"wire_double_h": [(), None, (), None]}
+dico_wire = {}
+dico_wire["wire_double_h"] = ((2), None, (0), None)
+dico_wire["wire_double_v"] = (None, (3), None, (1))
+dico_wire["wire_triple_nsw"] = ((1, 3), (0, 3), None, (0, 1))
+dico_wire["wire_triple_nse"] = (None, (2, 3), (1, 3), (1, 2))
+dico_wire["wire_triple_nwe"] = ((1, 2), (0, 2), (0, 1), None)
+dico_wire["wire_triple_swe"] = ((2, 3), None, (0, 3), (0, 2))
+dico_wire["wire_quad"] = ((1, 2, 3), (0, 2, 3), (0, 1, 3), (0, 1, 2))
+dico_wire["wire_corner_nw"] = ((1), (0), None, None)
+dico_wire["wire_corner_ne"] = (None, (2), (1), None)
+dico_wire["wire_corner_se"] = (None, None, (3), (2))
+dico_wire["wire_corner_sw"] = ((3), None, None, (0))

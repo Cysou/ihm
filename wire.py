@@ -3,9 +3,9 @@ from PIL import Image, ImageTk
 from const import *
 from grid import *
 
+
 # Mettre tags pour wires (point, triple_n|s|e|w, simple_n|s|e|w, double_h|v
 # corner_nw|ne|se|sw, quad, bridge_h|v)
-
 class Wire:
 
     def __init__(self, cav, grid):
@@ -40,7 +40,10 @@ class Wire:
             j = x // grid_squares
             if self.grid.matrice[i][j] == 0:
                 self.grid.matrice[i][j] = "wire"
-                self.idd_actual.append(self.cav.create_image(x + (grid_squares//2), y + (grid_squares//2), image=self.img[direction]))
+                x_im = x + (grid_squares//2)
+                y_im = y + (grid_squares//2)
+                self.idd_actual.append(self.cav.create_image(x_im, y_im,
+                                                             image=self.img[direction]))
 
     def multiple_make_wire(self, x, y):
         """ Fonction permettant de tracer une ligne. """
