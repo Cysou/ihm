@@ -10,10 +10,10 @@ class Robot:
         self.grid = grid
 
     def detect_gates(self):
-        x = grid_width // grid_squares
+        x = 0
         y = 0
         while y < (grid_height // grid_squares):
-            if self.grid.matrice[y][x] == "mt":
+            if self.grid.matrice[y][x] == "cpt":
                 self.check_wire(x, y)
                 pass
 

@@ -113,34 +113,34 @@ class Grid:
                 j += 1
             i += 1
         if int(sens) % 4 == 0:
-            self.matrice[y_matrice - lengthy][x_matrice - lengthx] = "enter"
-            self.matrice[y_matrice - lengthy][x_matrice + lengthx] = "enter"
-            self.matrice[y_matrice + lengthy][x_matrice] = "exit"
+            self.matrice[y_matrice - lengthy][x_matrice - lengthx] = "enter0"
+            self.matrice[y_matrice - lengthy][x_matrice + lengthx] = "enter0"
+            self.matrice[y_matrice + lengthy][x_matrice] = "exit0"
             self.gate.enter_exit(x_matrice - lengthx, y_matrice - lengthy)
             self.gate.enter_exit(x_matrice + lengthx, y_matrice - lengthy)
             self.gate.enter_exit(x_matrice, y_matrice + lengthy)
         elif int(sens) % 2 == 0:
-            self.matrice[y_matrice + lengthy][x_matrice - lengthx] = "enter"
-            self.matrice[y_matrice + lengthy][x_matrice + lengthx] = "enter"
-            self.matrice[y_matrice - lengthy][x_matrice] = "exit"
+            self.matrice[y_matrice + lengthy][x_matrice - lengthx] = "enter0"
+            self.matrice[y_matrice + lengthy][x_matrice + lengthx] = "enter0"
+            self.matrice[y_matrice - lengthy][x_matrice] = "exit0"
             self.gate.enter_exit(x_matrice - lengthx, y_matrice + lengthy)
             self.gate.enter_exit(x_matrice + lengthx, y_matrice + lengthy)
             self.gate.enter_exit(x_matrice, y_matrice - lengthy)
         elif int(sens) % 3 == 0:
-            self.matrice[y_matrice - lengthy][x_matrice + lengthx] = "enter"
-            self.matrice[y_matrice + lengthy][x_matrice + lengthx] = "enter"
-            self.matrice[y_matrice][x_matrice - lengthx] = "exit"
+            self.matrice[y_matrice - lengthy][x_matrice + lengthx] = "enter0"
+            self.matrice[y_matrice + lengthy][x_matrice + lengthx] = "enter0"
+            self.matrice[y_matrice][x_matrice - lengthx] = "exit0"
             self.gate.enter_exit(x_matrice + lengthx, y_matrice - lengthy)
             self.gate.enter_exit(x_matrice + lengthx, y_matrice + lengthy)
             self.gate.enter_exit(x_matrice - lengthx, y_matrice)
         else:
-            self.matrice[y_matrice - lengthy][x_matrice - lengthx] = "enter"
-            self.matrice[y_matrice + lengthy][x_matrice - lengthx] = "enter"
-            self.matrice[y_matrice][x_matrice + lengthx] = "exit"
+            self.matrice[y_matrice - lengthy][x_matrice - lengthx] = "enter0"
+            self.matrice[y_matrice + lengthy][x_matrice - lengthx] = "enter0"
+            self.matrice[y_matrice][x_matrice + lengthx] = "exit0"
             self.gate.enter_exit(x_matrice - lengthx, y_matrice - lengthy)
             self.gate.enter_exit(x_matrice - lengthx, y_matrice + lengthy)
             self.gate.enter_exit(x_matrice + lengthx, y_matrice)
-        #print(self.matrice)
+        print(self.matrice)
 
     def check_placement(self, x, y, gate_key, sens):
         """ Fonction vérifiant si le placement de la porte est valide. """
