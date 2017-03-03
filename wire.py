@@ -3,11 +3,9 @@ from PIL import Image, ImageTk
 from const import *
 from grid import *
 
+
 # Mettre tags pour wires (point, triple_n|s|e|w, simple_n|s|e|w, double_h|v
 # corner_nw|ne|se|sw, quad, bridge_h|v)
-dico={trple: [[(1,2,3)],[],[],[]], corner: [0,1,2,3]}
-2, tag
-do$ico[tag]
 class Wire:
 
     def __init__(self, cav, grid):
@@ -42,7 +40,10 @@ class Wire:
             j = x // grid_squares
             if self.grid.matrice[i][j] == 0:
                 self.grid.matrice[i][j] = "wire"
-                self.idd_actual.append(self.cav.create_image(x + (grid_squares//2), y + (grid_squares//2), image=self.img[direction]))
+                x1 = x + (grid_squares//2)
+                y1 = y + (grid_squares//2)
+                self.idd_actual.append(self.cav.create_image(x1, y1,
+                                                             image=self.img[direction]))
 
     def multiple_make_wire(self, x, y):
         """ Fonction permettant de tracer une ligne. """
@@ -103,7 +104,7 @@ class Wire:
             d = self.first[0] // grid_squares
             for a in range(b, c+1):
                 if self.grid.detect_grid_ij(d, a):
-                    # qgzegergerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr ici
+                    # qgzegergerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr ici
                     self.grid.matrice[a][d] = 0
         elif self.direction == "horizontal":
             b = self.first[0] // grid_squares
@@ -112,7 +113,7 @@ class Wire:
             d = self.first[1] // grid_squares
             for a in range(b, c+1):
                 if self.grid.detect_grid_ij(a, d):
-                    # qgzegergerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr ici
+                    # qgzegergerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr ici
                     self.grid.matrice[d][a] = 0
         else:
             i = self.first[1] // grid_squares
