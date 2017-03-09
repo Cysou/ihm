@@ -1,2 +1,0 @@
-Récupérer coords d'un widget : event.widget.coords("current")
-Récupérer x1, y1, x2, y2 : event.widget.bbox("current")

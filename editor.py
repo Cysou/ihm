@@ -2,6 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import os
 from const import *
+from entry import *
 
 class Editor:
     
@@ -25,8 +26,18 @@ class Editor:
         self.idd_popup = []
         self.indicator_popup = 0
         
-        self.funcid = []
         self.layout_uncover = None
+
+        self.pos_start = None
+        self.pos_end = None
+        self.idd_start = None
+        self.idd_end = None
+
+        self.hidden_circles = []
+        
+        self.bind()
+        
+        self.entry = Entry(cav)
 
     def set_layout_uncover(self, func):
         self.layout_uncover = func
@@ -45,11 +56,15 @@ class Editor:
             self.img[path] = tkimg
 
     def start(self):
-        self.bind()
+        self.create_entry()
         if self.indicator_popup == 0:
             self.create()
+            self.create_start(*editor_pos_start)
+            self.create_end(*editor_pos_end)
         elif self.indicator_popup != "notouch":
             self.delete_all_circle()
+            self.delete_start()
+            self.delete_end()
             self.create_map()
         self.indicator_popup = 0
 
@@ -59,7 +74,7 @@ class Editor:
         x2 = editor_grid_x1 + editor_grid_square
         y2 = editor_grid_y1 + editor_grid_square
         while (y2 <= editor_grid_height + editor_grid_y1):
-            self.cav.create_rectangle(x1, y1, x2, y2, outline="grey60", fill="grey80", tags="square")
+            self.cav.create_rectangle(x1, y1, x2, y2, outline="grey60", fill="grey95", tags="square")
             if x2 >= editor_grid_width + editor_grid_x1:
                 x1 = editor_grid_x1
                 y1 += editor_grid_square
@@ -78,28 +93,93 @@ class Editor:
                 print(line)
                 j = 0
                 for circle in line:
-                    if circle != "0":
+                    if circle == "1":
                         self.first_place(i, j)
                         self.update_around(i, j)
+                    elif circle == "2":
+                        self.create_start(i, j)
+                    elif circle == "3":
+                        self.create_end(i, j)
                     j += 1
                 i += 1
 
+    def create_start(self, i, j):
+        x = editor_grid_square*j + editor_grid_x1
+        y = editor_grid_square*i + editor_grid_y1
+        idd = self.cav.create_image(x, y, anchor="nw", image=self.img["start.png"])
+        self.idd_start = idd
+        self.matrix[i][j] = idd
+        self.pos_start = [i, j]
+        self.cav.tag_bind(idd, "<B1-Motion>", self.replace_start)
+
+    def replace_start(self, event):
+        i, j = self.get_index(event.x, event.y)
+        if self.detect_grid(event.x, event.y):
+            if self.matrix[i][j] == 0:
+                x = editor_grid_square*j + editor_grid_x1
+                y = editor_grid_square*i + editor_grid_y1
+                i_old = self.pos_start[0]
+                j_old = self.pos_start[1]
+                self.matrix[i_old][j_old] = 0
+                self.pos_start = [i, j]
+                self.matrix[i][j] = self.idd_start
+                self.cav.coords(self.idd_start, x, y)
+
+    def delete_start(self):
+        i = self.pos_start[0]
+        j = self.pos_start[1]
+        self.cav.delete(self.matrix[i][j])
+        self.matrix[i][j] = 0
+        self.pos_start = None
+        self.idd_start = None
+            
+    def create_end(self, i, j):
+        x = editor_grid_square*j + editor_grid_x1
+        y = editor_grid_square*i + editor_grid_y1
+        idd = self.cav.create_image(x, y, anchor="nw", image=self.img["end.png"])
+        self.idd_end = idd
+        self.matrix[i][j] = idd
+        self.pos_end = [i, j]
+        self.cav.tag_bind(idd, "<B1-Motion>", self.replace_end)
+
+    def replace_end(self, event):
+        i, j = self.get_index(event.x, event.y)
+        if self.detect_grid(event.x, event.y):
+            if self.matrix[i][j] == 0:
+                x = editor_grid_square*j + editor_grid_x1
+                y = editor_grid_square*i + editor_grid_y1
+                i_old = self.pos_end[0]
+                j_old = self.pos_end[1]
+                self.matrix[i_old][j_old] = 0
+                self.pos_end = [i, j]
+                self.matrix[i][j] = self.idd_end
+                self.cav.coords(self.idd_end, x, y)
+
+
+    def delete_end(self):
+        i = self.pos_end[0]
+        j = self.pos_end[1]
+        self.cav.delete(self.matrix[i][j])
+        self.matrix[i][j] = 0
+        self.pos_end = None
+        self.idd_end = None
+    
     def bind(self):
-        self.funcid.append(self.cav.bind("<Button-1>", self.place))
-        self.funcid.append(self.cav.bind("<Button-3>", self.remove))
-        self.funcid.append(self.cav.bind("<B1-Motion>", self.place))
-        self.funcid.append(self.cav.bind("<B3-Motion>", self.remove))
+        self.cav.tag_bind("square", "<Button-1>", self.place)
+        self.cav.tag_bind("square", "<Button-3>", self.remove)
+        self.cav.tag_bind("square", "<B1-Motion>", self.place)
+        self.cav.tag_bind("square", "<B3-Motion>", self.remove)
+        
+        self.cav.tag_bind("circle", "<Button-1>", self.place)
+        self.cav.tag_bind("circle", "<Button-3>", self.remove)
+        self.cav.tag_bind("circle", "<B1-Motion>", self.place)
+        self.cav.tag_bind("circle", "<B3-Motion>", self.remove)
+        self.cav.tag_bind("circle", "<ButtonRelease-3>", self.delete_hidden_circles)
 
     def stop(self):
-        self.unbind()
         self.delete_all_circle()
-
-    def unbind(self):
-        self.cav.unbind("<Button-1>", self.funcid[0])
-        self.cav.unbind("<Button-3>", self.funcid[1])
-        self.cav.unbind("<B1-Motion>", self.funcid[2])
-        self.cav.unbind("<B3-Motion>", self.funcid[3])
-        self.funcid = []
+        self.delete_start()
+        self.delete_end()
 
     def delete_all_circle(self):
         N = len(self.matrix)
@@ -107,23 +187,25 @@ class Editor:
         while i < N:
             j = 0
             while j < N:
-                self.matrix_delete(i, j)
+                self.delete_circle(i, j)
                 j += 1
             i += 1
         
     def place(self, event):
+        print(event.x, event.y)
         if self.detect_grid(event.x, event.y):
             x, y = self.find_closest(event.x, event.y)
             self.display_circle(x, y)
 
     def remove(self, event):
+        print(event.x, event.y)
         if self.detect_grid(event.x, event.y):
             x, y = self.find_closest(event.x, event.y)
             self.remove_circle(x, y)
 
     def remove_circle(self, x, y):
         i, j = self.get_index(x, y)
-        self.matrix_delete(i ,j)
+        self.hide_circle(i ,j)
         self.update_around_inv(i, j)
     
     def get_index(self, x, y):
@@ -138,7 +220,7 @@ class Editor:
         y1 = editor_grid_y1
         x2 = editor_grid_x1 + editor_grid_width
         y2 = editor_grid_y1 + editor_grid_height
-        return (x1 <= x <= x2) and (y1 <= y <= y2)
+        return (x1 <= x < x2) and (y1 <= y < y2)
 
     def display_circle(self, x, y):
         i, j = self.get_index(x, y)
@@ -156,14 +238,14 @@ class Editor:
         N = len(self.matrix)
         while a < 4:
             if 0 <= li[a] < N and 0 <= lj[a] < N:
-                if self.matrix[li[a]][lj[a]] != 0:
+                if type(self.matrix[li[a]][lj[a]]) == list:
                     self.update_corners(corners, lc[a])
             a += 1
         self.matrix[i][j] = [0, corners]
         name_img = self.get_name_img(self.matrix[i][j][1])
         y = (i * editor_grid_square) + editor_grid_y1
         x = (j * editor_grid_square) + editor_grid_x1
-        idd = self.cav.create_image(x, y, anchor="nw", image=self.img[name_img])
+        idd = self.cav.create_image(x, y, anchor="nw", image=self.img[name_img], tags="circle")
         self.matrix[i][j][0] = idd
 
     def update_around(self, i, j):
@@ -174,13 +256,13 @@ class Editor:
 
     def update(self, i, j, corners):
         if 0 <= i < len(self.matrix) and 0 <= j < len(self.matrix):
-            if self.matrix[i][j] != 0:
+            if type(self.matrix[i][j]) == list:
                 self.cav.delete(self.matrix[i][j][0])
                 self.update_corners(self.matrix[i][j][1], corners)
                 name_img = self.get_name_img(self.matrix[i][j][1])
                 y = (i * editor_grid_square) + editor_grid_y1
                 x = (j * editor_grid_square) + editor_grid_x1
-                idd = self.cav.create_image(x, y, anchor="nw", image=self.img[name_img])
+                idd = self.cav.create_image(x, y, anchor="nw", image=self.img[name_img], tags="circle")
                 self.matrix[i][j][0] = idd
 
     def update_corners(self, actual, corners):
@@ -195,37 +277,43 @@ class Editor:
         return self.dico_name_img[string]
 
     def update_around_inv(self, i, j):
-        if self.matrix_delete(i-1, j):
+        if self.delete_circle(i-1, j):
             self.first_place(i-1, j)
-        if self.matrix_delete(i, j-1):
+        if self.delete_circle(i, j-1):
             self.first_place(i, j-1)
-        if self.matrix_delete(i+1, j):
+        if self.delete_circle(i+1, j):
             self.first_place(i+1, j)
-        if self.matrix_delete(i, j+1):
+        if self.delete_circle(i, j+1):
             self.first_place(i, j+1)
 
-    def matrix_delete(self, i, j):
+    def delete_circle(self, i, j):
         if 0 <= i < len(self.matrix) and 0 <= j < len(self.matrix):
-            if self.matrix[i][j] != 0:
+            if type(self.matrix[i][j]) == list:
                 self.cav.delete(self.matrix[i][j][0])
                 self.matrix[i][j] = 0
                 return True
         return False
 
+    def hide_circle(self, i, j):
+        if 0 <= i < len(self.matrix) and 0 <= j < len(self.matrix):
+            if type(self.matrix[i][j]) == list:
+                self.cav.itemconfig(self.matrix[i][j][0], state="hidden")
+                self.hidden_circles.append(self.matrix[i][j][0])
+                self.matrix[i][j] = 0
+
+    def delete_hidden_circles(self, event):
+        for idd in self.hidden_circles:
+            self.cav.delete(idd)
+        self.hidden_circles = []
+        
+
     # map manager
     def map_manager_delete(self):
         self.indicator_popup = "notouch"
-        self.unbind()
         self.display_delete()
-        """
-        if fd:
-            for i in self.matrix:
-                fd.write(str(i)+"\n")
-            fd.close()"""
 
     def map_manager_open(self):
         self.indicator_popup = "notouch"
-        self.unbind()
         self.display_open()
 
     def display_delete(self):
@@ -234,7 +322,7 @@ class Editor:
         while i < len(listdir):
             x = (width // 2) - editor_delete_gap_x
             y = editor_delete_first_y + (i * editor_delete_gap_x)
-            idd = self.cav.create_text(x, y, text=listdir[i], font=("Arial",13))
+            idd = self.cav.create_text(x, y, text=listdir[i][:-4], font=("Arial",13))
             self.idd_popup.append(idd)
 
             x = (width // 2) + editor_delete_gap_x
@@ -250,7 +338,7 @@ class Editor:
         while i < len(listdir):
             x = (width // 2) - editor_open_gap_x
             y = editor_open_first_y + (i * editor_open_gap_x)
-            idd = self.cav.create_text(x, y, text=listdir[i], font=("Arial",13))
+            idd = self.cav.create_text(x, y, text=listdir[i][:-4], font=("Arial",13))
             self.idd_popup.append(idd)
 
             x = (width // 2) + editor_open_gap_x
@@ -264,6 +352,7 @@ class Editor:
         for idd in self.idd_popup:
             self.cav.delete(idd)
         self.idd_popup = []
+        self.delete_entry()
 
     def delete_map(self, i):
         print(os.listdir("map/custom")[i], "removed")
@@ -275,7 +364,31 @@ class Editor:
         self.indicator_popup = "map/custom/" + os.listdir("map/custom")[i]
         self.delete_popup()
         self.layout_uncover()
-    
+
+    def save_map(self):
+        string = self.entry.get_string()
+        if len(string) > 0:
+            path = "map/custom/" + string + ".map"
+            with open(path, "w") as fd:
+                for line in self.matrix:
+                    print(line)
+                    for circle in line:
+                        if circle == 0:
+                            fd.write("0 ")
+                        elif type(circle) == list:
+                            fd.write("1 ")
+                        elif circle == self.idd_start:
+                            fd.write("2 ")
+                        elif circle == self.idd_end:
+                            fd.write("3 ")
+                    fd.write("\n")
+            
+
+    def create_entry(self):
+        self.entry.create(editor_save_x, editor_save_y)
+
+    def delete_entry(self):
+        self.entry.delete()
     
 if __name__ == '__main__':
     root = tk.Tk()

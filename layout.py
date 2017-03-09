@@ -16,7 +16,8 @@ class Layout():
                               "editor.start": editor.start,
                               "cover": self.cover,
                               "uncover": self.uncover,
-                              "editor.delete_popup": editor.delete_popup}
+                              "editor.delete_popup": editor.delete_popup,
+                              "editor.save_map": editor.save_map}
 
         self.dico_functions = {}
         self.know_functions = {"highlight.create_text": highlight.create_text,

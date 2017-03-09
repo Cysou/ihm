@@ -17,6 +17,9 @@ editor_grid_height = editor_grid_square * (map_height//map_square)
 editor_grid_x1 = (editor_width - editor_grid_width) // 2
 editor_grid_y1 = (editor_height - editor_grid_height) // 2
 
+editor_pos_start = (19, 0)
+editor_pos_end = (0, 19)
+
 editor_delete_first_y = 100
 editor_delete_gap_x = 50
 editor_delete_gap_y = 50
@@ -24,6 +27,9 @@ editor_delete_gap_y = 50
 editor_open_first_y = 100
 editor_open_gap_x = 50
 editor_open_gap_y = 50
+
+editor_save_x = 1000
+editor_save_y = 100
 
 # gates.py
 # la taille des portes doit être impaire
@@ -40,3 +46,15 @@ grid_squares = 10  # ne pas changer a cause des images
 
 # wire.py
 dico_wire = {"wire_double_h": [(), None, (), None]}
+
+# entry.py
+entry_max_char = 20
+entry_font_name = "Courier New"
+entry_font_size = 16
+entry_gap = 5
+autorised_key = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+                 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+                 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+                 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+                 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8',
+                 '9', ' ', '_', '-', 'é', 'è', 'à', 'ù']

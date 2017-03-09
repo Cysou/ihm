@@ -16,10 +16,10 @@ rec 1000 0 1200 200 grey10
 rec 1000 200 1200 675 grey10
 
 *editor
-rec 0 0 1200 675 grey80
+rec 0 0 1200 675 grey5
 rec 100 100 200 150 red #cover:map_manager_delete
 rec 100 200 200 250 green #cover:map_manager_open
-rec 100 300 200 350 blue
+rec 100 300 200 350 blue #editor.save_map
 fun editor.start
 
 *map_manager_delete
