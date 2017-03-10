@@ -9,6 +9,9 @@ class Gate:
         self.cav = cav
         self.circuit = circuit
         self.circuit.gates = self
+
+    def create(self):
+        """ Fonction initialisant la création des portes. """
         self.cav.create_rectangle(width - gates_window_width,
                                   height - gates_window_height, width, height,
                                   fill="grey50")

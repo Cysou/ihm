@@ -54,11 +54,12 @@ class Circuit:
         de celle-ci avec les fonctionns correspondantes. """
         x1 = dico_gates[gate_key][0] // 2
         y1 = dico_gates[gate_key][1] // 2
-        self.cav.create_rectangle(x - x1, y - y1, x + x1, y + y1,
-                                  fill=dico_gates[gate_key][2],
-                                  tags=(gate_key, sens))
+        gate_id = self.cav.create_rectangle(x - x1, y - y1, x + x1, y + y1,
+                                            fill=dico_gates[gate_key][2],
+                                            tags=(gate_key, sens))
+        self.cav.tag_bind(gate_id, "<Button-1>", self.init_move_gate)
 
-    def init_move_gate(self):
+    def init_move_gate(self, event):
         """ Fonction initialisant le déplacement d'une porte. """
         pass
 
