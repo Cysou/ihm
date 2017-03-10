@@ -1,4 +1,5 @@
 import tkinter as tk
+from const import *
 from gates import *
 
 
@@ -75,7 +76,4 @@ class Circuit:
     def end_wire(self):
         """ Fonction simulant un event pour vérifier que le fil fini
         bien sur une entrée/sortie. """
-        pass
-
-    def fname(arg):
         pass

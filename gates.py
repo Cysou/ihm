@@ -7,7 +7,7 @@ class Gate:
 
     def __init__(self, cav, grid):
         self.cav = cav
-        self.grid = grid
+        self.circuit = circuit
 
     def release(self, event):
         """ Fonction initialisant le placement de la porte lorsque l'on

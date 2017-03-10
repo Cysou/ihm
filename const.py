@@ -27,16 +27,18 @@ editor_open_gap_y = 50
 
 # gates.py
 # la taille des portes doit être impaire
+gates_window_width = 300
+gates_window_height = 550
 dico_gates = {}
 dico_gates["gate_or"] = (5, 3, "or", "blue")
 dico_gates["gate_and"] = (5, 3, "and", "red")
 dico_gates["gate_not"] = (5, 3, "not", "purple")
 dico_gates["gate_xor"] = (5, 3, "xor", "seagreen")
 
-# grid.py
-grid_width = 900  # Il faut que grid_width % grid_squares = 0
-grid_height = 550  # Il faut que grid_height % grid_squares = 0
-grid_squares = 10  # ne pas changer a cause des images
+# circuit.py
+circuit_width = 900  # Il faut que grid_width % grid_squares = 0
+circuit_height = 550  # Il faut que grid_height % grid_squares = 0
+circuit_squares = 10  # ne pas changer a cause des images
 
 # wire.py
 dico_wire = {}
