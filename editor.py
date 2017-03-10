@@ -367,6 +367,7 @@ class Editor:
 
     def save_map(self):
         string = self.entry.get_string()
+        self.reset_entry()
         if len(string) > 0:
             path = "map/custom/" + string + ".map"
             with open(path, "w") as fd:
@@ -385,10 +386,13 @@ class Editor:
             
 
     def create_entry(self):
-        self.entry.create(editor_save_x, editor_save_y)
+        self.entry.create(editor_entry_x, editor_entry_y)
 
     def delete_entry(self):
         self.entry.delete()
+
+    def reset_entry(self):
+        self.entry.reset_text()
     
 if __name__ == '__main__':
     root = tk.Tk()

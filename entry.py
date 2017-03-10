@@ -29,7 +29,6 @@ class Entry:
         self.cav.tag_bind(idd_rec, "<Leave>", lambda event: self.update_cursor(1))
 
     def update_cursor(self, num):
-        print(1)
         if num == 1:
             self.cav.config(cursor="arrow")
         elif num == 2:
@@ -74,11 +73,14 @@ class Entry:
         return (len(self.string) > entry_max_char)
 
     def update_text(self):
-        print(self.string)
         self.cav.itemconfig(self.idd_text, text=self.string)
 
     def get_string(self):
         return self.string
+
+    def reset_text(self):
+        self.string = ""
+        self.update_text()
 
 
 if __name__ == '__main__':

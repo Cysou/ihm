@@ -28,8 +28,8 @@ editor_open_first_y = 100
 editor_open_gap_x = 50
 editor_open_gap_y = 50
 
-editor_save_x = 1000
-editor_save_y = 100
+editor_entry_x = 1050
+editor_entry_y = 100
 
 # gates.py
 # la taille des portes doit être impaire
@@ -57,4 +57,13 @@ autorised_key = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
                  'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
                  'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
                  'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8',
-                 '9', ' ', '_', '-', 'é', 'è', 'à', 'ù']
+                 '9', ' ', '_', '-', 'é', 'è', 'à', 'ù', 'ç']
+
+# aid.py
+aid_len = 120  # coté du carré
+aid_xoffset = 40  # l'offset du carré a droite de la bbox
+aid_ygap = 15  # l'écrat entre le bas du triangle et le bas du rectangle a droite
+aid_height_t = 30  # hauteur du triangle
+aid_margin_top = 5
+aid_margin_left = 30
+aid_margin_bot = 5
