@@ -2,7 +2,7 @@ import tkinter as tk
 from const import *
 
 class Entry:
-    
+
     def __init__(self, cav):
         self.cav = cav
         self.coords = None
@@ -10,21 +10,22 @@ class Entry:
         self.idd_rec = None
         self.idd_text = None
         self.string = ""
+        self.funcid = []
 
-    def create(self, x, y):
+    def create(self, x, y, fill="white", outline="black"):
         x1 = x - ((entry_max_char*entry_font_size) // 2) - entry_gap
         y1 = y - (entry_font_size // 2) - entry_gap
         x2 = x + ((entry_max_char*entry_font_size) // 2) + entry_gap
         y2 = y + (entry_font_size // 2) + entry_gap
-        idd_rec = self.cav.create_rectangle(x1, y1, x2, y2, outline="black", fill="white")
+        idd_rec = self.cav.create_rectangle(x1, y1, x2, y2, outline=outline, fill=fill, width=2)
         self.coords = [x1, y1 ,x2, y2]
         self.idd_rec = idd_rec
 
         idd_text = self.cav.create_text(x1 + entry_gap, y1, text=self.string, anchor="nw", font=(entry_font_name, entry_font_size))
         self.idd_text = idd_text
 
-        self.cav.bind("<Button-1>", self.check_focus)
-        self.cav.bind_all("<KeyPress>", self.print_char)
+        self.funcid.append(self.cav.bind("<Button-1>", self.check_focus))
+        self.funcid.append(self.cav.bind_all("<KeyPress>", self.print_char))
         self.cav.tag_bind(idd_rec, "<Enter>", lambda event: self.update_cursor(2))
         self.cav.tag_bind(idd_rec, "<Leave>", lambda event: self.update_cursor(1))
 
@@ -35,21 +36,28 @@ class Entry:
             self.cav.config(cursor="hand2")
 
     def delete(self):
-        self.cav.delete(self.idd_rec)
-        self.cav.delete(self.idd_text)
-        self.coords = None
-        self.focus = None
-        self.idd_rec = None
-        self.idd_text = None
-        self.string = ""
+        if self.idd_rec:
+            self.cav.delete(self.idd_rec)
+            self.cav.delete(self.idd_text)
+            self.coords = None
+            self.focus = None
+            self.idd_rec = None
+            self.idd_text = None
+            self.string = ""
+            self.unbind()
+            self.funcid = []
+
+    def unbind(self):
+        self.cav.unbind("<Button-1>", self.funcid[0])
+        self.cav.unbind("<KeyPress>", self.funcid[1])
 
     def check_focus(self, event):
         if self.in_entry(event.x, event.y):
             self.focus = True
-            self.cav.itemconfig(self.idd_rec, width=2)
+            self.cav.itemconfig(self.idd_rec, width=3)
         else:
             self.focus = False
-            self.cav.itemconfig(self.idd_rec, width=1)
+            self.cav.itemconfig(self.idd_rec, width=2)
 
     def in_entry(self, x , y):
         x1, y1, x2, y2 = self.coords
@@ -57,11 +65,10 @@ class Entry:
 
     def print_char(self, event):
         if self.focus:
-            #print(event.keycode)
             self.update_string(event.char, event.keycode)
 
     def update_string(self, char, code):
-        if code == 8:
+        if code == 8 or code == 22:
             self.string = self.string[:-1]
         else:
             if char in autorised_key:

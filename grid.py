@@ -7,7 +7,7 @@ from robot import *
 # il n'y a plus de grille
 
 # quand on place une porte on ajoute le tag et la bbox
-# dico = {tag: (x, y)}  # ex : tag = "and_3" ou tag = "or_8"
+# dico = {tag: (x1, y1, x2, y2)}  # ex : tag = "and_3" ou tag = "or_8"
 # la tag est aussi mit sur le create
 
 # on aura de base les 4 capteurs et les 4 moteurs dans le dico
@@ -20,8 +20,8 @@ from robot import *
 # -etc
 
 # ducoup le trait se crée automatiquement d'une certaine manière
-# on ajoute dans un dico : dico2[idd_wire] = ("tag", "tag")
-# ou alors dico2[tag] = [tag1, tag2]
+# on ajoute dans un dico : dico2[idd_wire] = ("tag")
+# ou alors dico2[tag] = [tag1]
 # ie : un capteur est relié à une entrée et un moteur
 # avec tag = le tag d'une porte ou capteur/moteur
 

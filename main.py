@@ -7,7 +7,7 @@ def main_loop():
 
     highlight.find()
 
-    root.after(50, main_loop)
+    root.after(main_loop_mili, main_loop)
 
 if __name__ == "__main__":
     root = tk.Tk()

@@ -5,12 +5,12 @@ from const import *
 from entry import *
 
 class Editor:
-    
+
     def __init__(self, cav):
         self.matrix = []
         self.create_matrix()
         self.cav = cav
-        
+
         self.img = {}
         self.load_img()
         self.dico_name_img = {"0000": "circle0.png",
@@ -25,7 +25,7 @@ class Editor:
                               "1111": "circle9.png"}
         self.idd_popup = []
         self.indicator_popup = 0
-        
+
         self.layout_uncover = None
 
         self.pos_start = None
@@ -34,9 +34,9 @@ class Editor:
         self.idd_end = None
 
         self.hidden_circles = []
-        
+
         self.bind()
-        
+
         self.entry = Entry(cav)
 
     def set_layout_uncover(self, func):
@@ -47,7 +47,7 @@ class Editor:
         while i > 0:
             self.matrix.append([0]*(editor_grid_width//editor_grid_square))
             i -= 1
-        
+
     def load_img(self):
         for path in os.listdir("editor/img"):
             path_all="editor/img/" + path
@@ -56,11 +56,12 @@ class Editor:
             self.img[path] = tkimg
 
     def start(self):
-        self.create_entry()
         if self.indicator_popup == 0:
             self.create()
             self.create_start(*editor_pos_start)
             self.create_end(*editor_pos_end)
+            self.delete_entry()
+            self.create_entry()
         elif self.indicator_popup != "notouch":
             self.delete_all_circle()
             self.delete_start()
@@ -132,7 +133,7 @@ class Editor:
         self.matrix[i][j] = 0
         self.pos_start = None
         self.idd_start = None
-            
+
     def create_end(self, i, j):
         x = editor_grid_square*j + editor_grid_x1
         y = editor_grid_square*i + editor_grid_y1
@@ -163,13 +164,13 @@ class Editor:
         self.matrix[i][j] = 0
         self.pos_end = None
         self.idd_end = None
-    
+
     def bind(self):
         self.cav.tag_bind("square", "<Button-1>", self.place)
         self.cav.tag_bind("square", "<Button-3>", self.remove)
         self.cav.tag_bind("square", "<B1-Motion>", self.place)
         self.cav.tag_bind("square", "<B3-Motion>", self.remove)
-        
+
         self.cav.tag_bind("circle", "<Button-1>", self.place)
         self.cav.tag_bind("circle", "<Button-3>", self.remove)
         self.cav.tag_bind("circle", "<B1-Motion>", self.place)
@@ -190,15 +191,13 @@ class Editor:
                 self.delete_circle(i, j)
                 j += 1
             i += 1
-        
+
     def place(self, event):
-        print(event.x, event.y)
         if self.detect_grid(event.x, event.y):
             x, y = self.find_closest(event.x, event.y)
             self.display_circle(x, y)
 
     def remove(self, event):
-        print(event.x, event.y)
         if self.detect_grid(event.x, event.y):
             x, y = self.find_closest(event.x, event.y)
             self.remove_circle(x, y)
@@ -207,7 +206,7 @@ class Editor:
         i, j = self.get_index(x, y)
         self.hide_circle(i ,j)
         self.update_around_inv(i, j)
-    
+
     def get_index(self, x, y):
         return (y-editor_grid_y1)//editor_grid_square, (x-editor_grid_x1)//editor_grid_square
 
@@ -305,7 +304,7 @@ class Editor:
         for idd in self.hidden_circles:
             self.cav.delete(idd)
         self.hidden_circles = []
-        
+
 
     # map manager
     def map_manager_delete(self):
@@ -352,11 +351,9 @@ class Editor:
         for idd in self.idd_popup:
             self.cav.delete(idd)
         self.idd_popup = []
-        self.delete_entry()
 
     def delete_map(self, i):
-        print(os.listdir("map/custom")[i], "removed")
-        #os.remove("map/custom/" + os.listdir("map/custom")[i])
+        os.remove("map/custom/" + os.listdir("map/custom")[i])
         self.delete_popup()
         self.display_delete()
 
@@ -372,7 +369,6 @@ class Editor:
             path = "map/custom/" + string + ".map"
             with open(path, "w") as fd:
                 for line in self.matrix:
-                    print(line)
                     for circle in line:
                         if circle == 0:
                             fd.write("0 ")
@@ -383,17 +379,18 @@ class Editor:
                         elif circle == self.idd_end:
                             fd.write("3 ")
                     fd.write("\n")
-            
 
+
+    # Entry
     def create_entry(self):
-        self.entry.create(editor_entry_x, editor_entry_y)
+        self.entry.create(editor_entry_x, editor_entry_y, outline="grey40")
 
     def delete_entry(self):
         self.entry.delete()
 
     def reset_entry(self):
         self.entry.reset_text()
-    
+
 if __name__ == '__main__':
     root = tk.Tk()
     root.resizable(width="false", height="false")

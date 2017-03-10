@@ -132,7 +132,7 @@ class Layout():
                 if commands:
                     for com in commands:
                         com[0] = self.know_commands[com[0]]
-                    self.know_functions[params[0]](*params[1:], commands)
+                        self.know_functions[params[0]](*(params[1:]+[commands]))
                 else:
                     self.know_functions[params[0]](*params[1:])
             else:

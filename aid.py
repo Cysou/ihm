@@ -1,32 +1,48 @@
 import tkinter as tk
 from const import *
+import copy
 
 class Aid:
-    
+
+    compteur = 0
     def __init__(self, cav):
         self.cav = cav
-        
-    def create(self, bbx1, bby1, bbx2, bby2, text):
-        x1 = bbx2 + aid_xoffset
-        y1 = bby1 - aid_len // 2
-        x2 = x1 + aid_len
-        y2 = y1
-        x3 = x2
-        y3 = y1 + aid_len
-        x4 = x1
-        y4 = y3
-        x5 = x4
-        y5 = y4 - aid_ygap
-        x6 = bbx2
-        y6 = y5 - (aid_height_t // 2)
-        x7 = x5
-        y7 = y5 - aid_height_t
-        coords = [x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, x7, y7]
+        self.dico = {}
+
+    def create(self, text, bbx1, bby1, bbx2, bby2, fill="white", outline="black", smooth=1, splinesteps=12):
+        Aid.compteur += 1
+        self.dico[Aid.compteur] = [aid_sec * 1000]
+        coords = self.create_coords(bbx1, bby1, bbx2, bby2)
+        self.create_rectangle(coords, bbx1, bbx2, fill, outline)
+        self.create_text(coords)
+
+    def create_rectangle(self, coords, bbx1, bbx2, fill, outline):
         self.verif_y(coords)
         self.verif_x(coords, bbx1, bbx2)
-        self
-        self.cav.create_polygon(coords, fill="orange", outline="blue")
-        
+        idd = self.cav.create_polygon(coords, fill=fill, outline=outline)
+        self.dico[Aid.compteur].append(idd)
+
+    def create_text(self, coords):
+        x1, y1 = [coords[0] , coords[1]]
+        x2, y2 = [coords[2] , coords[5]]
+        x = ((x2 - x1) // 2) + x1
+        y = ((y2 - y1) // 2) + y1
+        max_width = (x2 - x1)
+        idd = self.cav.create_text(x, y, text=text, width=max_width, font=(aid_font_name, aid_font_size))
+        self.dico[Aid.compteur].append(idd)
+
+    def create_coords(self, bbx1, bby1, bbx2, bby2):
+        coords = [bbx2 + aid_xoffset, bby1 - aid_len // 2,
+            bbx2 + aid_xoffset + aid_len, bby1 - aid_len // 2,
+            bbx2 + aid_xoffset + aid_len, bby1 - aid_len // 2 + aid_len,
+            bbx2 + aid_xoffset, bby1 - aid_len // 2 + aid_len,
+            bbx2 + aid_xoffset, bby1 - aid_len // 2 + aid_len - aid_ygap,
+            bbx2,
+            bby1 - aid_len // 2 + aid_len - aid_ygap - aid_height_t // 2,
+            bbx2 + aid_xoffset,
+            bby1 - aid_len // 2 + aid_len - aid_ygap - aid_height_t]
+        return coords
+
     def verif_y(self, coords):
         if coords[1] < aid_margin_top:
             y = aid_margin_top - coords[1]
@@ -48,6 +64,23 @@ class Aid:
         for i in indexs:
             coords[i] += value
 
+    def update(self):
+        memo = copy.deepcopy(self.dico)
+        for key in memo:
+            self.dico[key][0] -= main_loop_mili
+            self.check_end(key)
+
+    def check_end(self, key):
+        if self.dico[key][0] == 0:
+            self.cav.delete(self.dico[key][1],  self.dico[key][2])
+            self.dico.pop(key)
+
+
+def main_loop():
+    aid.update()
+    root.after(main_loop_mili, main_loop)
+
+
 if __name__ == '__main__':
     root = tk.Tk()
     root.resizable(width="false", height="false")
@@ -56,8 +89,13 @@ if __name__ == '__main__':
     cav.pack()
 
     aid = Aid(cav)
-    bbox = [900, 620, 950, 675]
+    bbox = [600, 300, 700, 350]
     cav.create_rectangle(bbox, fill="grey60")
-    aid.create(*bbox)
+    text = "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
+    #aid.create(text, *bbox)
+
+    cav.bind("<1>", lambda event, text=text, bbox=bbox: aid.create(text, *bbox))
+
+    main_loop()
 
     root.mainloop()

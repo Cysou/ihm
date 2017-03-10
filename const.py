@@ -1,6 +1,7 @@
 # general
 width = 1200
 height = 675
+main_loop_mili = 50
 
 # map.py
 map_width = 200
@@ -48,7 +49,7 @@ grid_squares = 10  # ne pas changer a cause des images
 dico_wire = {"wire_double_h": [(), None, (), None]}
 
 # entry.py
-entry_max_char = 20
+entry_max_char = 15
 entry_font_name = "Courier New"
 entry_font_size = 16
 entry_gap = 5
@@ -67,3 +68,6 @@ aid_height_t = 30  # hauteur du triangle
 aid_margin_top = 5
 aid_margin_left = 30
 aid_margin_bot = 5
+aid_font_name = "Verdana"
+aid_font_size = 10
+aid_sec = 1
