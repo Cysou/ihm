@@ -1,4 +1,5 @@
 import tkinter as tk
+<<<<<<< HEAD
 import highlight as m_highlight
 import layout as m_layout
 import editor as m_editor
@@ -23,5 +24,24 @@ if __name__ == "__main__":
     layout.display("home")
 
     main_loop()
+=======
+from const import *
+from gates import *
+from circuit import *
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    root.geometry("1200x675")
+    root.resizable(width=tk.FALSE, height=tk.FALSE)
+    root.title("Titre")
+    cav = tk.Canvas(root, width=width, height=height)
+    cav.pack()
+
+    # classes
+    circuit = Circuit(cav)
+    gate = Gate(cav, circuit)
+    gate.create()
+>>>>>>> e84608114139e0c6b03cb4cc118b6b7af0891981
 
     root.mainloop()
