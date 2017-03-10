@@ -1,13 +1,20 @@
 import tkinter as tk
-from grid import *
+from circuit import *
 from const import *
 
 
 class Gate:
 
-    def __init__(self, cav, grid):
+    def __init__(self, cav, circuit):
         self.cav = cav
         self.circuit = circuit
+        self.circuit.gates = self
+        self.cav.create_rectangle(width - gates_window_width,
+                                  height - gates_window_height, width, height,
+                                  fill="grey50")
+        gate_a = self.cav.create_rectangle(1075, 250, 1125, 280, fill="red",
+                                           tags=("gate_and", 1))
+        self.cav.tag_bind(gate_a, "<ButtonRelease-1>", self.release)
 
     def release(self, event):
         """ Fonction initialisant le placement de la porte lorsque l'on
@@ -16,7 +23,7 @@ class Gate:
         sens = self.cav.gettags("current")[1]
         x = event.x
         y = event.y
-        self.grid.check_placement(x, y, gate_key, sens)
+        self.circuit.check_placement(x, y, gate_key, sens)
 
     def rotate(self, event, id_gate):
         """ Foncion permettant de faire tourner une porte à 90°. """

@@ -7,31 +7,56 @@ class Circuit:
 
     def __init__(self, cav):
         self.cav = cav
+        self.gates = None
+        self.cav.create_rectangle(x1_circuit, y1_circuit,
+                                  x2_circuit, y2_circuit,
+                                  fill="grey60")
 
-    def check_placement(self, x, y):
+    def check_placement(self, x, y, gate_key, sens):
         """ Fonction permettant de savoir si la porte peut
         être placée dans la zone. """
-        pass
+        if self.check_area(x, y):
+            x, y = self.correct_position(x, y, gate_key)
+            self.placement(x, y, gate_key, sens)
 
     def check_area(self, x, y):
         """ Fonction permettant de savoir si la porte est placée dans
         la zone du circuit. """
-        pass
+        return ((x1_circuit <= x <= x2_circuit)
+                and (y1_circuit <= y <= y2_circuit))
 
-    def correct_position(self, x, y):
+    def correct_position(self, x, y, gate_key):
         """ Fonction corrigeant la position de la porte si sa
         position dépasse la zone du circuit. """
-        pass
+        lengthx = dico_gates[gate_key][0] // 2
+        lengthy = dico_gates[gate_key][1] // 2
+        new_x = x
+        new_y = y
+        if (x < (x1_circuit + lengthx)):
+            new_x = x1_circuit + lengthx
+        elif (x > (x2_circuit - lengthx)):
+            new_x = x2_circuit - lengthx
 
-    def placement(self, x, y):
+        if (y < (y1_circuit + lengthy)):
+            new_y = y1_circuit + lengthy
+        elif (y > (y2_circuit - lengthy)):
+            new_y = y2_circuit - lengthy
+
+        return (new_x, new_y)
+
+    def placement(self, x, y, gate_key, sens):
         """ Fonction affichant la porte
         et remplissant la structure des données. """
-        pass
+        self.display_gate(x, y, gate_key, sens)
 
-    def display_gate(self):
+    def display_gate(self, x, y, gate_key, sens):
         """ Fonction affichant la porte et effectuant les binding
         de celle-ci avec les fonctionns correspondantes. """
-        pass
+        x1 = dico_gates[gate_key][0] // 2
+        y1 = dico_gates[gate_key][1] // 2
+        self.cav.create_rectangle(x - x1, y - y1, x + x1, y + y1,
+                                  fill=dico_gates[gate_key][2],
+                                  tags=(gate_key, sens))
 
     def init_move_gate(self):
         """ Fonction initialisant le déplacement d'une porte. """
