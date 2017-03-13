@@ -9,6 +9,7 @@ class Gate:
         self.cav = cav
         self.circuit = circuit
         self.circuit.gates = self
+        self.coord_move = []
 
     def create(self):
         """ Fonction initialisant la création des portes. """
@@ -59,18 +60,18 @@ class Gate:
     def init_move_gate(self, event, gate_id, sens):
         """ Fonction initialisant le déplacement d'une porte en
         plaçant le curseur au centre de celle-ci. """
-        self.coord_move = [event.x, event.y]
         gate_key = self.cav.gettags(gate_id)[0]
-        if int(sens) % 2 != 0:
-            self.cav.coords(gate_id, event.x - (dico_gates[gate_key][0] // 2),
-                            event.y - (dico_gates[gate_key][1] // 2),
-                            event.x + (dico_gates[gate_key][0] // 2),
-                            event.y + (dico_gates[gate_key][1] // 2))
-        else:
-            self.cav.coords(gate_id, event.x - (dico_gates[gate_key][1] // 2),
-                            event.y - (dico_gates[gate_key][0] // 2),
-                            event.x + (dico_gates[gate_key][1] // 2),
-                            event.y + (dico_gates[gate_key][0] // 2))
+        lengthx = dico_gates[gate_key][0] // 2
+        lengthy = dico_gates[gate_key][1] // 2
+        self.coord_move = [event.x, event.y]
+        if ((x1_circuit + lengthx < event.x < x2_circuit - lengthx)
+           and (y1_circuit + lengthy < event.y < y2_circuit - lengthy)):
+            if int(sens) % 2 != 0:
+                self.cav.coords(gate_id, event.x - lengthx, event.y - lengthy,
+                                event.x + lengthx, event.y + lengthy)
+            else:
+                self.cav.coords(gate_id, event.x - lengthy, event.y - lengthx,
+                                event.x + lengthy, event.y + lengthx)
 
     def move_gate(self, event, id_gate, sens):
         """ Fonction permettant le déplacement de la porte et des fils. """

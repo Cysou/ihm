@@ -11,7 +11,6 @@ class Circuit:
         self.cav.create_rectangle(x1_circuit, y1_circuit,
                                   x2_circuit, y2_circuit,
                                   fill="grey60")
-        self.coord_move = []
 
     def check_placement(self, x, y, gate_key, sens):
         """ Fonction permettant de savoir si la porte peut
