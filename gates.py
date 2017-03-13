@@ -17,7 +17,18 @@ class Gate:
                                   fill="grey50")
         gate_a = self.cav.create_rectangle(1075, 250, 1125, 280, fill="red",
                                            tags=("gate_and", 1))
+        gate_o = self.cav.create_rectangle(1075, 330, 1125, 360, fill="blue",
+                                           tags=("gate_or", 1))
+        gate_xo = self.cav.create_rectangle(1075, 410, 1125, 440,
+                                            fill="seagreen",
+                                            tags=("gate_xor", 1))
+        gate_n = self.cav.create_rectangle(1075, 490, 1125, 520,
+                                           fill="purple",
+                                           tags=("gate_not", 1))
         self.cav.tag_bind(gate_a, "<ButtonRelease-1>", self.release)
+        self.cav.tag_bind(gate_o, "<ButtonRelease-1>", self.release)
+        self.cav.tag_bind(gate_xo, "<ButtonRelease-1>", self.release)
+        self.cav.tag_bind(gate_n, "<ButtonRelease-1>", self.release)
 
     def release(self, event):
         """ Fonction initialisant le placement de la porte lorsque l'on
@@ -38,14 +49,11 @@ class Gate:
         x = (coord[0] + coord[2]) // 2
         y = (coord[1] + coord[3]) // 2
         self.delete_gate(event, id_gate)
-        if not self.grid.check_placement(x, y, tag[0], sens):
-            x, y = self.grid.find_closest(x, y)
-            self.grid.placement(x, y, tag[0], tag[1])
+        if not self.circuit.check_placement(x, y, tag[0], sens):
+            self.circuit.placement(x, y, tag[0], tag[1])
 
     def delete_gate(self, event, id_gate):
         """ Fonction supprimant une porte. """
-        self.grid.delete_matrice(id_gate)
-        self.delete_ee(id_gate)
         self.cav.delete(id_gate)
 
     def move(self, event, id_gate, sens):
@@ -62,17 +70,3 @@ class Gate:
             self.cav.coords(id_gate, newx, newy,
                             newx + grid_squares * dico_gates[gate_key][1],
                             newy + grid_squares * dico_gates[gate_key][0])
-        self.delete_ee(id_gate)
-
-    def enter_exit(self, x, y):
-        """ Fonction plaçant les entrées et la sortie de la porte. """
-        x1 = x * grid_squares
-        y1 = y * grid_squares
-        x2 = x1 + grid_squares
-        y2 = y1 + grid_squares
-        self.cav.create_rectangle(x1, y1, x2, y2, fill="yellow", tags="ee")
-
-    def delete_ee(self, id_gate):
-        self.cav.delete(self.cav.find_above(id_gate))
-        self.cav.delete(self.cav.find_above(id_gate))
-        self.cav.delete(self.cav.find_above(id_gate))

@@ -11,13 +11,16 @@ class Circuit:
         self.cav.create_rectangle(x1_circuit, y1_circuit,
                                   x2_circuit, y2_circuit,
                                   fill="grey60")
+        self.coord_move = []
 
     def check_placement(self, x, y, gate_key, sens):
         """ Fonction permettant de savoir si la porte peut
         être placée dans la zone. """
         if self.check_area(x, y):
-            x, y = self.correct_position(x, y, gate_key)
+            x, y = self.correct_position(x, y, gate_key, sens)
             self.placement(x, y, gate_key, sens)
+            return True
+        return False
 
     def check_area(self, x, y):
         """ Fonction permettant de savoir si la porte est placée dans
@@ -25,11 +28,15 @@ class Circuit:
         return ((x1_circuit <= x <= x2_circuit)
                 and (y1_circuit <= y <= y2_circuit))
 
-    def correct_position(self, x, y, gate_key):
+    def correct_position(self, x, y, gate_key, sens):
         """ Fonction corrigeant la position de la porte si sa
         position dépasse la zone du circuit. """
-        lengthx = dico_gates[gate_key][0] // 2
-        lengthy = dico_gates[gate_key][1] // 2
+        if int(sens) % 2 != 0:
+            lengthx = dico_gates[gate_key][0] // 2
+            lengthy = dico_gates[gate_key][1] // 2
+        else:
+            lengthx = dico_gates[gate_key][1] // 2
+            lengthy = dico_gates[gate_key][0] // 2
         new_x = x
         new_y = y
         if (x < (x1_circuit + lengthx)):
@@ -54,18 +61,52 @@ class Circuit:
         de celle-ci avec les fonctionns correspondantes. """
         x1 = dico_gates[gate_key][0] // 2
         y1 = dico_gates[gate_key][1] // 2
-        gate_id = self.cav.create_rectangle(x - x1, y - y1, x + x1, y + y1,
-                                            fill=dico_gates[gate_key][2],
-                                            tags=(gate_key, sens))
-        self.cav.tag_bind(gate_id, "<Button-1>", self.init_move_gate)
+        if (int(sens) % 2) != 0:
+            gate_id = self.cav.create_rectangle(x - x1, y - y1, x + x1, y + y1,
+                                                fill=dico_gates[gate_key][2],
+                                                tags=(gate_key, sens))
+        else:
+            gate_id = self.cav.create_rectangle(x - y1, y - x1, x + y1, y + x1,
+                                                fill=dico_gates[gate_key][2],
+                                                tags=(gate_key, sens))
 
-    def init_move_gate(self, event):
-        """ Fonction initialisant le déplacement d'une porte. """
-        pass
+        self.cav.tag_bind(gate_id, "<Button-1>",
+                          lambda event: self.init_move_gate(event,
+                                                            gate_id, sens))
+        self.cav.tag_bind(gate_id, "<B1-Motion>",
+                          lambda event: self.move_gate(event, gate_id, sens))
+        self.cav.tag_bind(gate_id, "<Button-3>",
+                          lambda event: self.gates.rotate(event, gate_id))
+        self.cav.tag_bind(gate_id, "<Control-Button-3>",
+                          lambda event: self.gates.delete_gate(event, gate_id))
 
-    def move_gate(self):
+    def init_move_gate(self, event, gate_id, sens):
+        """ Fonction initialisant le déplacement d'une porte en
+        plaçant le curseur au centre de celle-ci. """
+        self.coord_move = [event.x, event.y]
+        gate_key = self.cav.gettags(gate_id)[0]
+        if int(sens) % 2 != 0:
+            self.cav.coords(gate_id, event.x - (dico_gates[gate_key][0] // 2),
+                            event.y - (dico_gates[gate_key][1] // 2),
+                            event.x + (dico_gates[gate_key][0] // 2),
+                            event.y + (dico_gates[gate_key][1] // 2))
+        else:
+            self.cav.coords(gate_id, event.x - (dico_gates[gate_key][1] // 2),
+                            event.y - (dico_gates[gate_key][0] // 2),
+                            event.x + (dico_gates[gate_key][1] // 2),
+                            event.y + (dico_gates[gate_key][0] // 2))
+
+    def move_gate(self, event, id_gate, sens):
         """ Fonction permettant le déplacement de la porte et des fils. """
-        pass
+        x = event.x
+        y = event.y
+        coord = self.cav.coords(id_gate)
+        gate_key = self.cav.gettags(id_gate)[0]
+        x, y = self.correct_position(x, y, gate_key, sens)
+        mv_x = x - self.coord_move[0]
+        mv_y = y - self.coord_move[1]
+        self.cav.move(id_gate, mv_x, mv_y)
+        self.coord_move = [x, y]
 
     def end_move_gate(self):
         """ Fonction finalisant le déplacement de la porte
