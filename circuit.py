@@ -55,6 +55,7 @@ class Circuit:
         """ Fonction affichant la porte
         et remplissant la structure des données. """
         self.display_gate(x, y, gate_key, sens)
+        self.fill_structure
 
     def display_gate(self, x, y, gate_key, sens):
         """ Fonction affichant la porte et effectuant les binding
@@ -71,47 +72,16 @@ class Circuit:
                                                 tags=(gate_key, sens))
 
         self.cav.tag_bind(gate_id, "<Button-1>",
-                          lambda event: self.init_move_gate(event,
-                                                            gate_id, sens))
+                          lambda event: self.gates.init_move_gate(event,
+                                                                  gate_id,
+                                                                  sens))
         self.cav.tag_bind(gate_id, "<B1-Motion>",
-                          lambda event: self.move_gate(event, gate_id, sens))
+                          lambda event: self.gates.move_gate(event,
+                                                             gate_id, sens))
         self.cav.tag_bind(gate_id, "<Button-3>",
                           lambda event: self.gates.rotate(event, gate_id))
         self.cav.tag_bind(gate_id, "<Control-Button-3>",
                           lambda event: self.gates.delete_gate(event, gate_id))
-
-    def init_move_gate(self, event, gate_id, sens):
-        """ Fonction initialisant le déplacement d'une porte en
-        plaçant le curseur au centre de celle-ci. """
-        self.coord_move = [event.x, event.y]
-        gate_key = self.cav.gettags(gate_id)[0]
-        if int(sens) % 2 != 0:
-            self.cav.coords(gate_id, event.x - (dico_gates[gate_key][0] // 2),
-                            event.y - (dico_gates[gate_key][1] // 2),
-                            event.x + (dico_gates[gate_key][0] // 2),
-                            event.y + (dico_gates[gate_key][1] // 2))
-        else:
-            self.cav.coords(gate_id, event.x - (dico_gates[gate_key][1] // 2),
-                            event.y - (dico_gates[gate_key][0] // 2),
-                            event.x + (dico_gates[gate_key][1] // 2),
-                            event.y + (dico_gates[gate_key][0] // 2))
-
-    def move_gate(self, event, id_gate, sens):
-        """ Fonction permettant le déplacement de la porte et des fils. """
-        x = event.x
-        y = event.y
-        coord = self.cav.coords(id_gate)
-        gate_key = self.cav.gettags(id_gate)[0]
-        x, y = self.correct_position(x, y, gate_key, sens)
-        mv_x = x - self.coord_move[0]
-        mv_y = y - self.coord_move[1]
-        self.cav.move(id_gate, mv_x, mv_y)
-        self.coord_move = [x, y]
-
-    def end_move_gate(self):
-        """ Fonction finalisant le déplacement de la porte
-        et changeant la structure de données. """
-        pass
 
     def fill_structure(self):
         """ Fonction remplissant la structure des données. """
