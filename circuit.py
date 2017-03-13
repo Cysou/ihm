@@ -55,7 +55,7 @@ class Circuit:
         """ Fonction affichant la porte
         et remplissant la structure des données. """
         self.display_gate(x, y, gate_key, sens)
-        self.fill_structure
+        self.fill_structure()
 
     def display_gate(self, x, y, gate_key, sens):
         """ Fonction affichant la porte et effectuant les binding
