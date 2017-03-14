@@ -64,8 +64,8 @@ class Gate:
         lengthx = dico_gates[gate_key][0] // 2
         lengthy = dico_gates[gate_key][1] // 2
         self.coord_move = [event.x, event.y]
-        if ((x1_circuit + lengthx < event.x < x2_circuit - lengthx)
-           and (y1_circuit + lengthy < event.y < y2_circuit - lengthy)):
+        if ((x1_circuit + lengthx < event.x < x2_circuit - lengthx) and
+           (y1_circuit + lengthy < event.y < y2_circuit - lengthy)):
             if int(sens) % 2 != 0:
                 self.cav.coords(gate_id, event.x - lengthx, event.y - lengthy,
                                 event.x + lengthx, event.y + lengthy)
@@ -77,7 +77,6 @@ class Gate:
         """ Fonction permettant le déplacement de la porte et des fils. """
         x = event.x
         y = event.y
-        coord = self.cav.coords(id_gate)
         gate_key = self.cav.gettags(id_gate)[0]
         x, y = self.circuit.correct_position(x, y, gate_key, sens)
         mv_x = x - self.coord_move[0]
