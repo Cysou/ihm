@@ -24,8 +24,8 @@ class Circuit:
     def check_area(self, x, y):
         """ Fonction permettant de savoir si la porte est placée dans
         la zone du circuit. """
-        return ((x1_circuit <= x <= x2_circuit)
-                and (y1_circuit <= y <= y2_circuit))
+        return ((x1_circuit <= x <= x2_circuit) and
+                (y1_circuit <= y <= y2_circuit))
 
     def correct_position(self, x, y, gate_key, sens):
         """ Fonction corrigeant la position de la porte si sa
@@ -77,6 +77,8 @@ class Circuit:
         self.cav.tag_bind(gate_id, "<B1-Motion>",
                           lambda event: self.gates.move_gate(event,
                                                              gate_id, sens))
+        self.cav.tag_bind(gate_id, "<ButtonRelease-1>",
+                          lambda event: self.gates.end_move_gate(event))
         self.cav.tag_bind(gate_id, "<Button-3>",
                           lambda event: self.gates.rotate(event, gate_id))
         self.cav.tag_bind(gate_id, "<Control-Button-3>",

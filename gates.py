@@ -60,32 +60,34 @@ class Gate:
     def init_move_gate(self, event, gate_id, sens):
         """ Fonction initialisant le déplacement d'une porte en
         plaçant le curseur au centre de celle-ci. """
-        gate_key = self.cav.gettags(gate_id)[0]
-        lengthx = dico_gates[gate_key][0] // 2
-        lengthy = dico_gates[gate_key][1] // 2
-        self.coord_move = [event.x, event.y]
+        self.coord_move.append(event.x - self.cav.coords(gate_id)[0])
+        self.coord_move.append(event.y - self.cav.coords(gate_id)[1])
 
-    def move_gate(self, event, id_gate, sens):
+    def move_gate(self, event, gate_id, sens):
         """ Fonction permettant le déplacement de la porte et des fils. """
-        x = event.x
-        y = event.y
-        gate_key = self.cav.gettags(id_gate)[0]
-        x, y = self.circuit.correct_position(x, y, gate_key, sens)
-        mv_x = x - self.coord_move[0]
-        mv_y = y - self.coord_move[1]
-        self.cav.move(id_gate, mv_x, mv_y)
-        self.coord_move = [x, y]
+        gate_key = self.cav.gettags(gate_id)[0]
+        lengthx = dico_gates[gate_key][0]
+        lengthy = dico_gates[gate_key][1]
+        x1 = event.x - self.coord_move[0]
+        y1 = event.y - self.coord_move[1]
+        x2 = x1 + lengthx
+        y2 = y1 + lengthy
+        if (x1 < x1_circuit):
+            x1 = x1_circuit
+            x2 = x1 + lengthx
+        elif (x2 > x2_circuit):
+            x2 = x2_circuit
+            x1 = x2 - lengthx
 
-        lengthx = dico_gates[gate_key][0] // 2
-        lengthy = dico_gates[gate_key][1] // 2
-        x_mid = self.cav.coords(id_gate)[0] + lengthx
-        y_mid = self.cav.coords(id_gate)[1] + lengthy
-        x_mid, y_mid = self.circuit.correct_position(x_mid, y_mid,
-                                                     gate_key, sens)
-        self.cav.coords(id_gate, x_mid - lengthx, y_mid - lengthy,
-                        x_mid + lengthx, y_mid + lengthy)
+        if (y1 < y1_circuit):
+            y1 = y1_circuit
+            y2 = y1 + lengthy
+        elif (y2 > y2_circuit):
+            y2 = y2_circuit
+            y1 = y2 - lengthy
+        self.cav.coords(gate_id, x1, y1, x1 + lengthx, y1 + lengthy)
 
-    def end_move_gate(self):
+    def end_move_gate(self, event):
         """ Fonction finalisant le déplacement de la porte
         et changeant la structure de données. """
-        pass
+        self.coord_move = []
