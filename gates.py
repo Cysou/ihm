@@ -64,14 +64,6 @@ class Gate:
         lengthx = dico_gates[gate_key][0] // 2
         lengthy = dico_gates[gate_key][1] // 2
         self.coord_move = [event.x, event.y]
-        if ((x1_circuit + lengthx < event.x < x2_circuit - lengthx) and
-           (y1_circuit + lengthy < event.y < y2_circuit - lengthy)):
-            if int(sens) % 2 != 0:
-                self.cav.coords(gate_id, event.x - lengthx, event.y - lengthy,
-                                event.x + lengthx, event.y + lengthy)
-            else:
-                self.cav.coords(gate_id, event.x - lengthy, event.y - lengthx,
-                                event.x + lengthy, event.y + lengthx)
 
     def move_gate(self, event, id_gate, sens):
         """ Fonction permettant le déplacement de la porte et des fils. """
@@ -83,6 +75,15 @@ class Gate:
         mv_y = y - self.coord_move[1]
         self.cav.move(id_gate, mv_x, mv_y)
         self.coord_move = [x, y]
+
+        lengthx = dico_gates[gate_key][0] // 2
+        lengthy = dico_gates[gate_key][1] // 2
+        x_mid = self.cav.coords(id_gate)[0] + lengthx
+        y_mid = self.cav.coords(id_gate)[1] + lengthy
+        x_mid, y_mid = self.circuit.correct_position(x_mid, y_mid,
+                                                     gate_key, sens)
+        self.cav.coords(id_gate, x_mid - lengthx, y_mid - lengthy,
+                        x_mid + lengthx, y_mid + lengthy)
 
     def end_move_gate(self):
         """ Fonction finalisant le déplacement de la porte
