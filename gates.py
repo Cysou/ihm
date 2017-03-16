@@ -62,16 +62,22 @@ class Gate:
         plaçant le curseur au centre de celle-ci. """
         self.coord_move.append(event.x - self.cav.coords(gate_id)[0])
         self.coord_move.append(event.y - self.cav.coords(gate_id)[1])
+        self.cav.lift(gate_id)
 
     def move_gate(self, event, gate_id, sens):
         """ Fonction permettant le déplacement de la porte et des fils. """
         gate_key = self.cav.gettags(gate_id)[0]
-        lengthx = dico_gates[gate_key][0]
-        lengthy = dico_gates[gate_key][1]
+        if int(sens) % 2 != 0:
+            lengthx = dico_gates[gate_key][0]
+            lengthy = dico_gates[gate_key][1]
+        else:
+            lengthx = dico_gates[gate_key][1]
+            lengthy = dico_gates[gate_key][0]
         x1 = event.x - self.coord_move[0]
         y1 = event.y - self.coord_move[1]
         x2 = x1 + lengthx
         y2 = y1 + lengthy
+
         if (x1 < x1_circuit):
             x1 = x1_circuit
             x2 = x1 + lengthx
