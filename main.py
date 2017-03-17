@@ -14,5 +14,6 @@ if __name__ == "__main__":
     # classes
     circuit = Circuit(cav)
     gate = Gate(cav, circuit)
+    circuit.init()
     gate.create()
     root.mainloop()

@@ -16,14 +16,14 @@ class Gate:
         self.cav.create_rectangle(width - gates_window_width,
                                   height - gates_window_height, width, height,
                                   fill="grey50")
-        gate_a = self.cav.create_rectangle(1075, 250, 1125, 280, fill="red",
+        gate_a = self.cav.create_rectangle(1075, 280, 1125, 310, fill="red",
                                            tags=("gate_and", 1))
-        gate_o = self.cav.create_rectangle(1075, 330, 1125, 360, fill="blue",
+        gate_o = self.cav.create_rectangle(1075, 360, 1125, 390, fill="blue",
                                            tags=("gate_or", 1))
-        gate_xo = self.cav.create_rectangle(1075, 410, 1125, 440,
+        gate_xo = self.cav.create_rectangle(1075, 440, 1125, 470,
                                             fill="seagreen",
                                             tags=("gate_xor", 1))
-        gate_n = self.cav.create_rectangle(1075, 490, 1125, 520,
+        gate_n = self.cav.create_rectangle(1075, 520, 1125, 550,
                                            fill="purple",
                                            tags=("gate_not", 1))
         self.cav.tag_bind(gate_a, "<ButtonRelease-1>", self.release)
@@ -97,3 +97,4 @@ class Gate:
         """ Fonction finalisant le déplacement de la porte
         et changeant la structure de données. """
         self.coord_move = []
+        self.circuit.fill_structure()

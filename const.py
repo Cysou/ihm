@@ -22,3 +22,8 @@ x1_circuit = 0
 y1_circuit = 75
 x2_circuit = 1000
 y2_circuit = 675
+
+
+# sensor
+sensor_width = 20
+sensor_heigth = 20

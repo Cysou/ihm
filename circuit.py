@@ -8,9 +8,6 @@ class Circuit:
     def __init__(self, cav):
         self.cav = cav
         self.gates = None
-        self.cav.create_rectangle(x1_circuit, y1_circuit,
-                                  x2_circuit, y2_circuit,
-                                  fill="grey60")
 
     def check_placement(self, x, y, gate_key, sens):
         """ Fonction permettant de savoir si la porte peut
@@ -89,13 +86,23 @@ class Circuit:
         pass
 
     def init(self):
-        """ Fonction initialisant la parie du circuit lors du lancement. """
-        pass
+        """ Fonction initialisant la partie du circuit lors du lancement. """
+        self.cav.create_rectangle(x1_circuit, y1_circuit,
+                                  x2_circuit, y2_circuit,
+                                  fill="grey60")
+        self.init_sensor()
 
-    def init_sensor(arg):
+    def init_sensor(self):
         """ Fonction initialisant et affichant les capteurs.
         Effectue également les bindings. """
-        pass
+        self.cav.create_rectangle(0, 185, 20, 205,
+                                  fill="deeppink", tags="capteur")
+        self.cav.create_rectangle(0, 305, 20, 325,
+                                  fill="deeppink", tags="capteur")
+        self.cav.create_rectangle(0, 425, 20, 445,
+                                  fill="deeppink", tags="capteur")
+        self.cav.create_rectangle(0, 545, 20, 565,
+                                  fill="deeppink", tags="capteur")
 
     def intit_motor(self):
         """ Fonction initialisant et affichant les moteurs.
