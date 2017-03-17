@@ -89,9 +89,9 @@ class Circuit:
         self.cav.tag_bind(gate_id, "<ButtonRelease-3>",
                           lambda event: self.gates.end_move_gate())
         self.cav.tag_bind(gate_id, "<Control-Button-1>",
-                          lambda event: self.gates.rotate(gate_id))
+                          lambda event: self.gates.rotate(event, gate_id))
         self.cav.tag_bind(gate_id, "<Control-Button-3>",
-                          lambda event: self.gates.delete_gate(gate_id))
+                          lambda event: self.gates.delete_gate(event, gate_id))
 
     def fill_structure(self):
         """ Fonction remplissant la structure des données. """
@@ -116,7 +116,7 @@ class Circuit:
                                             y1 + sensor_height,
                                             fill="deeppink", tags="sensor")
             self.cav.tag_bind(ids, "<Button-1>",
-                              lambda event: self.init_wire(ids))
+                              lambda event: self.init_wire(event, x2, y1 + (sensor_width // 2)))
             y1 += placement
 
     def intit_motor(self):
@@ -130,7 +130,9 @@ class Circuit:
                                             y1 + motor_height,
                                             fill="yellow", tags="motor")
             self.cav.tag_bind(idm, "<Button-1>",
-                              lambda event: self.init_wire(idm))
+                              lambda event: self.init_wire(event, x1, y1 + (motor_width // 2)))
+            self.cav.tag_bind(idm, "<B1-Motion>",
+                              lambda event: self.move_wire(event))
             y1 += placement
 
     def detect_click(self, event, gate_id, gate_key):
@@ -143,17 +145,19 @@ class Circuit:
         lengthx = dico_gates[gate_key][0] // 2
         lengthy = dico_gates[gate_key][1] // 2
         if (x >= (gate_coords[0] + lengthx)):
-            self.tags_io_wire.append("output")
-            self.init_wire(gate_coords[2], gate_coords[1] + lengthy)
+            self.tags_io_wire.append("input")
+            self.init_wire(event, gate_coords[2], gate_coords[1] + lengthy)
         elif ((x < (gate_coords[0] + lengthx)) and
               (y <= (gate_coords[1] + lengthy))):
-            self.tags_io_wire.append("input")
-            self.init_wire(gate_coords[0], gate_coords[1] + (lengthy // 2))
+            self.tags_io_wire.append("output")
+            self.init_wire(event, gate_coords[0],
+                           gate_coords[1] + (lengthy // 2))
         else:
-            self.tags_io_wire.append("input")
-            self.init_wire(gate_coords[0], gate_coords[3] - (lengthy // 2))
+            self.tags_io_wire.append("output")
+            self.init_wire(event, gate_coords[0],
+                           gate_coords[3] - (lengthy // 2))
 
-    def init_wire(self, x, y):
+    def init_wire(self, event, x, y):
         """ Fonction créant et affichant les fils et remplissant la
         structure de données. """
         wire_id = self.cav.create_line(x, y, x, y, tags="line")
@@ -172,5 +176,33 @@ class Circuit:
         bien sur une entrée/sortie. """
         self.begin_wire = []
         ident = self.cav.find_overlapping(event.x, event.y,
-                                          event.x, event.y)[1]
-        print(self.cav.gettags(ident)[0])
+                                          event.x, event.y)
+        if (len(ident) > 2):
+            ident = ident[-2]
+            tag = self.cav.gettags(ident)[0]
+            if (tag in ["motor", "input"]):
+                self.tags_io_wire.append("output")
+            elif (tag in ["sensor", "output"]):
+                self.tags_io_wire.append("input")
+            self.check_wire(ident)
+        else:
+            ident = ident[-1]
+            self.cav.delete(ident)
+            self.tags_io_wire = []
+
+    def check_wire(self, ident):
+        """ Fonction vérifiant la validité du fil. """
+        if (self.tags_io_wire[0] != self.tags_io_wire[1]):
+            self.create_wire()
+            self.fill_structure()
+        elif (self.tags_io_wire[0] == "input"):
+            # Pour pop-up signalant l'invalidité du fil.
+            pass
+        elif (self.tags_io_wire[0] == "output"):
+            # Pour pop-up signalant l'invalidité du fil.
+            pass
+        self.tags_io_wire = []
+
+    def create_wire(self):
+        """ Fonction créant le fil de manière brisée. """
+        pass
