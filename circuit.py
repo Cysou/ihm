@@ -8,6 +8,11 @@ class Circuit:
     def __init__(self, cav):
         self.cav = cav
         self.gates = None
+        self.struct_input = {}
+        self.struct_output = {}
+        self.struct_wire = {}
+        self.tags_io_wire = []
+        self.begin_wire = []
 
     def check_placement(self, x, y, gate_key, sens):
         """ Fonction permettant de savoir si la porte peut
@@ -67,19 +72,26 @@ class Circuit:
                                                 fill=dico_gates[gate_key][2],
                                                 tags=(gate_key, sens))
 
-        self.cav.tag_bind(gate_id, "<Button-1>",
+        self.cav.tag_bind(gate_id, "<Button-3>",
                           lambda event: self.gates.init_move_gate(event,
                                                                   gate_id,
                                                                   sens))
-        self.cav.tag_bind(gate_id, "<B1-Motion>",
+        self.cav.tag_bind(gate_id, "<B3-Motion>",
                           lambda event: self.gates.move_gate(event,
                                                              gate_id, sens))
+        self.cav.tag_bind(gate_id, "<Button-1>",
+                          lambda event: self.detect_click(event,
+                                                          gate_id, gate_key))
+        self.cav.tag_bind(gate_id, "<B1-Motion>",
+                          lambda event: self.move_wire(event))
         self.cav.tag_bind(gate_id, "<ButtonRelease-1>",
-                          lambda event: self.gates.end_move_gate(event))
-        self.cav.tag_bind(gate_id, "<Button-3>",
-                          lambda event: self.gates.rotate(event, gate_id))
+                          lambda event: self.end_wire(event))
+        self.cav.tag_bind(gate_id, "<ButtonRelease-3>",
+                          lambda event: self.gates.end_move_gate())
+        self.cav.tag_bind(gate_id, "<Control-Button-1>",
+                          lambda event: self.gates.rotate(gate_id))
         self.cav.tag_bind(gate_id, "<Control-Button-3>",
-                          lambda event: self.gates.delete_gate(event, gate_id))
+                          lambda event: self.gates.delete_gate(gate_id))
 
     def fill_structure(self):
         """ Fonction remplissant la structure des données. """
@@ -100,9 +112,11 @@ class Circuit:
         y1 = y1_circuit + placement - (sensor_height // 2)
         x1 = 0
         for i in range(0, 4):
-            self.cav.create_rectangle(x1, y1, x1 + sensor_width,
-                                      y1 + sensor_height,
-                                      fill="deeppink", tags="capteur")
+            ids = self.cav.create_rectangle(x1, y1, x1 + sensor_width,
+                                            y1 + sensor_height,
+                                            fill="deeppink", tags="sensor")
+            self.cav.tag_bind(ids, "<Button-1>",
+                              lambda event: self.init_wire(ids))
             y1 += placement
 
     def intit_motor(self):
@@ -112,21 +126,51 @@ class Circuit:
         y1 = y1_circuit + placement - (motor_height // 2)
         x1 = x2_circuit - motor_width
         for i in range(0, 4):
-            self.cav.create_rectangle(x1, y1, x1 + motor_width,
-                                      y1 + motor_height,
-                                      fill="yellow", tags="moteur")
+            idm = self.cav.create_rectangle(x1, y1, x1 + motor_width,
+                                            y1 + motor_height,
+                                            fill="yellow", tags="motor")
+            self.cav.tag_bind(idm, "<Button-1>",
+                              lambda event: self.init_wire(idm))
             y1 += placement
 
-    def init_wire(self, x, y, x1, y1):
-        """ Fonction créant et affichant les fils. """
-        pass
+    def detect_click(self, event, gate_id, gate_key):
+        """ Fonction permettant de savoir sur quelle partie
+        de la porte on click, et ainsi savoir s'il s'agit
+        d'une entrée ou d'un sortie. """
+        gate_coords = self.cav.coords(gate_id)
+        x = event.x
+        y = event.y
+        lengthx = dico_gates[gate_key][0] // 2
+        lengthy = dico_gates[gate_key][1] // 2
+        if (x >= (gate_coords[0] + lengthx)):
+            self.tags_io_wire.append("output")
+            self.init_wire(gate_coords[2], gate_coords[1] + lengthy)
+        elif ((x < (gate_coords[0] + lengthx)) and
+              (y <= (gate_coords[1] + lengthy))):
+            self.tags_io_wire.append("input")
+            self.init_wire(gate_coords[0], gate_coords[1] + (lengthy // 2))
+        else:
+            self.tags_io_wire.append("input")
+            self.init_wire(gate_coords[0], gate_coords[3] - (lengthy // 2))
 
-    def move_wire(self, x, y):
+    def init_wire(self, x, y):
+        """ Fonction créant et affichant les fils et remplissant la
+        structure de données. """
+        wire_id = self.cav.create_line(x, y, x, y, tags="line")
+        self.begin_wire = [wire_id, x, y]
+
+    def move_wire(self, event):
         """ Fonction supprimant et recréant le fil
         à chaque mouvement de la souris. """
-        pass
+        wire_id = self.begin_wire[0]
+        x = event.x
+        y = event.y
+        self.cav.coords(wire_id, self.begin_wire[1], self.begin_wire[2], x, y)
 
-    def end_wire(self):
+    def end_wire(self, event):
         """ Fonction simulant un event pour vérifier que le fil fini
         bien sur une entrée/sortie. """
-        pass
+        self.begin_wire = []
+        ident = self.cav.find_overlapping(event.x, event.y,
+                                          event.x, event.y)[1]
+        print(self.cav.gettags(ident)[0])

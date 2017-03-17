@@ -45,8 +45,6 @@ class Gate:
         coord = self.cav.coords(id_gate)
         tag = self.cav.gettags("current")
         sens = int(tag[1]) + 1
-        if sens == 5:
-            sens = 1
         x = (coord[0] + coord[2]) // 2
         y = (coord[1] + coord[3]) // 2
         self.delete_gate(event, id_gate)
@@ -67,7 +65,7 @@ class Gate:
     def move_gate(self, event, gate_id, sens):
         """ Fonction permettant le déplacement de la porte et des fils. """
         gate_key = self.cav.gettags(gate_id)[0]
-        if int(sens) % 2 != 0:
+        if (int(sens) % 2 != 0):
             lengthx = dico_gates[gate_key][0]
             lengthy = dico_gates[gate_key][1]
         else:
@@ -93,7 +91,7 @@ class Gate:
             y1 = y2 - lengthy
         self.cav.coords(gate_id, x1, y1, x1 + lengthx, y1 + lengthy)
 
-    def end_move_gate(self, event):
+    def end_move_gate(self):
         """ Fonction finalisant le déplacement de la porte
         et changeant la structure de données. """
         self.coord_move = []

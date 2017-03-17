@@ -2,11 +2,6 @@
 width = 1200
 height = 675
 
-# map.py
-map_width = 200
-map_height = 200
-map_square = 10  # doit être divisible par width et height
-
 # gates.py
 # la taille des portes doit être impaire
 gates_window_width = 200
