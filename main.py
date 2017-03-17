@@ -2,6 +2,7 @@ import tkinter as tk
 import highlight as m_highlight
 import layout as m_layout
 import editor as m_editor
+from const import *
 
 def main_loop():
 

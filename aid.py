@@ -9,7 +9,10 @@ class Aid:
         self.cav = cav
         self.dico = {}
 
-    def create(self, text, bbx1, bby1, bbx2, bby2, fill="white", outline="black", smooth=1, splinesteps=12):
+    def create(self, text, bbx1, bby1, bbx2="n", bby2="n", fill="white", outline="black"):
+        if bbx2 == "n" and bby2 == "n":
+            bbx2 = bbx1
+            bby2 = bby1
         Aid.compteur += 1
         self.dico[Aid.compteur] = [aid_sec * 1000]
         coords = self.create_coords(bbx1, bby1, bbx2, bby2)

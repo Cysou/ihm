@@ -3,6 +3,8 @@ from PIL import Image, ImageTk
 import os
 from const import *
 from entry import *
+from astar import *
+from aid import *
 
 class Editor:
 
@@ -38,6 +40,8 @@ class Editor:
         self.bind()
 
         self.entry = Entry(cav)
+        self.astar = Astar()
+        self.aid = Aid(cav)
 
     def set_layout_uncover(self, func):
         self.layout_uncover = func
@@ -363,9 +367,25 @@ class Editor:
         self.layout_uncover()
 
     def save_map(self):
-        string = self.entry.get_string()
-        self.reset_entry()
-        if len(string) > 0:
+        matrix = self.transform_matrix()
+        if self.astar.search(matrix, 1, 2, 3):
+            print(1)
+            string = self.entry.get_string()
+            if len(string) > 0:
+                self.reset_entry()
+                self.write_map(string)
+            else:
+                text = "Veuiller ajouter un nom"
+                self.aid.create(text,
+                                editor_entry_x,
+                                editor_entry_y)
+        else:
+            text = "Le robot ne peut pas passer"
+            self.aid.create(text,
+                     editor_grid_x1 + editor_grid_width,
+                     editor_grid_y1 + editor_grid_height)
+
+    def write_map(self, string):
             path = "map/custom/" + string + ".map"
             with open(path, "w") as fd:
                 for line in self.matrix:
@@ -380,6 +400,19 @@ class Editor:
                             fd.write("3 ")
                     fd.write("\n")
 
+    def transform_matrix(self):
+        new_matrix = copy.deepcopy(self.matrix)
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[0])):
+                if j == 0:
+                    new_matrix[i][j] = 0
+                elif type(j) == list:
+                    new_matrix[i][j] = 1
+                elif j == self.idd_start:
+                    new_matrix[i][j] = 2
+                elif j == self.idd_end:
+                    new_matrix[i][j] = 3
+        return new_matrix
 
     # Entry
     def create_entry(self):

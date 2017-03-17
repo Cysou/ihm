@@ -3,6 +3,11 @@ import tkinter as tk
 def test(event):
     cav.tag_raise("1", "3")
 
+def test2(event):
+    idd = event.widget.gettag("current")
+    tag = event.widget.find_withtag("current")
+    print(idd)
+
 if __name__ == "__main__":
     root = tk.Tk()
     cav = tk.Canvas(root, width=1200, height=675, highlightthickness=0, bg="black")
@@ -13,6 +18,8 @@ if __name__ == "__main__":
     cav.create_rectangle(20, 20, 120, 120, fill="blue", tags="2")
     cav.create_rectangle(40, 40, 140, 140, fill="grey", tags="3")
 
-    cav.bind("<Button-1>", test)
+    #cav.bind("<Button-1>", test)
+
+    cav.bind("<Button-1>", test2)
 
     root.mainloop()
