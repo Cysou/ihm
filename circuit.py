@@ -27,7 +27,7 @@ class Circuit:
     def correct_position(self, x, y, gate_key, sens):
         """ Fonction corrigeant la position de la porte si sa
         position dépasse la zone du circuit. """
-        if int(sens) % 2 != 0:
+        if (int(sens) % 2 != 0):
             lengthx = dico_gates[gate_key][0] // 2
             lengthy = dico_gates[gate_key][1] // 2
         else:
@@ -91,23 +91,31 @@ class Circuit:
                                   x2_circuit, y2_circuit,
                                   fill="grey60")
         self.init_sensor()
+        self.intit_motor()
 
     def init_sensor(self):
         """ Fonction initialisant et affichant les capteurs.
-        Effectue également les bindings. """
-        self.cav.create_rectangle(0, 185, 20, 205,
-                                  fill="deeppink", tags="capteur")
-        self.cav.create_rectangle(0, 305, 20, 325,
-                                  fill="deeppink", tags="capteur")
-        self.cav.create_rectangle(0, 425, 20, 445,
-                                  fill="deeppink", tags="capteur")
-        self.cav.create_rectangle(0, 545, 20, 565,
-                                  fill="deeppink", tags="capteur")
+        #Effectue également les bindings. """
+        placement = (y2_circuit - y1_circuit) // 5
+        y1 = y1_circuit + placement - (sensor_height // 2)
+        x1 = 0
+        for i in range(0, 4):
+            self.cav.create_rectangle(x1, y1, x1 + sensor_width,
+                                      y1 + sensor_height,
+                                      fill="deeppink", tags="capteur")
+            y1 += placement
 
     def intit_motor(self):
         """ Fonction initialisant et affichant les moteurs.
-        Effectue également les bindings """
-        pass
+        #Effectue également les bindings """
+        placement = (y2_circuit - y1_circuit) // 5
+        y1 = y1_circuit + placement - (motor_height // 2)
+        x1 = x2_circuit - motor_width
+        for i in range(0, 4):
+            self.cav.create_rectangle(x1, y1, x1 + motor_width,
+                                      y1 + motor_height,
+                                      fill="yellow", tags="moteur")
+            y1 += placement
 
     def init_wire(self, x, y, x1, y1):
         """ Fonction créant et affichant les fils. """

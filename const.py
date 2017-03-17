@@ -26,4 +26,8 @@ y2_circuit = 675
 
 # sensor
 sensor_width = 20
-sensor_heigth = 20
+sensor_height = 20
+
+# motor
+motor_width = 20
+motor_height = 20

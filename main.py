@@ -8,7 +8,7 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.resizable(width=tk.FALSE, height=tk.FALSE)
     root.title("Titre")
-    cav = tk.Canvas(root, width=width, height=height)
+    cav = tk.Canvas(root, width=width, height=height, highlightthickness=0)
     cav.pack()
 
     # classes
