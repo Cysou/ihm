@@ -83,8 +83,8 @@ class Circuit:
                           lambda event: self.detect_click(event,
                                                           gate_id,
                                                           gate_key, sens))
-        # self.cav.tag_bind(gate_id, "<B1-Motion>",
-        #                  lambda event: self.move_wire(event))
+        self.cav.tag_bind(gate_id, "<B1-Motion>",
+                          lambda event: self.move_wire(event))
         self.cav.tag_bind(gate_id, "<ButtonRelease-1>",
                           lambda event: self.end_wire(event))
         self.cav.tag_bind(gate_id, "<ButtonRelease-3>",
@@ -182,11 +182,10 @@ class Circuit:
     def end_wire(self, event):
         """ Fonction simulant un event pour vérifier que le fil fini
         bien sur une entrée/sortie. """
-        self.begin_wire = []
         ident = self.cav.find_overlapping(event.x, event.y,
                                           event.x, event.y)
-        if (len(ident) > 1):
-            ident = ident[-1]
+        if (len(ident) > 2):
+            ident = ident[-2]
             tag = self.cav.gettags(ident)[0]
             if (tag in ["motor", "input"]):
                 self.tags_io_wire.append("output")
@@ -194,12 +193,14 @@ class Circuit:
                 self.tags_io_wire.append("input")
             self.check_wire()
         else:
+            ident = ident[-1]
+            self.cav.delete(ident)
             self.tags_io_wire = []
+        self.begin_wire = []
 
     def check_wire(self):
         """ Fonction vérifiant la validité du fil. """
         if (self.tags_io_wire[0] != self.tags_io_wire[1]):
-            self.create_wire()
             self.fill_structure()
         elif (self.tags_io_wire[0] == "input"):
             # Pour pop-up signalant l'invalidité du fil.
@@ -213,13 +214,22 @@ class Circuit:
         """ Fonction créant le fil de manière brisée. """
         wire_id = self.begin_wire[0]
         wire_coord = self.cav.coords(wire_id)
-        self.cav.delete(wire_id)
-        self.cav.create_line(wire_coord[0], wire_coord[1],
-                             (wire_coord[0] + wire_coord[2]) / 2,
-                             wire_coord[1])
-        self.cav.create_line((wire_coord[0] + wire_coord[2]) / 2,
+        # self.cav.delete(wire_id)
+        self.cav.coords(wire_id, wire_coord[0], wire_coord[1],
+                        (wire_coord[0] + wire_coord[2]) / 2,
+                        wire_coord[1],
+                        (wire_coord[0] + wire_coord[2]) / 2,
+                        wire_coord[1],
+                        (wire_coord[0] + wire_coord[2]) / 2,
+                        wire_coord[3],
+                        (wire_coord[0] + wire_coord[2]) / 2,
+                        wire_coord[3], wire_coord[2], wire_coord[3])
+        """self.cav.create_line((wire_coord[0] + wire_coord[2]) / 2,
                              wire_coord[1],
                              (wire_coord[0] + wire_coord[2]) / 2,
-                             wire_coord[3])
+                             wire_coord[3])(wire_coord[0] + wire_coord[2]) / 2,
+                             wire_coord[1],
+                             (wire_coord[0] + wire_coord[2]) / 2,
+                             wire_coord[3]
         self.cav.create_line((wire_coord[0] + wire_coord[2]) / 2,
-                             wire_coord[3], wire_coord[2], wire_coord[3])
+                             wire_coord[3], wire_coord[2], wire_coord[3])"""
