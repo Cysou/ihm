@@ -81,9 +81,10 @@ class Circuit:
                                                              gate_id, sens))
         self.cav.tag_bind(gate_id, "<Button-1>",
                           lambda event: self.detect_click(event,
-                                                          gate_id, gate_key))
-        self.cav.tag_bind(gate_id, "<B1-Motion>",
-                          lambda event: self.move_wire(event))
+                                                          gate_id,
+                                                          gate_key, sens))
+        # self.cav.tag_bind(gate_id, "<B1-Motion>",
+        #                  lambda event: self.move_wire(event))
         self.cav.tag_bind(gate_id, "<ButtonRelease-1>",
                           lambda event: self.end_wire(event))
         self.cav.tag_bind(gate_id, "<ButtonRelease-3>",
@@ -135,15 +136,21 @@ class Circuit:
                               lambda event: self.move_wire(event))
             y1 += placement
 
-    def detect_click(self, event, gate_id, gate_key):
+    def detect_click(self, event, gate_id, gate_key, sens):
         """ Fonction permettant de savoir sur quelle partie
         de la porte on click, et ainsi savoir s'il s'agit
         d'une entrée ou d'un sortie. """
         gate_coords = self.cav.coords(gate_id)
         x = event.x
         y = event.y
-        lengthx = dico_gates[gate_key][0] // 2
-        lengthy = dico_gates[gate_key][1] // 2
+        if (int(sens) % 2 != 0):
+            lengthx = dico_gates[gate_key][0] // 2
+            lengthy = dico_gates[gate_key][1] // 2
+        else:
+            lengthx = dico_gates[gate_key][1] // 2
+            lengthy = dico_gates[gate_key][0] // 2
+
+        # Rajouter cas où la porte est verticale.
         if (x >= (gate_coords[0] + lengthx)):
             self.tags_io_wire.append("input")
             self.init_wire(event, gate_coords[2], gate_coords[1] + lengthy)
@@ -170,6 +177,7 @@ class Circuit:
         x = event.x
         y = event.y
         self.cav.coords(wire_id, self.begin_wire[1], self.begin_wire[2], x, y)
+        self.create_wire()
 
     def end_wire(self, event):
         """ Fonction simulant un event pour vérifier que le fil fini
@@ -177,20 +185,18 @@ class Circuit:
         self.begin_wire = []
         ident = self.cav.find_overlapping(event.x, event.y,
                                           event.x, event.y)
-        if (len(ident) > 2):
-            ident = ident[-2]
+        if (len(ident) > 1):
+            ident = ident[-1]
             tag = self.cav.gettags(ident)[0]
             if (tag in ["motor", "input"]):
                 self.tags_io_wire.append("output")
             elif (tag in ["sensor", "output"]):
                 self.tags_io_wire.append("input")
-            self.check_wire(ident)
+            self.check_wire()
         else:
-            ident = ident[-1]
-            self.cav.delete(ident)
             self.tags_io_wire = []
 
-    def check_wire(self, ident):
+    def check_wire(self):
         """ Fonction vérifiant la validité du fil. """
         if (self.tags_io_wire[0] != self.tags_io_wire[1]):
             self.create_wire()
@@ -205,4 +211,15 @@ class Circuit:
 
     def create_wire(self):
         """ Fonction créant le fil de manière brisée. """
-        pass
+        wire_id = self.begin_wire[0]
+        wire_coord = self.cav.coords(wire_id)
+        self.cav.delete(wire_id)
+        self.cav.create_line(wire_coord[0], wire_coord[1],
+                             (wire_coord[0] + wire_coord[2]) / 2,
+                             wire_coord[1])
+        self.cav.create_line((wire_coord[0] + wire_coord[2]) / 2,
+                             wire_coord[1],
+                             (wire_coord[0] + wire_coord[2]) / 2,
+                             wire_coord[3])
+        self.cav.create_line((wire_coord[0] + wire_coord[2]) / 2,
+                             wire_coord[3], wire_coord[2], wire_coord[3])
