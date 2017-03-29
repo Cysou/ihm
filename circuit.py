@@ -109,7 +109,7 @@ class Circuit:
                                   x2_circuit, y2_circuit,
                                   fill="grey60")
         self.init_sensor()
-        self.intit_motor()
+        self.init_motor()
 
     def init_sensor(self):
         """ Fonction initialisant et affichant les capteurs.
@@ -121,15 +121,13 @@ class Circuit:
             ids = self.cav.create_rectangle(x1, y1, x1 + sensor_width,
                                             y1 + sensor_height,
                                             fill="deeppink", tags="sensor")
-            coords = self.cav.coords(ids)
-            self.cav.tag_bind(ids, "<Button-1>",
-                              lambda event: self.init_wire(event, coords[2],
-                                                           coords[1] + (sensor_width // 2)))
-            self.cav.tag_bind(ids, "<B1-Motion>",
-                              lambda event: self.move_wire(event))
             y1 += placement
+        self.cav.tag_bind("sensor", "<Button-1>",
+                          lambda event: self.get_ms_coords(event))
+        self.cav.tag_bind("sensor", "<B1-Motion>",
+                          lambda event: self.move_wire(event))
 
-    def intit_motor(self):
+    def init_motor(self):
         """ Fonction initialisant et affichant les moteurs.
         #Effectue également les bindings """
         placement = (y2_circuit - y1_circuit) // 5
@@ -139,13 +137,17 @@ class Circuit:
             idm = self.cav.create_rectangle(x1, y1, x1 + motor_width,
                                             y1 + motor_height,
                                             fill="yellow", tags="motor")
-            coords = self.cav.coords(idm)
-            self.cav.tag_bind(idm, "<Button-1>",
-                              lambda event: self.init_wire(event, coords[0],
-                                                           coords[1] + (motor_width // 2)))
-            self.cav.tag_bind(idm, "<B1-Motion>",
-                              lambda event: self.move_wire(event))
             y1 += placement
+        self.cav.tag_bind("motor", "<Button-1>",
+                          lambda event: self.get_ms_coords(event))
+        self.cav.tag_bind("motor", "<B1-Motion>",
+                          lambda event: self.move_wire(event))
+
+    def get_ms_coords(self, event):
+        """ Fonction qui récupère les coordonnées du moteur/capteur
+        pour commencer à tracer le fil. """
+        coord = self.cav.coords(self.cav.find_withtag("current"))
+        self.init_wire(event, coord[0], coord[1])
 
     def detect_click(self, event, gate_id, gate_key, sens):
         """ Fonction permettant de savoir sur quelle partie
@@ -215,6 +217,7 @@ class Circuit:
         """ Fonction créant et affichant les fils et remplissant la
         structure de données. """
         wire_id = self.cav.create_line(x, y, x, y, tags="line")
+        print(x, y)
         self.begin_wire = [wire_id, x, y]
 
     def move_wire(self, event):
