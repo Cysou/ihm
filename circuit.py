@@ -238,8 +238,7 @@ class Circuit:
         bien sur une entrée/sortie. """
         ident = self.cav.find_overlapping(event.x, event.y,
                                           event.x, event.y)
-        if ((len(ident) > 2) and (event.x <= x2_circuit) and
-                (event.y >= y1_circuit)):
+        if (len(ident) > 2):
             ident = ident[-2]
             tag = self.cav.gettags(ident)[0]
             coords = self.cav.coords(ident)
@@ -287,9 +286,9 @@ class Circuit:
                     self.create_wire(x, y)
             self.check_wire()
         else:
-            ident = ident[-1]
-            self.cav.delete(ident)
-            self.tags_io_wire = []
+            if ((event.x <= x2_circuit) and (event.y >= y1_circuit)):
+                self.tags_io_wire = []
+            self.cav.delete(self.begin_wire[0])
         self.begin_wire = []
 
     def check_wire(self):
