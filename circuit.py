@@ -121,11 +121,14 @@ class Circuit:
             ids = self.cav.create_rectangle(x1, y1, x1 + sensor_width,
                                             y1 + sensor_height,
                                             fill="deeppink", tags="sensor")
+            self.cav.tag_bind(ids, "<Button-1>",
+                              lambda event, y1=y1: self.init_wire(event, x1 + sensor_width,
+                                                                  y1 + (sensor_height // 2)))
+            self.cav.tag_bind(ids, "<B1-Motion>",
+                              lambda event: self.move_wire(event))
+            self.cav.tag_bind(ids, "<ButtonRelease-1>",
+                              lambda event: self.end_wire(event))
             y1 += placement
-        self.cav.tag_bind("sensor", "<Button-1>",
-                          lambda event: self.get_ms_coords(event))
-        self.cav.tag_bind("sensor", "<B1-Motion>",
-                          lambda event: self.move_wire(event))
 
     def init_motor(self):
         """ Fonction initialisant et affichant les moteurs.
@@ -137,17 +140,14 @@ class Circuit:
             idm = self.cav.create_rectangle(x1, y1, x1 + motor_width,
                                             y1 + motor_height,
                                             fill="yellow", tags="motor")
+            self.cav.tag_bind(idm, "<Button-1>",
+                              lambda event, y1=y1: self.init_wire(event, x1,
+                                                                  y1 + (motor_height // 2)))
+            self.cav.tag_bind(idm, "<B1-Motion>",
+                              lambda event: self.move_wire(event))
+            self.cav.tag_bind(idm, "<ButtonRelease-1>",
+                              lambda event: self.end_wire(event))
             y1 += placement
-        self.cav.tag_bind("motor", "<Button-1>",
-                          lambda event: self.get_ms_coords(event))
-        self.cav.tag_bind("motor", "<B1-Motion>",
-                          lambda event: self.move_wire(event))
-
-    def get_ms_coords(self, event):
-        """ Fonction qui récupère les coordonnées du moteur/capteur
-        pour commencer à tracer le fil. """
-        coord = self.cav.coords(self.cav.find_withtag("current"))
-        self.init_wire(event, coord[0], coord[1])
 
     def detect_click(self, event, gate_id, gate_key, sens):
         """ Fonction permettant de savoir sur quelle partie
@@ -216,8 +216,12 @@ class Circuit:
     def init_wire(self, event, x, y):
         """ Fonction créant et affichant les fils et remplissant la
         structure de données. """
+        tag = self.cav.gettags("current")[0]
+        if (tag == "motor"):
+            self.tags_io_wire.append("output")
+        elif (tag == "sensor"):
+            self.tags_io_wire.append("input")
         wire_id = self.cav.create_line(x, y, x, y, tags="line")
-        print(x, y)
         self.begin_wire = [wire_id, x, y]
 
     def move_wire(self, event):
@@ -227,33 +231,60 @@ class Circuit:
         x = event.x
         y = event.y
         self.cav.coords(wire_id, self.begin_wire[1], self.begin_wire[2], x, y)
-        self.create_wire()
+        self.create_wire(None, None)
 
     def end_wire(self, event):
         """ Fonction simulant un event pour vérifier que le fil fini
         bien sur une entrée/sortie. """
         ident = self.cav.find_overlapping(event.x, event.y,
                                           event.x, event.y)
-        if (len(ident) > 2):
+        if ((len(ident) > 2) and (event.x <= x2_circuit) and
+                (event.y >= y1_circuit)):
             ident = ident[-2]
             tag = self.cav.gettags(ident)[0]
+            coords = self.cav.coords(ident)
             if (tag in ["motor", "input"]):
                 self.tags_io_wire.append("output")
+                x = coords[0]
+                y = coords[1] + motor_height // 2
+                self.create_wire(x, y)
             elif (tag in ["sensor", "output"]):
                 self.tags_io_wire.append("input")
+                x = coords[2]
+                y = coords[1] + sensor_height // 2
+                self.create_wire(x, y)
             elif (tag in ["gate_and", "gate_or", "gate_xor", "gate_not"]):
                 sens = self.cav.gettags(ident)[1]
-                gate_coords = self.cav.coords(ident)
                 if (int(sens) % 2 != 0):
                     lengthx = dico_gates[tag][0] // 2
                     lengthy = dico_gates[tag][1] // 2
-                    self.detect_click_hor(event, gate_coords,
-                                          tag, lengthx, lengthy)
+                    io = self.detect_click_hor(event, coords,
+                                               tag, lengthx, lengthy)
+                    if (io == 1):
+                        x = coords[2]
+                        y = coords[1] + lengthy
+                    elif (io == 2):
+                        x = coords[0]
+                        y = coords[1] + lengthy // 2
+                    elif (io == 3):
+                        x = coords[0]
+                        y = coords[3] - lengthy // 2
+                    self.create_wire(x, y)
                 else:
                     lengthx = dico_gates[tag][1] // 2
                     lengthy = dico_gates[tag][0] // 2
-                    self.detect_click_vert(event, gate_coords,
-                                           tag, lengthx, lengthy)
+                    io = self.detect_click_vert(event, coords,
+                                                tag, lengthx, lengthy)
+                    if (io == 1):
+                        x = coords[0] + lengthx
+                        y = coords[1] - 1
+                    elif (io == 2):
+                        x = coords[0] + lengthx
+                        y = coords[3] + 1
+                    elif (io == 3):
+                        x = coords[2] - lengthx // 2
+                        y = coords[3] + 1
+                    self.create_wire(x, y)
             self.check_wire()
         else:
             ident = ident[-1]
@@ -273,16 +304,23 @@ class Circuit:
             self.cav.delete(self.begin_wire[0])
         self.tags_io_wire = []
 
-    def create_wire(self):
+    def create_wire(self, x, y):
         """ Fonction créant le fil de manière brisée. """
         wire_id = self.begin_wire[0]
         wire_coord = self.cav.coords(wire_id)
-        self.cav.coords(wire_id, wire_coord[0], wire_coord[1],
-                        (wire_coord[0] + wire_coord[2]) / 2,
-                        wire_coord[1],
-                        (wire_coord[0] + wire_coord[2]) / 2,
-                        wire_coord[1],
-                        (wire_coord[0] + wire_coord[2]) / 2,
-                        wire_coord[3],
-                        (wire_coord[0] + wire_coord[2]) / 2,
-                        wire_coord[3], wire_coord[2], wire_coord[3])
+        if (wire_coord[3] < y1_circuit):
+            wire_coord[3] = y1_circuit + 1
+        if (wire_coord[2] > x2_circuit):
+            wire_coord[2] = x2_circuit
+
+        if ((x is None) or (y is None)):
+            self.cav.coords(wire_id, wire_coord[0], wire_coord[1],
+                            (wire_coord[0] + wire_coord[2]) / 2,
+                            wire_coord[1],
+                            (wire_coord[0] + wire_coord[2]) / 2,
+                            wire_coord[3], wire_coord[2], wire_coord[3])
+        else:
+            self.cav.coords(wire_id, wire_coord[0], wire_coord[1],
+                            (wire_coord[0] + x) / 2,
+                            wire_coord[1],
+                            (wire_coord[0] + x) / 2, y, x, y)
