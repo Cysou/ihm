@@ -33,7 +33,7 @@ class Highlight():
 
     def load_img(self):
         for i in range(self.nb_img):
-            path="highlight/img/cendre" + str(i) + ".png"
+            path="highlight/img/cendre_ne" + str(i) + ".png"
             pilimg = Image.open(path)
             tkimg = ImageTk.PhotoImage(pilimg)
             self.img.append(tkimg)

@@ -1,7 +1,7 @@
 *home
 rec 0 0 1200 675 grey10
 img 600 337 robot_resized.png
-txt 1130 650 EthericStd© white Ubuntu 10
+txt 1130 650 EthericStd® white Ubuntu 10
 fun highlight.create_text 150 150 Jouer white Sawasdee 15 #highlight.delete_highlight_text+display:game
 fun highlight.create_text 150 180 Tutoriel white Sawasdee 15
 fun highlight.create_text 150 210 Editeur white Sawasdee 15 #highlight.delete_highlight_text+display:editor
