@@ -26,7 +26,7 @@ class Highlight():
         size : taille de la police
         commands : function a bind s'il y a
         """
-        idd = self.cav.create_text(int(x), int(y), text=text, fill=fill, font=(font, int(size)), tags="highlight_text")
+        idd = self.cav.create_text(int(x), int(y), text=text, fill=color, font=(font, int(size)), tags="highlight_text")
         self.cav.tag_bind(idd, "<Enter>", lambda event: self.start(event))
         self.cav.tag_bind(idd, "<Leave>", lambda event: self.stop(event))
         self.bind_command(commands, idd)

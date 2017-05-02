@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     editor = m_editor.Editor(cav)
 
-    layout = m_layout.Layout(cav, highlight, editor)
+    layout = m_layout.Layout(root, cav, highlight, editor)
     layout.display("home")
 
     main_loop()

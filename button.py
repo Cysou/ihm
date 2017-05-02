@@ -82,11 +82,6 @@ class Button():
     def in_bbox(self, x, y, bbox):
         return (bbox[0] < x < bbox[2]) and (bbox[1] < y < bbox[3])
 
-def main_loop():
-
-    button.find()
-
-    root.after(50, main_loop)
 
 
 if __name__ == "__main__":
@@ -98,7 +93,5 @@ if __name__ == "__main__":
 
     button.create("delete", 400, 300, print, "delete")
     button.create("up", 450, 300, print, "up")
-
-    #main_loop()
 
     root.mainloop()

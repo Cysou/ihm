@@ -10,20 +10,24 @@ class Layout():
     Un plan contient l'affichage d'objects à l'écran et le lancement de fonctions
     Fontion utile : display(*)
     """
-    def __init__(self, cav, highlight, editor):
+    def __init__(self, root, cav, highlight, editor):
         self.dico_objects = {" ": []}
         self.actual = " "
         self.actual_cover = None
         self.cav = cav
         editor.set_layout_uncover(self.uncover)
-        self.know_types = {"img": self.add_img, "fun": self.add_functions, "rec": self.add_rec}
+        self.know_types = {"img": self.add_img,
+                           "fun": self.add_functions,
+                           "rec": self.add_rec,
+                           "txt": self.add_text}
         self.know_commands = {"display": self.display,
                               "highlight.delete_highlight_text": highlight.delete_highlight_text,
                               "editor.start": editor.start,
                               "cover": self.cover,
                               "uncover": self.uncover,
                               "editor.delete_popup": editor.delete_popup,
-                              "editor.save_map": editor.save_map}
+                              "editor.save_map": editor.save_map,
+                              "root.quit": root.quit}
 
         self.dico_functions = {}
         self.know_functions = {"highlight.create_text": highlight.create_text,
@@ -68,13 +72,22 @@ class Layout():
         if len(params) == 4:
             self.dico_objects[actual].append((idd,1))
         else:
-            self.dico_objects[actual].append(idd,0)
-        self.bind_command(command, idd)
+            self.dico_objects[actual].append((idd,0))
+        self.bind_command(commands, idd)
 
     def add_rec(self, fields, actual):
         params, commands = self.get_params_command(fields)
         idd = self.cav.create_rectangle(int(params[0]), int(params[1]), int(params[2]), int(params[3]), fill=params[4], width=0, state="hidden")
         if len(params) == 6:
+            self.dico_objects[actual].append((idd,1))
+        else:
+            self.dico_objects[actual].append((idd,0))
+        self.bind_command(commands, idd)
+
+    def add_text(self, fields, actual):
+        params, commands = self.get_params_command(fields)
+        idd = self.cav.create_text(int(params[0]), int(params[1]), text=params[2], fill=params[3], font=(params[4], int(params[5])), state="hidden")
+        if len(params) == 7:
             self.dico_objects[actual].append((idd,1))
         else:
             self.dico_objects[actual].append((idd,0))

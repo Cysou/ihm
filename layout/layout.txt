@@ -1,11 +1,13 @@
 *home
 rec 0 0 1200 675 grey10
-fun highlight.create_text 150 150 Jouer white arial 15 #highlight.delete_highlight_text+display:game
-fun highlight.create_text 150 180 Tutoriel white arial 15
-fun highlight.create_text 150 210 Editeur white arial 15 #highlight.delete_highlight_text+display:editor
-fun highlight.create_text 150 240 Aide white arial 15
-fun highlight.create_text 150 270 Options white arial 15
-fun highlight.create_text 150 300 Quitter white arial 15
+img 600 337 robot_resized.png
+txt 1130 650 EthericStd© white Ubuntu 10
+fun highlight.create_text 150 150 Jouer white Sawasdee 15 #highlight.delete_highlight_text+display:game
+fun highlight.create_text 150 180 Tutoriel white Sawasdee 15
+fun highlight.create_text 150 210 Editeur white Sawasdee 15 #highlight.delete_highlight_text+display:editor
+fun highlight.create_text 150 240 Aide white Sawasdee 15
+fun highlight.create_text 150 270 Options white Sawasdee 15
+fun highlight.create_text 150 300 Quitter white Sawasdee 15 #root.quit
 
 *game
 # menu
