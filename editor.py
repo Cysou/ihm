@@ -7,7 +7,12 @@ from astar import *
 from aid import *
 
 class Editor:
-
+    """
+    Classe unique.
+    Gère l'editeur de niveaux
+    Enregistrement, modification et suppression d'un niveau
+    Fontion utile : start(*)
+    """
     def __init__(self, cav):
         self.matrix = []
         self.create_matrix()
@@ -43,6 +48,31 @@ class Editor:
         self.astar = Astar()
         self.aid = Aid(cav)
 
+    def start(self):
+        """
+        Gère plusieurs cas en fontion :
+        - de la premiere ouverture de l'éditeur (on crée tout)
+        - si on a ouvert une map et que l'on
+        veut lire le fichier et créer la map automatiquement
+        En général :
+        - Crée la grille, l'entrée, la sortie
+        - Gère les évènements au clic de la souris pour créer les murs
+        ou déplacer l'entrée/sortie
+        - Gère les ouvertures de pop-up pour ouvrir une map en supprimer une
+        """
+        if self.indicator_popup == 0:
+            self.create()
+            self.create_start(*editor_pos_start)
+            self.create_end(*editor_pos_end)
+            self.delete_entry()
+            self.create_entry()
+        elif self.indicator_popup != "notouch":
+            self.delete_all_circle()
+            self.delete_start()
+            self.delete_end()
+            self.create_map()
+        self.indicator_popup = 0
+
     def set_layout_uncover(self, func):
         self.layout_uncover = func
 
@@ -58,20 +88,6 @@ class Editor:
             pilimg = Image.open(path_all)
             tkimg = ImageTk.PhotoImage(pilimg)
             self.img[path] = tkimg
-
-    def start(self):
-        if self.indicator_popup == 0:
-            self.create()
-            self.create_start(*editor_pos_start)
-            self.create_end(*editor_pos_end)
-            self.delete_entry()
-            self.create_entry()
-        elif self.indicator_popup != "notouch":
-            self.delete_all_circle()
-            self.delete_start()
-            self.delete_end()
-            self.create_map()
-        self.indicator_popup = 0
 
     def create(self):
         x1 = editor_grid_x1

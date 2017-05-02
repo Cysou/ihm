@@ -1,5 +1,9 @@
 class Astar:
-
+    """
+    Classe unique.
+    Calcul s'il existe un chemin entre 2 points dans une matrice
+    Fontion utile : search(*)
+    """
     def __init__(self):
         self.matrix = None
         self.N = None
@@ -9,8 +13,14 @@ class Astar:
         self.finish = None
 
     def search(self, matrix, wall, start, end):
-        """initialise les variables
-        et lance la fonction récurrente"""
+        """
+        Initialise les variables et lance la fonction récurrente A*
+        matrix : matrice avec des valeurs entières
+        wall : valeur d'un mur
+        start : valeur du point d'entrée
+        end : valeur du point d'arrivée
+        Returne Vrai ou Faux
+        """
         self.matrix = matrix
         self.N = len(matrix)
         self.M = len(matrix[0])

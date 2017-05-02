@@ -5,7 +5,9 @@ import editor as m_editor
 from const import *
 
 def main_loop():
-
+    """
+    fonction récurssive pour gérer les animations et autres
+    """
     highlight.find()
 
     root.after(main_loop_mili, main_loop)

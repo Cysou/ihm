@@ -2,7 +2,12 @@ import tkinter as tk
 from const import *
 
 class Entry:
-
+    """
+    Classe non-unique
+    Crée un zone d'entrée de texte directement dans un canvas
+    Gère le focus sur la zone au clic
+    Fontion utile : create(*)
+    """
     def __init__(self, cav):
         self.cav = cav
         self.coords = None
@@ -12,7 +17,13 @@ class Entry:
         self.string = ""
         self.funcid = []
 
-    def create(self, x, y, fill="white", outline="black"):
+    def create(self, x, y, color="black", fill="white", outline="black"):
+        """
+        x/y : coords du centre
+        color : couleur du texte
+        fill : couleur de fond
+        outline : couleur du contour
+        """
         x1 = x - ((entry_max_char*entry_font_size) // 2) - entry_gap
         y1 = y - (entry_font_size // 2) - entry_gap
         x2 = x + ((entry_max_char*entry_font_size) // 2) + entry_gap
@@ -21,7 +32,7 @@ class Entry:
         self.coords = [x1, y1 ,x2, y2]
         self.idd_rec = idd_rec
 
-        idd_text = self.cav.create_text(x1 + entry_gap, y1, text=self.string, anchor="nw", font=(entry_font_name, entry_font_size))
+        idd_text = self.cav.create_text(x1 + entry_gap, y1, text=self.string, anchor="nw", fill=color, font=(entry_font_name, entry_font_size))
         self.idd_text = idd_text
 
         self.funcid.append(self.cav.bind("<Button-1>", self.check_focus))
@@ -98,6 +109,6 @@ if __name__ == '__main__':
     cav.pack()
 
     entry = Entry(cav)
-    entry.create(200,200)
+    entry.create(200,200, "red")
 
     root.mainloop()

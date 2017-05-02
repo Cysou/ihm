@@ -4,12 +4,33 @@ import os
 
 
 class Button():
+    """
+    Classe unique.
+    Sert à la création de boutons animés au survol avec une fonction associée
+    Fontion utile : create(*)
+    """
     def __init__(self, cav):
         self.dico_img = {}
         self.cav = cav
         self.load_img()
         print(self.dico_img)
         self.clicked = None
+
+    def create(self, name, x, y, function, *params):
+        """
+        Crée le bouton et associe le fonction
+        name : nom de l'image du bouton (voir dans le fichier bouton)
+        x/y : coords du centre
+        function : fonction associée au clic
+        *params : paramètres éventuels de la fonction associée
+        Returne rien
+        """
+        idd = self.cav.create_image(x, y, image=self.dico_img[name][0], tags="button")
+        self.cav.tag_bind(idd, "<Enter>", lambda event, idd=idd, name=name: self.modif(idd, name, 1))
+        self.cav.tag_bind(idd, "<Leave>", lambda event, idd=idd, name=name: self.modif(idd, name, 0))
+        self.cav.tag_bind(idd, "<Button-1>", lambda event, idd=idd, name=name: self.modif(idd, name, 2))
+        lol = [idd, name, function, params]
+        self.cav.tag_bind(idd, "<ButtonRelease-1>", lambda event, lol=lol: self.launch_function(event, *lol))
 
 
     def load_img(self):
@@ -34,15 +55,6 @@ class Button():
         while img[i] != "_":
             i += 1
         return img[:i]
-
-    def create(self, name, x, y, function, *params):
-        idd = self.cav.create_image(x, y, image=self.dico_img[name][0], tags="button")
-        self.cav.tag_bind(idd, "<Enter>", lambda event, idd=idd, name=name: self.modif(idd, name, 1))
-        self.cav.tag_bind(idd, "<Leave>", lambda event, idd=idd, name=name: self.modif(idd, name, 0))
-        self.cav.tag_bind(idd, "<Button-1>", lambda event, idd=idd, name=name: self.modif(idd, name, 2))
-        lol = [idd, name, function, params]
-        self.cav.tag_bind(idd, "<ButtonRelease-1>", lambda event, lol=lol: self.launch_function(event, *lol))
-
 
     def modif(self, idd, name, i):
         if i == 1:

@@ -4,6 +4,12 @@ import os
 
 
 class Layout():
+    """
+    Classe unique
+    Gère différents assemblages de plans
+    Un plan contient l'affichage d'objects à l'écran et le lancement de fonctions
+    Fontion utile : display(*)
+    """
     def __init__(self, cav, highlight, editor):
         self.dico_objects = {" ": []}
         self.actual = " "
@@ -96,6 +102,9 @@ class Layout():
 
     # Manage
     def display(self, layout_name):
+        """
+        layout_name : nom du plan à afficher
+        """
         self.delete_layout(self.actual)
         self.actual = layout_name
         self.display_objects(self.actual)

@@ -5,6 +5,11 @@ import os
 
 
 class Highlight():
+    """
+    Classe unique
+    Crée un texte qui s'illumine au survol de la souris
+    Fontion utile : create_text(*)
+    """
     def __init__(self, cav):
         self.dico = {}
         self.img = []
@@ -12,6 +17,19 @@ class Highlight():
         self.cav = cav
         self.load_img()
 
+    def create_text(self, x, y, text, color, font, size, commands=None):
+        """
+        x/y : coords du centre
+        text : texte voulu
+        color : couleur du texte
+        font : police de caractère
+        size : taille de la police
+        commands : function a bind s'il y a
+        """
+        idd = self.cav.create_text(int(x), int(y), text=text, fill=fill, font=(font, int(size)), tags="highlight_text")
+        self.cav.tag_bind(idd, "<Enter>", lambda event: self.start(event))
+        self.cav.tag_bind(idd, "<Leave>", lambda event: self.stop(event))
+        self.bind_command(commands, idd)
 
     def load_img(self):
         for i in range(self.nb_img):
@@ -24,12 +42,6 @@ class Highlight():
     def get_center(self, idd):
         return self.cav.coords(idd)
 
-
-    def create_text(self, x, y, text, fill, font, size, commands=None):
-        idd = self.cav.create_text(int(x), int(y), text=text, fill=fill, font=(font, int(size)), tags="highlight_text")
-        self.cav.tag_bind(idd, "<Enter>", lambda event: self.start(event))
-        self.cav.tag_bind(idd, "<Leave>", lambda event: self.stop(event))
-        self.bind_command(commands, idd)
 
     def bind_command(self, commands, idd):
         if commands:

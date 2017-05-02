@@ -1,3 +1,6 @@
+"""
+Fichier contenant les constantes
+"""
 # general
 width = 1200
 height = 675

@@ -3,13 +3,28 @@ from const import *
 import copy
 
 class Aid:
-
+    """
+    Classe non unique.
+    Affiche pendant un temps un message d'aide
+    Nécessite un appel dans la fontion récurssive
+    Fontion utile : create(*)
+    """
     compteur = 0
     def __init__(self, cav):
         self.cav = cav
         self.dico = {}
 
-    def create(self, text, bbx1, bby1, bbx2="n", bby2="n", fill="white", outline="black"):
+    def create(self, text, bbx1, bby1, bbx2="n", bby2="n", color="black", fill="white", outline="black"):
+        """
+        Crée le carré d'aide
+        text : texte a afficher
+        bbx1/bby1/bbx2/bby2 : coords du renctangle autour duquel le fonction va essayer d'afficher l'aide
+        On peut aussi définir un point
+        color : couleur du texte
+        fill : couleur de fond
+        outline: couleur du contour
+        Returne rien
+        """
         if bbx2 == "n" and bby2 == "n":
             bbx2 = bbx1
             bby2 = bby1
@@ -17,7 +32,7 @@ class Aid:
         self.dico[Aid.compteur] = [aid_sec * 1000]
         coords = self.create_coords(bbx1, bby1, bbx2, bby2)
         self.create_rectangle(coords, bbx1, bbx2, fill, outline)
-        self.create_text(coords)
+        self.create_text(coords, color)
 
     def create_rectangle(self, coords, bbx1, bbx2, fill, outline):
         self.verif_y(coords)
@@ -25,13 +40,13 @@ class Aid:
         idd = self.cav.create_polygon(coords, fill=fill, outline=outline)
         self.dico[Aid.compteur].append(idd)
 
-    def create_text(self, coords):
+    def create_text(self, coords, color):
         x1, y1 = [coords[0] , coords[1]]
         x2, y2 = [coords[2] , coords[5]]
         x = ((x2 - x1) // 2) + x1
         y = ((y2 - y1) // 2) + y1
         max_width = (x2 - x1)
-        idd = self.cav.create_text(x, y, text=text, width=max_width, font=(aid_font_name, aid_font_size))
+        idd = self.cav.create_text(x, y, text=text, width=max_width, fill=color, font=(aid_font_name, aid_font_size))
         self.dico[Aid.compteur].append(idd)
 
     def create_coords(self, bbx1, bby1, bbx2, bby2):
