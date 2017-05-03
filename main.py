@@ -4,6 +4,7 @@ import layout as m_layout
 import editor as m_editor
 import helps as m_help
 import button as m_button
+import aid as m_aid
 from const import *
 
 def main_loop():
@@ -11,6 +12,7 @@ def main_loop():
     fonction récurssive pour gérer les animations et autres
     """
     highlight.find()
+    aid.update()
 
     root.after(main_loop_mili, main_loop)
 
@@ -22,7 +24,9 @@ if __name__ == "__main__":
     #classes
     highlight = m_highlight.Highlight(cav)
 
-    editor = m_editor.Editor(cav)
+    aid = m_aid.Aid(cav)
+
+    editor = m_editor.Editor(cav, aid)
 
     helps = m_help.Help(cav)
 

@@ -13,7 +13,7 @@ class Editor:
     Enregistrement, modification et suppression d'un niveau
     Fontion utile : start(*)
     """
-    def __init__(self, cav):
+    def __init__(self, cav, aid):
         self.matrix = []
         self.create_matrix()
         self.cav = cav
@@ -46,7 +46,7 @@ class Editor:
 
         self.entry = Entry(cav)
         self.astar = Astar()
-        self.aid = Aid(cav)
+        self.aid = aid
 
     def start(self):
         """
@@ -343,7 +343,7 @@ class Editor:
         while i < len(listdir):
             x = (width // 2) - editor_delete_gap_x
             y = editor_delete_first_y + (i * editor_delete_gap_x)
-            idd = self.cav.create_text(x, y, text=listdir[i][:-4], font=("Arial",13))
+            idd = self.cav.create_text(x, y, text=listdir[i][:-4], fill="white", font=("Arial",13))
             self.idd_popup.append(idd)
 
             x = (width // 2) + editor_delete_gap_x
@@ -359,7 +359,7 @@ class Editor:
         while i < len(listdir):
             x = (width // 2) - editor_open_gap_x
             y = editor_open_first_y + (i * editor_open_gap_x)
-            idd = self.cav.create_text(x, y, text=listdir[i][:-4], font=("Arial",13))
+            idd = self.cav.create_text(x, y, text=listdir[i][:-4], fill="white", font=("Arial",13))
             self.idd_popup.append(idd)
 
             x = (width // 2) + editor_open_gap_x
@@ -393,14 +393,12 @@ class Editor:
                 self.write_map(string)
             else:
                 text = "Veuiller ajouter un nom"
-                self.aid.create(text,
-                                editor_entry_x,
-                                editor_entry_y)
+                self.aid.create(text, 922, 222, 1176, 264)
         else:
             text = "Le robot ne peut pas passer"
             self.aid.create(text,
                      editor_grid_x1 + editor_grid_width,
-                     editor_grid_y1 + editor_grid_height)
+                     editor_grid_y1 + editor_grid_height//1.5)
 
     def write_map(self, string):
             path = "level/custom/" + string + ".map"
@@ -421,19 +419,19 @@ class Editor:
         new_matrix = copy.deepcopy(self.matrix)
         for i in range(len(self.matrix)):
             for j in range(len(self.matrix[0])):
-                if j == 0:
+                if new_matrix[i][j] == 0:
                     new_matrix[i][j] = 0
-                elif type(j) == list:
+                elif type(new_matrix[i][j]) == list:
                     new_matrix[i][j] = 1
-                elif j == self.idd_start:
+                elif new_matrix[i][j] == self.idd_start:
                     new_matrix[i][j] = 2
-                elif j == self.idd_end:
+                elif new_matrix[i][j] == self.idd_end:
                     new_matrix[i][j] = 3
         return new_matrix
 
     # Entry
     def create_entry(self):
-        self.entry.create(editor_entry_x, editor_entry_y, outline="grey40")
+        self.entry.create(editor_entry_x, editor_entry_y, outline="white")
 
     def delete_entry(self):
         self.entry.delete()

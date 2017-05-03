@@ -32,7 +32,7 @@ class Entry:
         self.coords = [x1, y1 ,x2, y2]
         self.idd_rec = idd_rec
 
-        idd_text = self.cav.create_text(x1 + entry_gap, y1, text=self.string, anchor="nw", fill=color, font=(entry_font_name, entry_font_size))
+        idd_text = self.cav.create_text(x1 + entry_gap, y1+3, text=self.string, anchor="nw", fill=color, font=(entry_font_name, entry_font_size))
         self.idd_text = idd_text
 
         self.funcid.append(self.cav.bind("<Button-1>", self.check_focus))
@@ -65,7 +65,7 @@ class Entry:
     def check_focus(self, event):
         if self.in_entry(event.x, event.y):
             self.focus = True
-            self.cav.itemconfig(self.idd_rec, width=3)
+            self.cav.itemconfig(self.idd_rec, width=5)
         else:
             self.focus = False
             self.cav.itemconfig(self.idd_rec, width=2)

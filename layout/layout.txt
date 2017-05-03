@@ -28,6 +28,7 @@ fun button.create esave 1050 300 #editor.save_map
 fun button.create retour 1050 50 #editor.stop+display:home+button.delete
 
 *map_manager_open
+img 600 337 fond_50.png lift
 img 600 337 level_open.png lift
 rec 713 13 787 38 white lift
 rec 715 15 785 35 black lift
@@ -35,6 +36,7 @@ txt 750 25 retour white Ubuntu 14 lift #editor.delete_popup+uncover
 fun editor.map_manager_open
 
 *map_manager_delete
+img 600 337 fond_50.png lift
 img 600 337 level_delete.png lift
 rec 713 13 787 38 white lift
 rec 715 15 785 35 black lift

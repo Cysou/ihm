@@ -30,13 +30,11 @@ class Astar:
         return self.pathfinder()
 
     def pathfinder(self):
-        """ """
         queue = [self.start]
         new_queue = []
         visited = [self.start]
         while len(queue) > 0:
             for current in queue:
-                current = queue[-1]
                 if current == self.end:
                     return True
 
@@ -62,7 +60,7 @@ class Astar:
         j = index[1]
         neighbors = []
         for i, j in [(i, j-1), (i-1, j), (i, j+1), (i+1, j)]:
-            if 0 < i < self.N and 0 < j < self.M:
+            if 0 <= i < self.N and 0 <= j < self.M:
                 neighbors.append((i, j))
         return neighbors
 
@@ -81,8 +79,8 @@ def create_matrix(file_name):
 
 if __name__ == '__main__':
 
-    matrix = create_matrix("map/custom/test.map")
+    matrix = create_matrix("level/custom/bon.map")
 
     astar = Astar()
     b = astar.search(matrix, 1, 2, 3)
-    print(b)
+    print(b, "result A*")

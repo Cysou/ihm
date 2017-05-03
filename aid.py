@@ -32,7 +32,7 @@ class Aid:
         self.dico[Aid.compteur] = [aid_sec * 1000]
         coords = self.create_coords(bbx1, bby1, bbx2, bby2)
         self.create_rectangle(coords, bbx1, bbx2, fill, outline)
-        self.create_text(coords, color)
+        self.create_text(coords, text, color)
 
     def create_rectangle(self, coords, bbx1, bbx2, fill, outline):
         self.verif_y(coords)
@@ -40,12 +40,12 @@ class Aid:
         idd = self.cav.create_polygon(coords, fill=fill, outline=outline)
         self.dico[Aid.compteur].append(idd)
 
-    def create_text(self, coords, color):
+    def create_text(self, coords, text, color):
         x1, y1 = [coords[0] , coords[1]]
         x2, y2 = [coords[2] , coords[5]]
         x = ((x2 - x1) // 2) + x1
         y = ((y2 - y1) // 2) + y1
-        max_width = (x2 - x1)
+        max_width = abs(x2 - x1) - aid_padding
         idd = self.cav.create_text(x, y, text=text, width=max_width, fill=color, font=(aid_font_name, aid_font_size))
         self.dico[Aid.compteur].append(idd)
 
