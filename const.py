@@ -74,3 +74,7 @@ aid_margin_bot = 5
 aid_font_name = "Verdana"
 aid_font_size = 10
 aid_sec = 1
+
+# help.py
+help_font_name = "Noto Sans CJK JP"
+help_font_size = 12
