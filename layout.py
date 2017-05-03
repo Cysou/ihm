@@ -10,7 +10,7 @@ class Layout():
     Un plan contient l'affichage d'objects à l'écran et le lancement de fonctions
     Fontion utile : display(*)
     """
-    def __init__(self, root, cav, highlight, editor):
+    def __init__(self, root, cav, highlight, editor, button, helps):
         self.dico_objects = {" ": []}
         self.actual = " "
         self.actual_cover = None
@@ -27,13 +27,17 @@ class Layout():
                               "uncover": self.uncover,
                               "editor.delete_popup": editor.delete_popup,
                               "editor.save_map": editor.save_map,
-                              "root.quit": root.quit}
+                              "root.quit": root.quit,
+                              "help.stop": helps.stop,
+                              "button.delete": button.delete}
 
         self.dico_functions = {}
         self.know_functions = {"highlight.create_text": highlight.create_text,
                                "editor.start": editor.start,
                                "editor.map_manager_delete": editor.map_manager_delete,
-                               "editor.map_manager_open": editor.map_manager_open}
+                               "editor.map_manager_open": editor.map_manager_open,
+                               "help.start": helps.start,
+                               "button.create": button.create}
 
         self.img = {}
         self.load_img()
@@ -154,12 +158,12 @@ class Layout():
                 if commands:
                     for com in commands:
                         com[0] = self.know_commands[com[0]]
-                        self.know_functions[params[0]](*(params[1:]+[commands]))
+                    self.know_functions[params[0]](*(params[1:]+[commands]))
                 else:
                     self.know_functions[params[0]](*params[1:])
             else:
                 if commands:
-                    for com in enumerate(commands):
+                    for com in commands:
                         com[0] = self.know_commands[com[0]]
                     self.know_functions[params[0]](com)
                 else:

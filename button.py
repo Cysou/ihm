@@ -7,16 +7,16 @@ class Button():
     """
     Classe unique.
     Sert à la création de boutons animés au survol avec une fonction associée
-    Fontion utile : create(*)
+    Fontion utile : create(*
     """
     def __init__(self, cav):
         self.dico_img = {}
         self.cav = cav
         self.load_img()
-        print(self.dico_img)
         self.clicked = None
 
-    def create(self, name, x, y, function, *params):
+
+    def create(self, name, x, y, commands):
         """
         Crée le bouton et associe le fonction
         name : nom de l'image du bouton (voir dans le fichier bouton)
@@ -25,13 +25,14 @@ class Button():
         *params : paramètres éventuels de la fonction associée
         Returne rien
         """
+        x = int(x)
+        y = int(y)
         idd = self.cav.create_image(x, y, image=self.dico_img[name][0], tags="button")
         self.cav.tag_bind(idd, "<Enter>", lambda event, idd=idd, name=name: self.modif(idd, name, 1))
         self.cav.tag_bind(idd, "<Leave>", lambda event, idd=idd, name=name: self.modif(idd, name, 0))
         self.cav.tag_bind(idd, "<Button-1>", lambda event, idd=idd, name=name: self.modif(idd, name, 2))
-        lol = [idd, name, function, params]
+        lol = [idd, name, commands]
         self.cav.tag_bind(idd, "<ButtonRelease-1>", lambda event, lol=lol: self.launch_function(event, *lol))
-
 
     def load_img(self):
         for img in os.listdir("button/img"):
@@ -70,18 +71,26 @@ class Button():
         else:
             self.cav.itemconfig(idd, image=self.dico_img[name][0])
 
-    def launch_function(self, event, idd, name, functions, params):
-        self.clicked = None
-        bbox = self.cav.bbox(idd)
-        if self.in_bbox(event.x, event.y, bbox):
-            self.cav.itemconfig(idd, image=self.dico_img[name][1])
-            functions(*params)
-        else:
-            self.cav.itemconfig(idd, image=self.dico_img[name][0])
+    def launch_function(self, event, idd, name, commands):
+        for com in commands:
+            function = com[0]
+            if len(com) > 1:
+                params = com[1:]
+            else:
+                params = []
+            self.clicked = None
+            bbox = self.cav.bbox(idd)
+            if self.in_bbox(event.x, event.y, bbox):
+                self.cav.itemconfig(idd, image=self.dico_img[name][1])
+                function(*params)
+            else:
+                self.cav.itemconfig(idd, image=self.dico_img[name][0])
 
     def in_bbox(self, x, y, bbox):
         return (bbox[0] < x < bbox[2]) and (bbox[1] < y < bbox[3])
 
+    def delete(self):
+        self.cav.delete("button")
 
 
 if __name__ == "__main__":
@@ -91,7 +100,7 @@ if __name__ == "__main__":
 
     button = Button(cav)
 
-    button.create("delete", 400, 300, print, "delete")
-    button.create("up", 450, 300, print, "up")
+    button.create_("delete", 400, 300, print, "delete")
+    button.create_("up", 450, 300, print, "up")
 
     root.mainloop()

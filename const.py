@@ -10,6 +10,7 @@ main_loop_mili = 50
 map_width = 200
 map_height = 200
 map_square = 10  # doit être divisible par width et height
+map_nb_square = map_height / map_square
 
 # editor.py
 editor_width = width
@@ -78,3 +79,10 @@ aid_sec = 1
 # help.py
 help_font_name = "Noto Sans CJK JP"
 help_font_size = 12
+
+# level.py
+level_start_x = 80
+level_start_y = 80
+level_gap_x = 80
+level_gap_y = 15
+level_lenght_square = 9

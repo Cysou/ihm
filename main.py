@@ -2,6 +2,8 @@ import tkinter as tk
 import highlight as m_highlight
 import layout as m_layout
 import editor as m_editor
+import helps as m_help
+import button as m_button
 from const import *
 
 def main_loop():
@@ -22,7 +24,11 @@ if __name__ == "__main__":
 
     editor = m_editor.Editor(cav)
 
-    layout = m_layout.Layout(root, cav, highlight, editor)
+    helps = m_help.Help(cav)
+
+    button = m_button.Button(cav)
+
+    layout = m_layout.Layout(root, cav, highlight, editor, button, helps)
     layout.display("home")
 
     main_loop()

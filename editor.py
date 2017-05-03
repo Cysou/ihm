@@ -111,7 +111,7 @@ class Editor:
             for line in fd:
                 line = line.strip()
                 line = line.split(" ")
-                print(line)
+                #print(line)
                 j = 0
                 for circle in line:
                     if circle == "1":
@@ -337,7 +337,7 @@ class Editor:
 
     def display_delete(self):
         i = 0
-        listdir = os.listdir("map/custom")
+        listdir = os.listdir("level/custom")
         while i < len(listdir):
             x = (width // 2) - editor_delete_gap_x
             y = editor_delete_first_y + (i * editor_delete_gap_x)
@@ -353,7 +353,7 @@ class Editor:
 
     def display_open(self):
         i = 0
-        listdir = os.listdir("map/custom")
+        listdir = os.listdir("level/custom")
         while i < len(listdir):
             x = (width // 2) - editor_open_gap_x
             y = editor_open_first_y + (i * editor_open_gap_x)
@@ -373,19 +373,18 @@ class Editor:
         self.idd_popup = []
 
     def delete_map(self, i):
-        os.remove("map/custom/" + os.listdir("map/custom")[i])
+        os.remove("level/custom/" + os.listdir("level/custom")[i])
         self.delete_popup()
         self.display_delete()
 
     def open_map(self, i):
-        self.indicator_popup = "map/custom/" + os.listdir("map/custom")[i]
+        self.indicator_popup = "level/custom/" + os.listdir("level/custom")[i]
         self.delete_popup()
         self.layout_uncover()
 
     def save_map(self):
         matrix = self.transform_matrix()
         if self.astar.search(matrix, 1, 2, 3):
-            print(1)
             string = self.entry.get_string()
             if len(string) > 0:
                 self.reset_entry()
@@ -402,7 +401,7 @@ class Editor:
                      editor_grid_y1 + editor_grid_height)
 
     def write_map(self, string):
-            path = "map/custom/" + string + ".map"
+            path = "level/custom/" + string + ".map"
             with open(path, "w") as fd:
                 for line in self.matrix:
                     for circle in line:

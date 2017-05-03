@@ -5,9 +5,11 @@ txt 1130 650 EthericStd® white Ubuntu 10
 fun highlight.create_text 150 150 Jouer white Sawasdee 15 #highlight.delete_highlight_text+display:game
 fun highlight.create_text 150 180 Tutoriel white Sawasdee 15
 fun highlight.create_text 150 210 Editeur white Sawasdee 15 #highlight.delete_highlight_text+display:editor
-fun highlight.create_text 150 240 Aide white Sawasdee 15
-fun highlight.create_text 150 270 Options white Sawasdee 15
-fun highlight.create_text 150 300 Quitter white Sawasdee 15 #root.quit
+fun highlight.create_text 150 240 Aide white Sawasdee 15 #highlight.delete_highlight_text+display:help
+fun highlight.create_text 150 270 Quitter white Sawasdee 15 #root.quit
+
+*map
+# start la class map
 
 *game
 # menu
@@ -33,3 +35,8 @@ fun editor.map_manager_delete
 rec 400 0 800 675 grey80 lift
 rec 1000 50 1100 100 orange #editor.delete_popup+uncover
 fun editor.map_manager_open
+
+*help
+# rajouter l'img de l'aide
+fun help.start
+fun button.create delete 1100 50 #help.stop+display:home+button.delete
