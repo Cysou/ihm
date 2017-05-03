@@ -3,7 +3,6 @@ width = 1200
 height = 675
 
 # gates.py
-# la taille des portes doit être impaire
 gates_window_width = 200
 gates_window_height = 475
 dico_gates = {}

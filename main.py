@@ -13,6 +13,7 @@ if __name__ == "__main__":
 
     # classes
     circuit = Circuit(cav)
+    wire = Wire(cav, circuit)
     gate = Gate(cav, circuit)
     circuit.init()
     gate.create()
