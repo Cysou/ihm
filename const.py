@@ -34,7 +34,7 @@ editor_open_gap_x = 50
 editor_open_gap_y = 50
 
 editor_entry_x = 1050
-editor_entry_y = 100
+editor_entry_y = 250
 
 # gates.py
 # la taille des portes doit être impaire

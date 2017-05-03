@@ -21,22 +21,27 @@ rec 1000 200 1200 675 grey10
 
 *editor
 img 600 337 editor.png
-rec 100 100 200 150 red #cover:map_manager_delete
-rec 100 200 200 250 green #cover:map_manager_open
-rec 100 300 200 350 blue #editor.save_map
 fun editor.start
-
-*map_manager_delete
-img 600 337 level_delete.png lift
-rec 1000 50 1100 100 orange #editor.delete_popup+uncover
-fun editor.map_manager_delete
+fun button.create eopen 150 125 #cover:map_manager_open
+fun button.create edelete 150 225 #cover:map_manager_delete
+fun button.create esave 1050 300 #editor.save_map
+fun button.create retour 1050 50 #editor.stop+display:home+button.delete
 
 *map_manager_open
 img 600 337 level_open.png lift
-rec 1000 50 1100 100 orange #editor.delete_popup+uncover
+rec 713 13 787 38 white lift
+rec 715 15 785 35 black lift
+txt 750 25 retour white Ubuntu 14 lift #editor.delete_popup+uncover
 fun editor.map_manager_open
+
+*map_manager_delete
+img 600 337 level_delete.png lift
+rec 713 13 787 38 white lift
+rec 715 15 785 35 black lift
+txt 750 25 retour white Ubuntu 14 lift #editor.delete_popup+uncover
+fun editor.map_manager_delete
 
 *help
 img 600 337 help.png
 fun help.start
-fun button.create delete 1100 50 #help.stop+display:home+button.delete
+fun button.create retour 1100 50 #help.stop+display:home+button.delete

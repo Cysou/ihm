@@ -199,8 +199,10 @@ class Editor:
 
     def stop(self):
         self.delete_all_circle()
+        self.delete_entry()
         self.delete_start()
         self.delete_end()
+        self.cav.delete("square")
 
     def delete_all_circle(self):
         N = len(self.matrix)

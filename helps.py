@@ -18,7 +18,7 @@ class Help:
         x = 600
         y = 338
         max_width = 600
-        color = "black"
+        color = "white"
         text = """\
 Le but du jeu est de permettre à notre robot de retourver la sortie du \
 labyrinthe.\n\

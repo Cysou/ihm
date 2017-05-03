@@ -23,6 +23,7 @@ class Layout():
         self.know_commands = {"display": self.display,
                               "highlight.delete_highlight_text": highlight.delete_highlight_text,
                               "editor.start": editor.start,
+                              "editor.stop": editor.stop,
                               "cover": self.cover,
                               "uncover": self.uncover,
                               "editor.delete_popup": editor.delete_popup,
