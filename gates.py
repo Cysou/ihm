@@ -1,5 +1,4 @@
 import tkinter as tk
-from circuit import *
 from const import *
 
 
@@ -19,14 +18,14 @@ class Gate:
         self.cav.create_rectangle(width - gates_window_width,
                                   height - gates_window_height, width, height,
                                   fill="grey50")
-        gate_a = self.cav.create_rectangle(1075, 280, 1125, 310, fill="red",
+        gate_a = self.cav.create_rectangle(1075, 280, 1075 + dico_gates["gate_and"][0], 280 + dico_gates["gate_and"][1], fill="red",
                                            tags=("gate_and", 1))
-        gate_o = self.cav.create_rectangle(1075, 360, 1125, 390, fill="blue",
+        gate_o = self.cav.create_rectangle(1075, 360, 1075 + dico_gates["gate_or"][0], 360 + dico_gates["gate_or"][1], fill="blue",
                                            tags=("gate_or", 1))
-        gate_xo = self.cav.create_rectangle(1075, 440, 1125, 470,
+        gate_xo = self.cav.create_rectangle(1075, 440, 1075 + dico_gates["gate_xor"][0], 440 + dico_gates["gate_xor"][1],
                                             fill="seagreen",
                                             tags=("gate_xor", 1))
-        gate_n = self.cav.create_rectangle(1075, 520, 1125, 550,
+        gate_n = self.cav.create_rectangle(1075, 520, 1075 + dico_gates["gate_not"][0], 520 + dico_gates["gate_not"][1],
                                            fill="purple",
                                            tags=("gate_not", 1))
         self.cav.tag_bind(gate_a, "<ButtonRelease-1>", self.release)
@@ -45,6 +44,9 @@ class Gate:
         y = event.y
         self.circuit.check_placement(x, y, gate_key, sens)
 
+    #Fonction de rotation pas opérationnelle
+    # avec les fils et la base de donnée.
+
     # def rotate(self, event, id_gate):
     #     """
     #     Permet de faire tourner une porte à 90°.
@@ -58,12 +60,6 @@ class Gate:
     #     if not self.circuit.check_placement(x, y, tag[0], sens):
     #         self.circuit.placement(x, y, tag[0], tag[1])
 
-    def delete_gate(self, event, id_gate):
-        """
-        Supprime une porte.
-        """
-        self.cav.delete(id_gate)
-
     def init_move_gate(self, event, gate_id, sens):
         """
         Initialise le déplacement d'une porte et des fils
@@ -71,8 +67,6 @@ class Gate:
         """
         self.coord_move.append(event.x - self.cav.coords(gate_id)[0])
         self.coord_move.append(event.y - self.cav.coords(gate_id)[1])
-        self.coord_move.append(None)
-        self.coord_move.append(None)
         self.cav.lift(gate_id)
 
     def move_gate(self, event, gate_id, sens):
@@ -92,11 +86,11 @@ class Gate:
         x2 = x1 + lengthx
         y2 = y1 + lengthy
 
-        if (x1 < x1_circuit):
-            x1 = x1_circuit
+        if (x1 < x1_circuit + sensor_width):
+            x1 = x1_circuit + sensor_width
             x2 = x1 + lengthx
-        elif (x2 > x2_circuit):
-            x2 = x2_circuit
+        elif (x2 > x2_circuit - motor_width):
+            x2 = x2_circuit - motor_width
             x1 = x2 - lengthx
 
         if (y1 < y1_circuit):
@@ -107,32 +101,8 @@ class Gate:
             y1 = y2 - lengthy
         self.cav.coords(gate_id, x1, y1, x1 + lengthx, y1 + lengthy)
 
-        """ /!\     Corriger le move chelou des fils    /!\ """
-
-        if ((self.coord_move[2] is None) and (self.coord_move[3] is None)):
-            self.coord_move[2] = x1
-            self.coord_move[3] = y1
-        for io in self.circuit.struct_gate[gate_id]:
-            for wire in io:
-                if (self.circuit.struct_wire[wire][1] == gate_id):
-                    self.wire.begin_wire.append(wire)
-                    l_coord = self.cav.coords(wire)
-                    x_wire = l_coord[-2] - self.coord_move[2]
-                    y_wire = l_coord[-1] - self.coord_move[3]
-                    self.wire.create_wire(x1 + x_wire, y1 + y_wire)
-                    self.wire.begin_wire = []
-                else:
-                    self.wire.begin_wire.append(wire)
-                    l_coord = self.cav.coords(wire)
-                    x_wire = l_coord[0] - self.coord_move[2]
-                    y_wire = l_coord[1] - self.coord_move[3]
-                    self.cav.coords(wire, x1 + x_wire, y1 + y_wire,
-                                    l_coord[-2], l_coord[-1])
-                    self.wire.create_wire(l_coord[-2], l_coord[-1])
-                    self.wire.begin_wire = []
-        self.coord_move[2] = x1
-        self.coord_move[3] = y1
-        self.circuit.read_structure()
+        self.wire.move_wire_gate(gate_id, gate_key, x1, y1)
+        self.circuit.robot.read_structure()
 
     def end_move_gate(self):
         """

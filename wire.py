@@ -1,5 +1,4 @@
 import tkinter as tk
-from circuit import *
 from const import *
 
 
@@ -107,14 +106,22 @@ class Wire:
                         if (io == 1):
                             x = coords[2]
                             y = coords[1] + lengthy
-                        elif (io == 2):
-                            x = coords[0]
-                            y = coords[1] + lengthy // 2
-                            self.tags_io_wire.append(io-2)
-                        elif (io == 3):
-                            x = coords[0]
-                            y = coords[3] - lengthy // 2
-                            self.tags_io_wire.append(io-2)
+                        elif (tag != "gate_not"):
+                            if (io == 2):
+                                x = coords[0]
+                                y = coords[1] + lengthy // 2
+                                self.tags_io_wire.append(io-2)
+                            elif (io == 3):
+                                x = coords[0]
+                                y = coords[3] - lengthy // 2
+                                self.tags_io_wire.append(io-2)
+                        else:
+                            if (io == 2):
+                                x = coords[2]
+                                y = coords[1] + lengthy
+                            else:
+                                x = coords[0]
+                                y = coords[1] + lengthy
                         self.create_wire(x, y)
                     else:
                         lengthx = dico_gates[tag][1] // 2
@@ -129,14 +136,22 @@ class Wire:
                         if (io == 1):
                             x = coords[0] + lengthx
                             y = coords[1] - 1
-                        elif (io == 2):
-                            x = coords[0] + lengthx
-                            y = coords[3] + 1
-                            self.tags_io_wire.append(io-2)
-                        elif (io == 3):
-                            x = coords[2] - lengthx // 2
-                            y = coords[3] + 1
-                            self.tags_io_wire.append(io-2)
+                        elif (tag != "gate_not"):
+                            if (io == 2):
+                                x = coords[0] + lengthx
+                                y = coords[3] + 1
+                                self.tags_io_wire.append(io-2)
+                            elif (io == 3):
+                                x = coords[2] - lengthx // 2
+                                y = coords[3] + 1
+                                self.tags_io_wire.append(io-2)
+                        else:
+                            if (io == 2):
+                                x = coords[0] + lengthx
+                                y = coords[1]
+                            else:
+                                x = coords[0] + lengthx
+                                y = coords[3]
                         self.create_wire(x, y)
                 self.check_wire()
 
@@ -156,9 +171,12 @@ class Wire:
             S'il n'est pas relié à un couple
             entrée/sortie, il est supprimé.
             """
+            wire_id = self.begin_wire[0]
             if (self.tags_io_wire[0] != self.tags_io_wire[1]):
-                self.circuit.fill_structure(self.begin_wire[0])
-                self.cav.tag_bind(self.begin_wire[0], "<Enter>", self.wire_lift)
+                self.circuit.fill_structure(wire_id)
+                self.cav.tag_bind(wire_id, "<Enter>", self.wire_lift)
+                self.cav.tag_bind(wire_id, "<Control-Button-3>",
+                                  lambda event: self.circuit.empty_structure(event, wire_id))
             elif (self.tags_io_wire[0] == "input"):
                 # Pour pop-up signalant l'invalidité du fil.
                 self.cav.delete(self.begin_wire[0])
@@ -175,10 +193,44 @@ class Wire:
             wire_id = self.begin_wire[0]
             wire_coord = self.cav.coords(wire_id)
 
+            if (x < x1_circuit):
+                x = x1_circuit
+            elif (x > x2_circuit):
+                x = x2_circuit
+
+            if (y < y1_circuit):
+                y = y1_circuit
+            elif (y > y2_circuit):
+                y = y2_circuit
+
             self.cav.coords(wire_id, wire_coord[0], wire_coord[1],
                             (wire_coord[0] + x) / 2,
                             wire_coord[1],
                             (wire_coord[0] + x) / 2, y, x, y)
+
+        def move_wire_gate(self, gate_id, gate_key, x1, y1):
+            """
+            Déplace les fils d'une porte lorsque
+            celle-ci bouge pour qu'ils la suivent.
+            """
+            for i in range(3):
+                io = self.circuit.struct_gate[gate_id][i]
+                for wire in io:
+                    if (self.circuit.struct_wire[wire][1] == gate_id):
+                        self.begin_wire.append(wire)
+                        self.create_wire(x1 + dico_wire[gate_key][i][0],
+                                              y1 + dico_wire[gate_key][i][1])
+                        self.begin_wire = []
+                    else:
+                        self.begin_wire.append(wire)
+                        l_coord = self.cav.coords(wire)
+                        self.cav.coords(wire, x1 + dico_wire[gate_key][i][0],
+                                        y1 + dico_wire[gate_key][i][1],
+                                        l_coord[-2], l_coord[-1])
+                        self.create_wire(l_coord[-2], l_coord[-1])
+                        self.begin_wire = []
+                if (gate_key == "gate_not" and i == 1):
+                    break
 
         def wire_lift(self, event):
             """

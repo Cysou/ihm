@@ -1,6 +1,4 @@
 import tkinter as tk
-from const import *
-from gates import *
 from circuit import *
 
 
@@ -14,6 +12,7 @@ if __name__ == "__main__":
     # classes
     circuit = Circuit(cav)
     wire = Wire(cav, circuit)
+    robot = Robot(cav, circuit)
     gate = Gate(cav, circuit)
     circuit.init()
     gate.create()
