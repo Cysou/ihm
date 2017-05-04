@@ -150,12 +150,40 @@ class Robot():
         """
         Permet au robot de bouger sur la carte.
         """
-        self.create_matrix()
         robot_position = self.detect_position()
         self.detect_murs(robot_position)
         if (self.read_structure()):
-            if (self.circuit.struct_val[6] == 1):
-                pass
+            for i in range(6, 10):
+                if (self.circuit.struct_val[i] == 1):
+                    self.matrix[robot_position[1][robot_position[0]]] = 0
+                    if (i == 6):
+                        robot_position[1] -= 1
+                    elif (i == 7):
+                        robot_position[0] -= 1
+                    elif (i == 8):
+                        robot_position[0] += 1
+                    elif (i == 9):
+                        robot_position[1] += 1
+                    if (self.matrix[robot_position[1][robot_position[0]]] == 3):
+                        return True
+                    self.matrix[robot_position[1][robot_position[0]]] = 2
         else:
             # Pop-up d'info que plus d'un moteur est allumé.
             return False
+
+    def simulation(self):
+        """
+        Effectue la simulation du robot.
+        """
+        self.create_matrix()
+        win = False
+        while (not win):
+            pos_deb = self.detect_position()
+            win = self.move_robot()
+            if (pos_deb == self.detect_position()):
+                # Pop-up signalant que le robot est bloqué.
+                break
+        if (win):
+            print("\n!!!!!!!!!!!!!!!!!!!!!! GAGNÉ !!!!!!!!!!!!!!!!!!!!!!!\n")
+        else:
+            print("\nBloqué  en ", pos_deb, ":(\n")

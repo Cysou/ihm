@@ -102,7 +102,7 @@ class Gate:
         self.cav.coords(gate_id, x1, y1, x1 + lengthx, y1 + lengthy)
 
         self.wire.move_wire_gate(gate_id, gate_key, x1, y1)
-        self.circuit.robot.read_structure()
+        self.circuit.robot.simulation()
 
     def end_move_gate(self):
         """
