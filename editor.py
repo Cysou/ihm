@@ -13,7 +13,7 @@ class Editor:
     Enregistrement, modification et suppression d'un niveau
     Fontion utile : start(*)
     """
-    def __init__(self, cav, aid):
+    def __init__(self, cav, aid, button):
         self.matrix = []
         self.create_matrix()
         self.cav = cav
@@ -47,6 +47,7 @@ class Editor:
         self.entry = Entry(cav)
         self.astar = Astar()
         self.aid = aid
+        self.button = button
 
     def start(self):
         """
@@ -348,9 +349,7 @@ class Editor:
 
             x = (width // 2) + editor_delete_gap_x
             y = editor_delete_first_y + (i * editor_delete_gap_x)
-            idd = self.cav.create_rectangle(x, y, x+30, y+15, fill="red")
-            self.cav.tag_bind(idd, "<Button-1>", lambda event, i=i: self.delete_map(i))
-            self.idd_popup.append(idd)
+            self.button.create("delete", x+15, y, [[self.delete_map, i]])
             i += 1
 
     def display_open(self):
@@ -364,9 +363,7 @@ class Editor:
 
             x = (width // 2) + editor_open_gap_x
             y = editor_open_first_y + (i * editor_open_gap_x)
-            idd = self.cav.create_rectangle(x, y, x+30, y+15, fill="green")
-            self.cav.tag_bind(idd, "<Button-1>", lambda event, i=i: self.open_map(i))
-            self.idd_popup.append(idd)
+            self.button.create("ok", x+15, y, [[self.open_map, i]])
             i += 1
 
     def delete_popup(self):

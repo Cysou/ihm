@@ -10,7 +10,7 @@ class Layout():
     Un plan contient l'affichage d'objects à l'écran et le lancement de fonctions
     Fontion utile : display(*)
     """
-    def __init__(self, root, cav, highlight, editor, button, helps):
+    def __init__(self, root, cav, highlight, editor, button, helps, circuit, gate):
         self.dico_objects = {" ": []}
         self.actual = " "
         self.actual_cover = None
@@ -38,7 +38,10 @@ class Layout():
                                "editor.map_manager_delete": editor.map_manager_delete,
                                "editor.map_manager_open": editor.map_manager_open,
                                "help.start": helps.start,
-                               "button.create": button.create}
+                               "button.create": button.create,
+                               "button.delete": button.delete,
+                               "circuit.init": circuit.init,
+                               "gate.create": gate.create}
 
         self.img = {}
         self.load_img()

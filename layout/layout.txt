@@ -18,9 +18,12 @@ rec 0 0 1000 75 grey10
 rec 1000 0 1200 200 grey10
 # gates
 rec 1000 200 1200 675 grey10
+fun circuit.init
+fun gate.create
 
 *editor
 img 600 337 editor.png
+fun button.delete
 fun editor.start
 fun button.create eopen 150 125 #cover:map_manager_open
 fun button.create edelete 150 225 #cover:map_manager_delete

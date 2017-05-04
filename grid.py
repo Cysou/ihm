@@ -172,7 +172,7 @@ class Grid:
             self.gate.enter_exit(x_matrice - lengthx, y_matrice - lengthy)
             self.gate.enter_exit(x_matrice - lengthx, y_matrice + lengthy)
             self.gate.enter_exit(x_matrice + lengthx, y_matrice)
-        print(self.matrice)
+        # print(self.matrice)
 
     def check_placement(self, x, y, gate_key, sens):
         """ Fonction vérifiant si le placement de la porte est valide. """
