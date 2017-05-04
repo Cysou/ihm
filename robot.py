@@ -8,6 +8,8 @@ class Robot():
         self.cav = cav
         self.circuit = circuit
         self.circuit.robot = self
+        self.path_matrix = None
+        self.matrix = None
 
 
     def read_structure(self):
@@ -90,30 +92,70 @@ class Robot():
         for motor in self.circuit.struct_motor:
             sum_val += self.circuit.struct_val[motor]
             if (sum_val >= 2):
-                # Pop-up d'info que plus d'un moteur est allumé.
                 return False
         return True
 
-    def detect_murs(self, matrice):
+    def detect_murs(self, robot):
         """
         Détecte les murs autour du robot et allume
         les capteurs en conséquence.
         """
-        robot = self.detect_position()
-        if (matrice[robot[1]-1][robot[0]] == 0):
+        if (self.path_matrix[robot[1]-1][robot[0]] == 1):
+            self.circuit.struct_val[2] = 0
+        else:
             self.circuit.struct_val[2] = 1
-        elif (matrice[robot[1]][robot[0]-1] == 0):
+
+        if (self.path_matrix[robot[1]][robot[0]-1] == 1):
+            self.circuit.struct_val[3] = 0
+        else:
             self.circuit.struct_val[3] = 1
-        elif (matrice[robot[1]][robot[0]+1] == 0):
+
+        if (self.path_matrix[robot[1]][robot[0]+1] == 1):
+            self.circuit.struct_val[4] = 0
+        else:
             self.circuit.struct_val[4] = 1
-        elif (matrice[robot[1]+1][robot[0]] == 0):
+
+        if (self.path_matrix[robot[1]+1][robot[0]] == 1):
+            self.circuit.struct_val[5] = 1
+        else:
             self.circuit.struct_val[5] = 1
 
-    def detect_position(self, matrice):
+    def detect_position(self):
         """
         Détecte la position du robot dans le niveau.
         """
-        for y in len(matrice):
-            for x in len(matrice[y]):
-                if (matrice[y][x] == 2):
-                    return (x, y)
+        for y in len(self.matrix):
+            for x in len(self.matrix[y]):
+                if (self.matrix[y][x] == 2):
+                    return [x, y]
+
+    def create_matrix(self):
+        """
+        Crée la matrice correspondante
+        à la carte choisie.
+        """
+        with open(self.path_matrix, "r") as fd:
+            matrix = []
+            i = 0
+            for line in fd:
+                line = line.strip()
+                line = line.split(" ")
+                for i in range(len(line)):
+                    line[i] = int(line[i])
+                print(line)
+                matrix.append(line)
+        self.matrix = matrix
+
+    def move_robot(self):
+        """
+        Permet au robot de bouger sur la carte.
+        """
+        self.create_matrix()
+        robot_position = self.detect_position()
+        self.detect_murs(robot_position)
+        if (self.read_structure()):
+            if (self.circuit.struct_val[6] == 1):
+                pass
+        else:
+            # Pop-up d'info que plus d'un moteur est allumé.
+            return False

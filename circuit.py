@@ -115,22 +115,22 @@ class Circuit:
         """
         Effectue les bindings des portes.
         """
-        self.cav.tag_bind(gate_id, "<Button-3>",
+        self.cav.tag_bind(gate_id, "<Button-1>",
                           lambda event: self.gates.init_move_gate(event,
                                                                   gate_id,
                                                                   sens))
-        self.cav.tag_bind(gate_id, "<B3-Motion>",
+        self.cav.tag_bind(gate_id, "<B1-Motion>",
                           lambda event: self.gates.move_gate(event,
                                                              gate_id, sens))
-        self.cav.tag_bind(gate_id, "<Button-1>",
+        self.cav.tag_bind(gate_id, "<Button-3>",
                           lambda event: self.detect_click(event,
                                                           gate_id,
                                                           gate_key, sens))
-        self.cav.tag_bind(gate_id, "<B1-Motion>",
+        self.cav.tag_bind(gate_id, "<B3-Motion>",
                           lambda event: self.wire.move_wire(event))
-        self.cav.tag_bind(gate_id, "<ButtonRelease-1>",
-                          lambda event: self.wire.end_wire(event))
         self.cav.tag_bind(gate_id, "<ButtonRelease-3>",
+                          lambda event: self.wire.end_wire(event))
+        self.cav.tag_bind(gate_id, "<ButtonRelease-1>",
                           lambda event: self.gates.end_move_gate())
 
         # Fonction de rotation pas opérationnelle
@@ -186,6 +186,9 @@ class Circuit:
             # de la structure du moteur.
             else:
                 self.struct_motor[l_id[i]].append(wire_id)
+
+        if (self.struct_wire[wire_id][0] == self.struct_wire[wire_id][1]):
+            self.empty_wire_structure(wire_id)
 
         # Affichage pour tests.
         print("\nCapteurs: ", self.struct_sensor)
@@ -280,15 +283,15 @@ class Circuit:
             ids = self.cav.create_rectangle(x1, y1, x1 + sensor_width,
                                             y1 + sensor_height,
                                             fill="deeppink", tags="sensor")
-            self.cav.tag_bind(ids, "<Button-1>",
+            self.cav.tag_bind(ids, "<Button-3>",
                               lambda event, y1=y1: self.wire.init_wire(event, x1 + sensor_width,
                                                                        y1 + (sensor_height // 2)))
-            self.cav.tag_bind(ids, "<B1-Motion>",
+            self.cav.tag_bind(ids, "<B3-Motion>",
                               lambda event: self.wire.move_wire(event))
-            self.cav.tag_bind(ids, "<ButtonRelease-1>",
+            self.cav.tag_bind(ids, "<ButtonRelease-3>",
                               lambda event: self.wire.end_wire(event))
             self.struct_sensor[ids] = []
-            self.struct_val[ids] = 1
+            self.struct_val[ids] = 0
             y1 += placement
 
     def init_motor(self):
@@ -303,12 +306,12 @@ class Circuit:
             idm = self.cav.create_rectangle(x1, y1, x1 + motor_width,
                                             y1 + motor_height,
                                             fill="yellow", tags="motor")
-            self.cav.tag_bind(idm, "<Button-1>",
+            self.cav.tag_bind(idm, "<Button-3>",
                               lambda event, y1=y1: self.wire.init_wire(event, x1,
                                                                        y1 + (motor_height // 2)))
-            self.cav.tag_bind(idm, "<B1-Motion>",
+            self.cav.tag_bind(idm, "<B3-Motion>",
                               lambda event: self.wire.move_wire(event))
-            self.cav.tag_bind(idm, "<ButtonRelease-1>",
+            self.cav.tag_bind(idm, "<ButtonRelease-3>",
                               lambda event: self.wire.end_wire(event))
             self.struct_motor[idm] = []
             self.struct_val[idm] = 0
