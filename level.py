@@ -52,12 +52,12 @@ class Level():
     def add_depth(self):
         if self.depth < self.max_depth:
             self.depth += 1
-        self.print_by3()
+            self.print_by3()
 
     def rem_depth(self):
         if self.depth > 0:
             self.depth -= 1
-        self.print_by3()
+            self.print_by3()
 
     def delete_soft(self):
         self.render.delete()

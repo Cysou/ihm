@@ -98,7 +98,7 @@ help_font_size = 12
 
 # level.py
 level_start_x = 80
-level_start_y = 80
+level_start_y = 90
 level_gap_x = 80
 level_gap_y = 15
 level_lenght_square = 9
