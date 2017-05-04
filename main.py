@@ -25,6 +25,7 @@ def main_loop():
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.resizable(width=False, height=False)
     cav = tk.Canvas(root, width=1200, height=675, highlightthickness=0)
     cav.pack()
 

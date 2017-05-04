@@ -40,10 +40,10 @@ editor_entry_y = 250
 gates_window_width = 200
 gates_window_height = 475
 dico_gates = {}
-dico_gates["gate_or"] = (50, 30, "blue")
-dico_gates["gate_and"] = (50, 30, "red")
-dico_gates["gate_xor"] = (50, 30, "seagreen")
-dico_gates["gate_not"] = (50, 30, "purple")
+dico_gates["gate_or"] = (40, 25, "blue")
+dico_gates["gate_and"] = (40, 25, "red")
+dico_gates["gate_xor"] = (40, 25, "seagreen")
+dico_gates["gate_not"] = (40, 25, "purple")
 
 # wire.py
 # Dictionnaire utilisé pour les déplacements des fils.
