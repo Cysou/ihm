@@ -30,6 +30,9 @@ fun circuit.init
 fun gate.create
 #fun button.create retour 930 50 #level.delete+display:home+button.delete
 #en attente delete circuit
+#fun button.create simulation 200 50 #mettre la fonction simul
+#fun button.create retour 930 50 #level.delete+display:home+button.delete
+#fun button.create changelevel 350 50 #display:level+button.delete #+delete circuit
 
 *editor
 img 600 337 editor.png
