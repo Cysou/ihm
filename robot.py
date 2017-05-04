@@ -100,25 +100,37 @@ class Robot():
         Détecte les murs autour du robot et allume
         les capteurs en conséquence.
         """
-        if (self.matrix[robot[1]-1][robot[0]] == 1):
+        if (0 < robot[1]):
+            if (self.matrix[robot[1]-1][robot[0]] == 1):
+                self.circuit.struct_val[self.circuit.l_sensor[0]] = 1
+            else:
+                self.circuit.struct_val[self.circuit.l_sensor[0]] = 0
+        else:
             self.circuit.struct_val[self.circuit.l_sensor[0]] = 1
-        else:
-            self.circuit.struct_val[self.circuit.l_sensor[0]] = 0
 
-        if (self.matrix[robot[1]][robot[0]-1] == 1):
+        if (0 < robot[0] ):
+            if (self.matrix[robot[1]][robot[0]-1] == 1):
+                self.circuit.struct_val[self.circuit.l_sensor[1]] = 1
+            else:
+                self.circuit.struct_val[self.circuit.l_sensor[1]] = 0
+        else:
             self.circuit.struct_val[self.circuit.l_sensor[1]] = 1
-        else:
-            self.circuit.struct_val[self.circuit.l_sensor[1]] = 0
 
-        if (self.matrix[robot[1]][robot[0]+1] == 1):
+        if (robot[0] < 19):
+            if (self.matrix[robot[1]][robot[0]+1] == 1):
+                self.circuit.struct_val[self.circuit.l_sensor[2]] = 1
+            else:
+                self.circuit.struct_val[self.circuit.l_sensor[2]] = 0
+        else:
             self.circuit.struct_val[self.circuit.l_sensor[2]] = 1
-        else:
-            self.circuit.struct_val[self.circuit.l_sensor[2]] = 0
 
-        if (self.matrix[robot[1]+1][robot[0]] == 1):
-            self.circuit.struct_val[self.circuit.l_sensor[3]] = 1
+        if (robot[1] < 19):
+            if (self.matrix[robot[1]+1][robot[0]] == 1):
+                self.circuit.struct_val[self.circuit.l_sensor[3]] = 1
+            else:
+                self.circuit.struct_val[self.circuit.l_sensor[3]] = 0
         else:
-            self.circuit.struct_val[self.circuit.l_sensor[3]] = 0
+            self.circuit.struct_val[self.circuit.l_sensor[3]] = 1
 
     def detect_position(self):
         """
@@ -152,21 +164,22 @@ class Robot():
         """
         robot_position = self.detect_position()
         self.detect_murs(robot_position)
+        l_val = self.circuit.struct_val
         if (self.read_structure()):
             for i in range(self.circuit.l_motor[0], self.circuit.l_motor[3]+1):
                 if (self.circuit.struct_val[i] == 1):
                     self.matrix[robot_position[1]][robot_position[0]] = 0
-                    if (i == self.circuit.l_motor[0]):
+                    if ((i == self.circuit.l_motor[0]) and (l_val[self.circuit.l_sensor[0]] == 0)):
                         robot_position[1] -= 1
-                    elif (i == self.circuit.l_motor[1]):
+                    elif ((i == self.circuit.l_motor[1]) and (l_val[self.circuit.l_sensor[1]] == 0)):
                         robot_position[0] -= 1
-                    elif (i == self.circuit.l_motor[2]):
+                    elif ((i == self.circuit.l_motor[2]) and (l_val[self.circuit.l_sensor[2]] == 0)):
                         robot_position[0] += 1
-                    elif (i == self.circuit.l_motor[3]):
+                    elif ((i == self.circuit.l_motor[3]) and (l_val[self.circuit.l_sensor[3]] == 0)):
                         robot_position[1] += 1
-                    if (self.matrix[robot_position[1][robot_position[0]]] == 3):
+                    if (self.matrix[robot_position[1]][robot_position[0]] == 3):
                         return True
-                    self.matrix[robot_position[1][robot_position[0]]] = 2
+                    self.matrix[robot_position[1]][robot_position[0]] = 2
         else:
             # Pop-up d'info que plus d'un moteur est allumé.
             return False

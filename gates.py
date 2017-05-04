@@ -17,17 +17,19 @@ class Gate:
         """
         self.cav.create_rectangle(width - gates_window_width,
                                   height - gates_window_height, width, height,
-                                  fill="grey50")
-        gate_a = self.cav.create_rectangle(1075, 280, 1075 + dico_gates["gate_and"][0], 280 + dico_gates["gate_and"][1], fill="red",
-                                           tags=("gate_and", 1))
-        gate_o = self.cav.create_rectangle(1075, 360, 1075 + dico_gates["gate_or"][0], 360 + dico_gates["gate_or"][1], fill="blue",
-                                           tags=("gate_or", 1))
+                                  fill="grey50", tag="base")
+        gate_a = self.cav.create_rectangle(1075, 280, 1075 + dico_gates["gate_and"][0], 280 + dico_gates["gate_and"][1],
+                                           fill="red",
+                                           tags=("gate_and", 1, "base"))
+        gate_o = self.cav.create_rectangle(1075, 360, 1075 + dico_gates["gate_or"][0], 360 + dico_gates["gate_or"][1],
+                                           fill="blue",
+                                           tags=("gate_or", 1, "base"))
         gate_xo = self.cav.create_rectangle(1075, 440, 1075 + dico_gates["gate_xor"][0], 440 + dico_gates["gate_xor"][1],
                                             fill="seagreen",
-                                            tags=("gate_xor", 1))
+                                            tags=("gate_xor", 1, "base"))
         gate_n = self.cav.create_rectangle(1075, 520, 1075 + dico_gates["gate_not"][0], 520 + dico_gates["gate_not"][1],
                                            fill="purple",
-                                           tags=("gate_not", 1))
+                                           tags=("gate_not", 1, "base"))
         self.cav.tag_bind(gate_a, "<ButtonRelease-1>", self.release)
         self.cav.tag_bind(gate_o, "<ButtonRelease-1>", self.release)
         self.cav.tag_bind(gate_xo, "<ButtonRelease-1>", self.release)

@@ -269,7 +269,7 @@ class Circuit:
         """
         self.cav.create_rectangle(x1_circuit, y1_circuit,
                                   x2_circuit, y2_circuit,
-                                  fill="grey60")
+                                  fill="grey60", tag="base")
         self.init_sensor()
         self.init_motor()
 
@@ -454,3 +454,17 @@ class Circuit:
             else:
                 self.wire.tags_io_wire[placement] = "output"
                 return 3
+
+    def clean_cav(self):
+        """
+        Clean le canevas.
+        """
+        l_id = list(self.struct_gate.keys())
+        for gate in l_id:
+            self.empty_gate_structure(gate)
+        self.struct_motor = {}
+        self.struct_sensor = {}
+        self.struct_val = {}
+        self.cav.delete("motor")
+        self.cav.delete("sensor")
+        self.cav.delete("base")

@@ -180,6 +180,7 @@ class Wire:
                     self.cav.tag_bind(wire_id, "<Enter>", self.wire_lift)
                     self.cav.tag_bind(wire_id, "<Control-Button-3>",
                                       lambda event: self.circuit.empty_structure(event, wire_id))
+                    self.circuit.clean_cav()
             elif (self.tags_io_wire[0] == "input"):
                 # Pour pop-up signalant l'invalidité du fil.
                 self.cav.delete(self.begin_wire[0])
