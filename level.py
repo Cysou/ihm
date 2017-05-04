@@ -19,15 +19,18 @@ class Level():
         self.fill_lists()
         # print(self.path)
         self.max_depth = self.calcul_max_depth()
-        # print(self.max_depth)
+        self.depth = 0
+        # print("max_d", self.max_depth)
         self.render = render
 
     def calcul_max_depth(self):
         maxi = 0
         for dif in self.path:
-            if len(dif) > maxi:
-                maxi = len(dif)
-        return (maxi-1)//3
+            # print("dif", self.path[dif])
+            # print("len", len(self.path[dif]))
+            if len(self.path[dif]) > maxi:
+                maxi = len(self.path[dif])
+        return (maxi-3)
 
     def fill_lists(self):
         for repository in ("easy", "medium", "hard", "custom"):
@@ -35,15 +38,33 @@ class Level():
             for i in os.listdir(path):
                 self.path[repository] += [path + i]
 
-    def print_by3(self, depth):
+    def print_by3(self):
+        self.delete_soft()
         x = level_start_x
         for repository in ("easy", "medium", "hard", "custom"):
             y = level_start_y
-            for i in range(depth, depth+3):
+            for i in range(self.depth, self.depth+3):
                 if len(self.path[repository]) >= i+1:
-                    self.render.level(self.path[repository][i], x, y, level_lenght_square)
+                    self.render.level(self.path[repository][i], x, y, level_lenght_square, 1)
                 y += level_lenght_square*map_nb_square + level_gap_y
             x += level_lenght_square*map_nb_square + level_gap_x
+
+    def add_depth(self):
+        if self.depth < self.max_depth:
+            self.depth += 1
+        self.print_by3()
+
+    def rem_depth(self):
+        if self.depth > 0:
+            self.depth -= 1
+        self.print_by3()
+
+    def delete_soft(self):
+        self.render.delete()
+
+    def delete(self):
+        self.render.delete()
+        self.depth = 0
 
 
 if __name__ == '__main__':
@@ -56,6 +77,6 @@ if __name__ == '__main__':
     render = m_render.Render(cav)
 
     level = Level(render)
-    level.print_by3(0)
+    level.print_by3()
 
     root.mainloop()
