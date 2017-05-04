@@ -100,32 +100,32 @@ class Robot():
         Détecte les murs autour du robot et allume
         les capteurs en conséquence.
         """
-        if (self.path_matrix[robot[1]-1][robot[0]] == 1):
-            self.circuit.struct_val[2] = 0
+        if (self.matrix[robot[1]-1][robot[0]] == 1):
+            self.circuit.struct_val[self.circuit.l_sensor[0]] = 1
         else:
-            self.circuit.struct_val[2] = 1
+            self.circuit.struct_val[self.circuit.l_sensor[0]] = 0
 
-        if (self.path_matrix[robot[1]][robot[0]-1] == 1):
-            self.circuit.struct_val[3] = 0
+        if (self.matrix[robot[1]][robot[0]-1] == 1):
+            self.circuit.struct_val[self.circuit.l_sensor[1]] = 1
         else:
-            self.circuit.struct_val[3] = 1
+            self.circuit.struct_val[self.circuit.l_sensor[1]] = 0
 
-        if (self.path_matrix[robot[1]][robot[0]+1] == 1):
-            self.circuit.struct_val[4] = 0
+        if (self.matrix[robot[1]][robot[0]+1] == 1):
+            self.circuit.struct_val[self.circuit.l_sensor[2]] = 1
         else:
-            self.circuit.struct_val[4] = 1
+            self.circuit.struct_val[self.circuit.l_sensor[2]] = 0
 
-        if (self.path_matrix[robot[1]+1][robot[0]] == 1):
-            self.circuit.struct_val[5] = 1
+        if (self.matrix[robot[1]+1][robot[0]] == 1):
+            self.circuit.struct_val[self.circuit.l_sensor[3]] = 1
         else:
-            self.circuit.struct_val[5] = 1
+            self.circuit.struct_val[self.circuit.l_sensor[3]] = 0
 
     def detect_position(self):
         """
         Détecte la position du robot dans le niveau.
         """
-        for y in len(self.matrix):
-            for x in len(self.matrix[y]):
+        for y in range(len(self.matrix)):
+            for x in range(len(self.matrix[y])):
                 if (self.matrix[y][x] == 2):
                     return [x, y]
 
@@ -142,7 +142,7 @@ class Robot():
                 line = line.split(" ")
                 for i in range(len(line)):
                     line[i] = int(line[i])
-                print(line)
+                # print(line)
                 matrix.append(line)
         self.matrix = matrix
 
@@ -153,16 +153,16 @@ class Robot():
         robot_position = self.detect_position()
         self.detect_murs(robot_position)
         if (self.read_structure()):
-            for i in range(6, 10):
+            for i in range(self.circuit.l_motor[0], self.circuit.l_motor[3]+1):
                 if (self.circuit.struct_val[i] == 1):
-                    self.matrix[robot_position[1][robot_position[0]]] = 0
-                    if (i == 6):
+                    self.matrix[robot_position[1]][robot_position[0]] = 0
+                    if (i == self.circuit.l_motor[0]):
                         robot_position[1] -= 1
-                    elif (i == 7):
+                    elif (i == self.circuit.l_motor[1]):
                         robot_position[0] -= 1
-                    elif (i == 8):
+                    elif (i == self.circuit.l_motor[2]):
                         robot_position[0] += 1
-                    elif (i == 9):
+                    elif (i == self.circuit.l_motor[3]):
                         robot_position[1] += 1
                     if (self.matrix[robot_position[1][robot_position[0]]] == 3):
                         return True

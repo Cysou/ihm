@@ -173,10 +173,13 @@ class Wire:
             """
             wire_id = self.begin_wire[0]
             if (self.tags_io_wire[0] != self.tags_io_wire[1]):
-                self.circuit.fill_structure(wire_id)
-                self.cav.tag_bind(wire_id, "<Enter>", self.wire_lift)
-                self.cav.tag_bind(wire_id, "<Control-Button-3>",
-                                  lambda event: self.circuit.empty_structure(event, wire_id))
+                if (self.id_extremites_wire[0] == self.id_extremites_wire[1]):
+                    self.cav.delete(self.begin_wire[0])
+                else:
+                    self.circuit.fill_structure(wire_id)
+                    self.cav.tag_bind(wire_id, "<Enter>", self.wire_lift)
+                    self.cav.tag_bind(wire_id, "<Control-Button-3>",
+                                      lambda event: self.circuit.empty_structure(event, wire_id))
             elif (self.tags_io_wire[0] == "input"):
                 # Pour pop-up signalant l'invalidité du fil.
                 self.cav.delete(self.begin_wire[0])

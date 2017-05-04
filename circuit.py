@@ -13,6 +13,11 @@ class Circuit:
         self.wire = None
         self.robot = None
 
+        # Listes utilisées pour conserver
+        # les id des capteurs et des moteurs.
+        self.l_sensor = []
+        self.l_motor = []
+
         # Dictionnaires utilisés pour la structure de données.
         self.struct_gate = {}
         self.struct_sensor = {}
@@ -187,9 +192,6 @@ class Circuit:
             else:
                 self.struct_motor[l_id[i]].append(wire_id)
 
-        if (self.struct_wire[wire_id][0] == self.struct_wire[wire_id][1]):
-            self.empty_wire_structure(wire_id)
-
         # Affichage pour tests.
         print("\nCapteurs: ", self.struct_sensor)
         print("\nMoteurs: ", self.struct_motor)
@@ -290,6 +292,7 @@ class Circuit:
                               lambda event: self.wire.move_wire(event))
             self.cav.tag_bind(ids, "<ButtonRelease-3>",
                               lambda event: self.wire.end_wire(event))
+            self.l_sensor.append(ids)
             self.struct_sensor[ids] = []
             self.struct_val[ids] = 0
             y1 += placement
@@ -313,6 +316,7 @@ class Circuit:
                               lambda event: self.wire.move_wire(event))
             self.cav.tag_bind(idm, "<ButtonRelease-3>",
                               lambda event: self.wire.end_wire(event))
+            self.l_motor.append(idm)
             self.struct_motor[idm] = []
             self.struct_val[idm] = 0
             y1 += placement
