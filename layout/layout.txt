@@ -10,10 +10,10 @@ fun highlight.create_text 150 270 Quitter white Sawasdee 15 #root.quit
 
 *level
 img 600 337 level.png
-txt 175 40 Easy white arial 14
-txt 430 40 Medium white arial 14
-txt 690 40 Hard white arial 14
-txt 950 40 Custom white arial 14
+txt 175 70 Easy white arial 14
+txt 430 70 Medium white arial 14
+txt 690 70 Hard white arial 14
+txt 950 70 Custom white arial 14
 fun level.print_by3
 fun button.create up 1100 300 #level.rem_depth
 fun button.create down 1100 380 #level.add_depth
@@ -46,17 +46,13 @@ fun button.create retour 1050 50 #editor.stop+display:home+button.delete
 *map_manager_open
 img 600 337 fond_50.png lift
 img 600 337 level_open.png lift
-rec 713 13 787 38 white lift
-rec 715 15 785 35 black lift
-txt 750 25 retour white Ubuntu 14 lift #editor.delete_popup+uncover
+fun button.create retour 750 25 #editor.delete_popup+uncover
 fun editor.map_manager_open
 
 *map_manager_delete
 img 600 337 fond_50.png lift
 img 600 337 level_delete.png lift
-rec 713 13 787 38 white lift
-rec 715 15 785 35 black lift
-txt 750 25 retour white Ubuntu 14 lift #editor.delete_popup+uncover
+fun button.create retour 750 25 #editor.delete_popup+uncover
 fun editor.map_manager_delete
 
 *help
