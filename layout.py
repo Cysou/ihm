@@ -31,7 +31,8 @@ class Layout():
                               "editor.save_map": editor.save_map,
                               "root.quit": root.quit,
                               "help.stop": helps.stop,
-                              "button.delete": button.delete,
+                              "button.delete_taken": button.delete_taken,
+                              "button.take": button.take,
                               "level.rem_depth": level.rem_depth,
                               "level.add_depth": level.add_depth,
                               "level.delete": level.delete}
@@ -43,7 +44,6 @@ class Layout():
                                "editor.map_manager_open": editor.map_manager_open,
                                "help.start": helps.start,
                                "button.create": button.create,
-                               "button.delete": button.delete,
                                "circuit.init": circuit.init,
                                "gate.create": gate.create,
                                "level.print_by3": level.print_by3}
@@ -131,6 +131,7 @@ class Layout():
         """
         layout_name : nom du plan à afficher
         """
+        print(layout_name)
         self.delete_layout(self.actual)
         self.actual = layout_name
         self.display_objects(self.actual)

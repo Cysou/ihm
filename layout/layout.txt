@@ -17,7 +17,7 @@ txt 950 70 Custom white arial 14
 fun level.print_by3
 fun button.create up 1100 300 #level.rem_depth
 fun button.create down 1100 380 #level.add_depth
-fun button.create retour 1110 40 #level.delete+display:home+button.delete
+fun button.create retour 1110 40 #button.take+level.delete+display:home+button.delete_taken
 
 *game
 # menu
@@ -26,36 +26,35 @@ rec 0 0 1000 75 grey10
 rec 1000 0 1200 200 grey10
 # gates
 rec 1000 200 1200 675 grey10
-fun circuit.init
-fun gate.create
-#fun button.create retour 930 50 #level.delete+display:home+button.delete
+#fun circuit.init
+#fun gate.create
+fun button.create retour 930 50 #button.take+display:home+button.delete_taken
 #en attente delete circuit
 #fun button.create simulation 200 50 #mettre la fonction simul
-#fun button.create retour 930 50 #level.delete+display:home+button.delete
-#fun button.create changelevel 350 50 #display:level+button.delete #+delete circuit
+#fun button.create retour 930 50 #button.take+level.delete+display:home+button.delete_taken
+#fun button.create changelevel 350 50 #button.take+display:level+button.delete_taken+delete circuit
 
 *editor
 img 600 337 editor.png
-fun button.delete
 fun editor.start
 fun button.create eopen 150 125 #cover:map_manager_open
 fun button.create edelete 150 225 #cover:map_manager_delete
 fun button.create esave 1050 300 #editor.save_map
-fun button.create retour 1050 50 #editor.stop+display:home+button.delete
+fun button.create retour 1050 50 #editor.stop+button.take+display:home+button.delete_taken
 
 *map_manager_open
 img 600 337 fond_50.png lift
 img 600 337 level_open.png lift
-fun button.create retour 750 25 #editor.delete_popup+uncover
+fun button.create retour 750 25 #button.take+editor.delete_popup+uncover+button.delete_taken
 fun editor.map_manager_open
 
 *map_manager_delete
 img 600 337 fond_50.png lift
 img 600 337 level_delete.png lift
-fun button.create retour 750 25 #editor.delete_popup+uncover
+fun button.create retour 750 25 #button.take+editor.delete_popup+uncover+button.delete_taken
 fun editor.map_manager_delete
 
 *help
 img 600 337 help.png
 fun help.start
-fun button.create retour 1100 50 #help.stop+display:home+button.delete
+fun button.create retour 1100 50 #help.stop+button.take+display:home+button.delete_taken
