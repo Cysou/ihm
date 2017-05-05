@@ -17,19 +17,23 @@ class Gate:
         """
         self.cav.create_rectangle(width - gates_window_width,
                                   height - gates_window_height, width, height,
-                                  fill="grey50", tag="obj")
+                                  fill="white", tag="obj")
         gate_a = self.cav.create_rectangle(1075, 280, 1075 + dico_gates["gate_and"][0], 280 + dico_gates["gate_and"][1],
                                            fill="white",
-                                           tags=("gate_and", 1, "obj"))
+                                           tags=("gate_and", 1, "obj"),
+                                           outline="white")
         gate_o = self.cav.create_rectangle(1075, 360, 1075 + dico_gates["gate_or"][0], 360 + dico_gates["gate_or"][1],
                                            fill="white",
-                                           tags=("gate_or", 1, "obj"))
+                                           tags=("gate_or", 1, "obj"),
+                                           outline="white")
         gate_xo = self.cav.create_rectangle(1075, 440, 1075 + dico_gates["gate_xor"][0], 440 + dico_gates["gate_xor"][1],
                                             fill="white",
-                                            tags=("gate_xor", 1, "obj"))
+                                            tags=("gate_xor", 1, "obj"),
+                                            outline="white")
         gate_n = self.cav.create_rectangle(1075, 520, 1075 + dico_gates["gate_not"][0], 520 + dico_gates["gate_not"][1],
                                            fill="white",
-                                           tags=("gate_not", 1, "obj"))
+                                           tags=("gate_not", 1, "obj"),
+                                           outline="white")
         self.cav.tag_bind(gate_a, "<ButtonRelease-1>", self.release)
         self.cav.tag_bind(gate_o, "<ButtonRelease-1>", self.release)
         self.cav.tag_bind(gate_xo, "<ButtonRelease-1>", self.release)

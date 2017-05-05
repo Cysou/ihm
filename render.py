@@ -67,31 +67,33 @@ class Render():
         self.cav.create_rectangle(x, y, x + lenght*map_nb_square,
                                         y + lenght*map_nb_square,
                                         fill=None, width=2, outline="grey80",
-                                        tags=("square_render", "map"))
+                                        tags=("square_render", "map", "obj"))
         self.cav.lift("img_render")
 
     def create_rec(self, i, j, x, y, lenght, name, path, bind):
         x = x + lenght * j
         y = y + lenght * i
         idd = self.cav.create_rectangle(x, y, x + lenght, y + lenght,
-                                        fill=self.rec[name], width=0, tags=("square_render", "map"))
+                                        fill=self.rec[name], width=0, tags=("square_render", "map", "obj"))
         if bind:
             self.cav.tag_bind(idd, "<Button-1>", lambda event, path=path: self.init_launch(path))
 
     def create_img(self, i, j, x, y, lenght, name, path, bind, big):
         x = x + lenght * j
         y = y + lenght * i
+
         if (big):
             self.cav.create_rectangle(x, y, x + lenght, y + lenght,
                                       fill="white", width=0, tags=("square_render", "map"))
             idd = self.cav.create_image(x, y, ancho="nw", image=self.img[name+"_b"],
-                                    tags=("square", "img_render", "map"))
-            self.cav.create_circle(x, y, 10, fill="grey60", tags=("map", "robot"))
+                                    tags=("square", "img_render", "map", "obj"))
+            if (name == "start"):
+                self.cav.create_oval(x, y, x + 29, y + 29, fill="grey60", tags=("map", "robot"), outline="grey60")
         else:
             self.cav.create_rectangle(x, y, x + lenght, y + lenght,
-                                      fill="white", width=0, tags=("square_render"))
+                                      fill="white", width=0, tags=("square_render", "obj"))
             idd = self.cav.create_image(x, y, ancho="nw", image=self.img[name],
-                                    tags=("square", "img_render", "map"))
+                                    tags=("square", "img_render", "map", "obj"))
         if bind:
             self.cav.tag_bind(idd, "<Button-1>", lambda event, path=path: self.init_launch(path))
 

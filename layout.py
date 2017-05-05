@@ -49,7 +49,8 @@ class Layout():
                                "button.create": button.create,
                                "circuit.init": circuit.init,
                                "gate.create": gate.create,
-                               "level.print_by3": level.print_by3}
+                               "level.print_by3": level.print_by3,
+                               "circuit.mini_map": circuit.mini_map}
 
         self.img = {}
         self.load_img()

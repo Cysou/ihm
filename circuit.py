@@ -5,7 +5,6 @@ from const import *
 from gates import *
 from wire import *
 from robot import *
-from render import *
 
 
 class Circuit:
@@ -115,11 +114,13 @@ class Circuit:
         if (int(sens) % 2) != 0:
             gate_id = self.cav.create_rectangle(x - x1, y - y1, x + x1, y + y1,
                                                 fill="white",
-                                                tags=(gate_key, sens, "obj"))
+                                                tags=(gate_key, sens, "obj"),
+                                                outline="white")
         else:
             gate_id = self.cav.create_rectangle(x - y1, y - x1, x + y1, y + x1,
                                                 fill="white",
-                                                tags=(gate_key, sens, "obj"))
+                                                tags=(gate_key, sens, "obj"),
+                                                outline="white")
 
         if (gate_key == "gate_and"):
             img_id = self.cav.create_image(x - x1, y - y1, anchor="nw",
@@ -222,10 +223,10 @@ class Circuit:
                 self.struct_motor[l_id[i]].append(wire_id)
 
         # Affichage pour tests.
-        print("\nCapteurs: ", self.struct_sensor)
-        print("\nMoteurs: ", self.struct_motor)
-        print("\nFils: ", self.struct_wire)
-        print("\nPortes\n: ", self.struct_gate)
+        # print("\nCapteurs: ", self.struct_sensor)
+        # print("\nMoteurs: ", self.struct_motor)
+        # print("\nFils: ", self.struct_wire)
+        # print("\nPortes\n: ", self.struct_gate)
 
     def empty_structure(self, event, obj_id):
         """
@@ -302,7 +303,7 @@ class Circuit:
         """
         self.cav.create_rectangle(x1_circuit, y1_circuit,
                                   x2_circuit, y2_circuit,
-                                  fill="grey60", tag="obj")
+                                  fill="white", tag="obj")
         self.init_sensor()
         self.init_motor()
 
@@ -524,3 +525,6 @@ class Circuit:
             pilimg = Image.open(path_all)
             tkimg = ImageTk.PhotoImage(pilimg)
             self.img[path] = tkimg
+
+    def mini_map(self):
+        self.robot.render.level(self.robot.path_matrix, 1000, 0, 10, False)

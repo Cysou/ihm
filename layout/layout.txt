@@ -27,12 +27,12 @@ rec 1000 0 1200 200 grey10
 # gates
 rec 1000 200 1200 675 grey10
 fun circuit.init
+fun circuit.mini_map
 fun gate.create
-fun button.create retour 930 30 #button.take+circuit.clean_cav+display:home+button.delete_taken
+fun button.create retour 930 37 #button.take+circuit.clean_cav+display:home+button.delete_taken
 #en attente delete circuit
-fun button.create esimulation 200 30 #robot.simulation
-#fun button.create retour 930 50 #button.take+level.delete+display:home+button.delete_taken
-#fun button.create changelevel 350 50 #button.take+display:level+button.delete_taken+delete
+fun button.create esimulation 200 37 #robot.simulation
+fun button.create elevel 400 37 #button.take+circuit.clean_cav+display:level+button.delete_taken
 
 *editor
 img 600 337 editor.png

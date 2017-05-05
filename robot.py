@@ -177,16 +177,17 @@ class Robot():
                     self.matrix[robot_position[1]][robot_position[0]] = 0
                     if ((i == self.circuit.l_motor[0]) and (l_val[self.circuit.l_sensor[0]] == 0)):
                         robot_position[1] -= 1
-                        self.cav.move("robot", 0, -35)
+                        self.cav.move("robot", 0, -30)
                     elif ((i == self.circuit.l_motor[1]) and (l_val[self.circuit.l_sensor[1]] == 0)):
                         robot_position[0] -= 1
-                        self.cav.move("robot", -35, 0)
+                        self.cav.move("robot", -30, 0)
                     elif ((i == self.circuit.l_motor[2]) and (l_val[self.circuit.l_sensor[2]] == 0)):
                         robot_position[0] += 1
-                        self.cav.move("robot", 35, 0)
+                        self.cav.move("robot", 30, 0)
                     elif ((i == self.circuit.l_motor[3]) and (l_val[self.circuit.l_sensor[3]] == 0)):
                         robot_position[1] += 1
-                        self.cav.move("robot", 0, 35)
+                        self.cav.move("robot", 0, 30)
+                    self.cav.update()
                     if (self.matrix[robot_position[1]][robot_position[0]] == 3):
                         return True
                     self.matrix[robot_position[1]][robot_position[0]] = 2
@@ -201,21 +202,22 @@ class Robot():
         self.create_matrix()
         win = False
         self.cav.create_image(0, 0, anchor="nw", image=self.img["layout/img/fond_50.png"], tags="map")
-        self.render.level(self.path_matrix, 250, 0, 35, False, True)
+        self.render.level(self.path_matrix, 250, 0, 30, False, True)
         self.cav.update()
         while (not win):
             pos_deb = self.detect_position()
-            win = self.move_robot()
             sleep(1)
+            win = self.move_robot()
             if (pos_deb == self.detect_position()):
                 text = "Erreur, robot bloqué à la position "+str(pos_deb)+"."
                 self.aid.create(text, x2_circuit - 50, y1_circuit + motor_height)
-                self.cav.update()
-                sleep(1)
-                self.cav.delete("map")
                 break
         if (win):
             self.aid.create("Gagné !! Bravo.", x2_circuit, y1_circuit + 220)
+        self.cav.update()
+        sleep(5)
+        self.cav.delete("map")
+        self.circuit.mini_map()
 
     def load_img(self):
             path_all="layout/img/fond_50.png"
