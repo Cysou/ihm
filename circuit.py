@@ -5,6 +5,7 @@ from const import *
 from gates import *
 from wire import *
 from robot import *
+from render import *
 
 
 class Circuit:
@@ -521,6 +522,3 @@ class Circuit:
             pilimg = Image.open(path_all)
             tkimg = ImageTk.PhotoImage(pilimg)
             self.img[path] = tkimg
-
-    def save(self):
-        pass

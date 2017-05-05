@@ -48,7 +48,7 @@ if __name__ == "__main__":
     render = m_render.Render(cav, robot, button)
     level = m_level.Level(render)
 
-    layout = m_layout.Layout(root, cav, highlight, editor, button, helps, circuit, gate, level, render)
+    layout = m_layout.Layout(root, cav, highlight, editor, button, helps, circuit, gate, level, render, robot)
     layout.display("home")
 
 
