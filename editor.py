@@ -96,7 +96,7 @@ class Editor:
         x2 = editor_grid_x1 + editor_grid_square
         y2 = editor_grid_y1 + editor_grid_square
         while (y2 <= editor_grid_height + editor_grid_y1):
-            self.cav.create_rectangle(x1, y1, x2, y2, outline="grey60", fill="grey95", tags="square")
+            self.cav.create_rectangle(x1, y1, x2, y2, outline="grey60", fill="grey95", tags="editor_square")
             if x2 >= editor_grid_width + editor_grid_x1:
                 x1 = editor_grid_x1
                 y1 += editor_grid_square
@@ -187,16 +187,16 @@ class Editor:
         self.idd_end = None
 
     def bind(self):
-        self.cav.tag_bind("square", "<Button-1>", self.place)
-        self.cav.tag_bind("square", "<Button-3>", self.remove)
-        self.cav.tag_bind("square", "<B1-Motion>", self.place)
-        self.cav.tag_bind("square", "<B3-Motion>", self.remove)
+        self.cav.tag_bind("editor_square", "<Button-1>", self.place)
+        self.cav.tag_bind("editor_square", "<Button-3>", self.remove)
+        self.cav.tag_bind("editor_square", "<B1-Motion>", self.place)
+        self.cav.tag_bind("editor_square", "<B3-Motion>", self.remove)
 
-        self.cav.tag_bind("circle", "<Button-1>", self.place)
-        self.cav.tag_bind("circle", "<Button-3>", self.remove)
-        self.cav.tag_bind("circle", "<B1-Motion>", self.place)
-        self.cav.tag_bind("circle", "<B3-Motion>", self.remove)
-        self.cav.tag_bind("circle", "<ButtonRelease-3>", self.delete_hidden_circles)
+        self.cav.tag_bind("editor_circle", "<Button-1>", self.place)
+        self.cav.tag_bind("editor_circle", "<Button-3>", self.remove)
+        self.cav.tag_bind("editor_circle", "<B1-Motion>", self.place)
+        self.cav.tag_bind("editor_circle", "<B3-Motion>", self.remove)
+        self.cav.tag_bind("editor_circle", "<ButtonRelease-3>", self.delete_hidden_circles)
 
     def stop(self):
         self.delete_all_circle()
@@ -267,7 +267,7 @@ class Editor:
         name_img = self.get_name_img(self.matrix[i][j][1])
         y = (i * editor_grid_square) + editor_grid_y1
         x = (j * editor_grid_square) + editor_grid_x1
-        idd = self.cav.create_image(x, y, anchor="nw", image=self.img[name_img], tags="circle")
+        idd = self.cav.create_image(x, y, anchor="nw", image=self.img[name_img], tags="editor_circle")
         self.matrix[i][j][0] = idd
 
     def update_around(self, i, j):
@@ -284,7 +284,7 @@ class Editor:
                 name_img = self.get_name_img(self.matrix[i][j][1])
                 y = (i * editor_grid_square) + editor_grid_y1
                 x = (j * editor_grid_square) + editor_grid_x1
-                idd = self.cav.create_image(x, y, anchor="nw", image=self.img[name_img], tags="circle")
+                idd = self.cav.create_image(x, y, anchor="nw", image=self.img[name_img], tags="editor_circle")
                 self.matrix[i][j][0] = idd
 
     def update_corners(self, actual, corners):

@@ -42,13 +42,13 @@ if __name__ == "__main__":
 
     circuit = m_circuit.Circuit(cav)
     wire = m_wire.Wire(cav, circuit)
-    robot = m_robot.Robot(cav, circuit)
+    robot = m_robot.Robot(cav, circuit, aid)
     gate = m_gates.Gate(cav, circuit)
 
     render = m_render.Render(cav, robot, button)
     level = m_level.Level(render)
 
-    layout = m_layout.Layout(root, cav, highlight, editor, button, helps, circuit, gate, level, render)
+    layout = m_layout.Layout(root, cav, highlight, editor, button, helps, circuit, gate, level, render, robot)
     layout.display("home")
 
 

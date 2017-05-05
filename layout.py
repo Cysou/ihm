@@ -10,7 +10,7 @@ class Layout():
     Un plan contient l'affichage d'objects à l'écran et le lancement de fonctions
     Fontion utile : display(*)
     """
-    def __init__(self, root, cav, highlight, editor, button, helps, circuit, gate, level, render):
+    def __init__(self, root, cav, highlight, editor, button, helps, circuit, gate, level, render, robot):
         self.dico_objects = {" ": []}
         self.actual = " "
         self.actual_cover = None
@@ -35,7 +35,10 @@ class Layout():
                               "button.take": button.take,
                               "level.rem_depth": level.rem_depth,
                               "level.add_depth": level.add_depth,
-                              "level.delete": level.delete}
+                              "level.delete": level.delete,
+                              "robot.simulation": robot.simulation,
+                              "circuit.clean_cav": circuit.clean_cav,
+                              "render.level": render.level}
 
         self.dico_functions = {}
         self.know_functions = {"highlight.create_text": highlight.create_text,
