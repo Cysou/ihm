@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     circuit = m_circuit.Circuit(cav)
     wire = m_wire.Wire(cav, circuit)
-    robot = m_robot.Robot(cav, circuit)
+    robot = m_robot.Robot(cav, circuit, aid)
     gate = m_gates.Gate(cav, circuit)
 
     render = m_render.Render(cav, robot, button)

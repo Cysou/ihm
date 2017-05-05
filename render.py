@@ -1,5 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+from time import sleep
 from const import *
 
 
@@ -18,6 +19,7 @@ class Render():
         self.layout_display = None
         self.robot = robot
         self.button = button
+        self.robot.render = self
 
     def set_layout_display(self, layout_display):
         self.layout_display = layout_display

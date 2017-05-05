@@ -1,16 +1,21 @@
 import tkinter as tk
+from PIL import Image, ImageTk
+import os
 from const import *
 
 
 class Robot():
 
-    def __init__(self, cav, circuit):
+    def __init__(self, cav, circuit, aid):
         self.cav = cav
         self.circuit = circuit
         self.circuit.robot = self
         self.path_matrix = None
         self.matrix = None
-
+        self.aid = aid
+        self.render = None
+        self.img = {}
+        self.load_img()
 
     def read_structure(self):
         """
@@ -181,7 +186,7 @@ class Robot():
                         return True
                     self.matrix[robot_position[1]][robot_position[0]] = 2
         else:
-            # Pop-up d'info que plus d'un moteur est allumé.
+            self.aid.create("Erreur, plusieurs moteurs sont allumés en même temps.", x2_circuit, y1_circuit + 250)
             return False
 
     def simulation(self):
@@ -190,13 +195,20 @@ class Robot():
         """
         self.create_matrix()
         win = False
+        self.cav.create_image(0, 0, anchor="nw", image=self.img["layout/img/fond_50.png"])
+        self.render.level(self.path_matrix, 250, 0, 35, False)
         while (not win):
             pos_deb = self.detect_position()
             win = self.move_robot()
             if (pos_deb == self.detect_position()):
-                # Pop-up signalant que le robot est bloqué.
+                text = "Erreur, robot bloqué à la position "+str(pos_deb)+"."
+                self.aid.create(text, x2_circuit, y1_circuit + motor_height)
                 break
         if (win):
-            print("\n!!!!!!!!!!!!!!!!!!!!!! GAGNÉ !!!!!!!!!!!!!!!!!!!!!!!\n")
-        else:
-            print("\nBloqué  en ", pos_deb, ":(\n")
+            self.aid.create("Gagné !! Bravo.", x2_circuit, y1_circuit + 220)
+
+    def load_img(self):
+            path_all="layout/img/fond_50.png"
+            pilimg = Image.open(path_all)
+            tkimg = ImageTk.PhotoImage(pilimg)
+            self.img[path_all] = tkimg

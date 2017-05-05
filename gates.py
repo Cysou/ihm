@@ -110,7 +110,6 @@ class Gate:
         self.cav.coords(self.circuit.struct_img[gate_id], x1, y1)
 
         self.wire.move_wire_gate(gate_id, gate_key, x1, y1)
-        self.circuit.robot.simulation()
 
     def end_move_gate(self):
         """

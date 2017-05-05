@@ -26,13 +26,13 @@ rec 0 0 1000 75 grey10
 rec 1000 0 1200 200 grey10
 # gates
 rec 1000 200 1200 675 grey10
-#fun circuit.init
-#fun gate.create
-fun button.create retour 930 50 #button.take+display:home+button.delete_taken
+fun circuit.init
+fun gate.create
+fun button.create retour 930 50 #button.take+circuit.clean_cav+display:home+button.delete_taken
 #en attente delete circuit
-#fun button.create simulation 200 50 #mettre la fonction simul
+fun button.create esimulation 200 50 #robot.simulation
 #fun button.create retour 930 50 #button.take+level.delete+display:home+button.delete_taken
-#fun button.create changelevel 350 50 #button.take+display:level+button.delete_taken+delete circuit
+#fun button.create changelevel 350 50 #button.take+display:level+button.delete_taken+delete
 
 *editor
 img 600 337 editor.png
