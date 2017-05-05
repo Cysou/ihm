@@ -18,18 +18,22 @@ class Gate:
         self.cav.create_rectangle(width - gates_window_width,
                                   height - gates_window_height, width, height,
                                   fill="white", tag="obj")
+        self.cav.create_text(1075, 280, anchor="sw", text="Porte ET")
         gate_a = self.cav.create_rectangle(1075, 280, 1075 + dico_gates["gate_and"][0], 280 + dico_gates["gate_and"][1],
                                            fill="white",
                                            tags=("gate_and", 1, "obj"),
                                            outline="white")
+        self.cav.create_text(1075, 360, anchor="sw", text="Porte OU")
         gate_o = self.cav.create_rectangle(1075, 360, 1075 + dico_gates["gate_or"][0], 360 + dico_gates["gate_or"][1],
                                            fill="white",
                                            tags=("gate_or", 1, "obj"),
                                            outline="white")
+        self.cav.create_text(1075, 440, anchor="sw", text="Porte OU-EXCLUSIF")
         gate_xo = self.cav.create_rectangle(1075, 440, 1075 + dico_gates["gate_xor"][0], 440 + dico_gates["gate_xor"][1],
                                             fill="white",
                                             tags=("gate_xor", 1, "obj"),
                                             outline="white")
+        self.cav.create_text(1075, 520, anchor="sw", text="Inverseur")
         gate_n = self.cav.create_rectangle(1075, 520, 1075 + dico_gates["gate_not"][0], 520 + dico_gates["gate_not"][1],
                                            fill="white",
                                            tags=("gate_not", 1, "obj"),
@@ -38,10 +42,10 @@ class Gate:
         self.cav.tag_bind(gate_o, "<ButtonRelease-1>", self.release)
         self.cav.tag_bind(gate_xo, "<ButtonRelease-1>", self.release)
         self.cav.tag_bind(gate_n, "<ButtonRelease-1>", self.release)
-        gate_and = self.cav.create_image(1075, 280, anchor="nw", image=self.circuit.img["and.png"], state="disabled", tags=("gate_and", 1, "obj"))
-        gate_or = self.cav.create_image(1075, 360, anchor="nw", image=self.circuit.img["or.png"], state="disabled", tags=("gate_or", 1, "obj"))
-        gate_xor = self.cav.create_image(1075, 440, anchor="nw", image=self.circuit.img["xor.png"], state="disabled", tags=("gate_xor", 1, "obj"))
-        gate_not = self.cav.create_image(1075, 520, anchor="nw", image=self.circuit.img["not.png"], state="disabled", tags=("gate_not", 1, "obj"))
+        self.cav.create_image(1075, 280, anchor="nw", image=self.circuit.img["and.png"], state="disabled", tags=("gate_and", 1, "obj"))
+        self.cav.create_image(1075, 360, anchor="nw", image=self.circuit.img["or.png"], state="disabled", tags=("gate_or", 1, "obj"))
+        self.cav.create_image(1075, 440, anchor="nw", image=self.circuit.img["xor.png"], state="disabled", tags=("gate_xor", 1, "obj"))
+        self.cav.create_image(1075, 520, anchor="nw", image=self.circuit.img["not.png"], state="disabled", tags=("gate_not", 1, "obj"))
 
     def release(self, event):
         """

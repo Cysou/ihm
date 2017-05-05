@@ -26,7 +26,6 @@ class Button():
         *params : paramètres éventuels de la fonction associée
         Returne rien
         """
-        print(name)
         x = int(x)
         y = int(y)
         idd = self.cav.create_image(x, y, image=self.dico_img[name][0], tags="button")

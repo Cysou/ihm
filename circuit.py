@@ -222,7 +222,7 @@ class Circuit:
             else:
                 self.struct_motor[l_id[i]].append(wire_id)
 
-        # Affichage pour tests.
+        # Affichages pour tests.
         # print("\nCapteurs: ", self.struct_sensor)
         # print("\nMoteurs: ", self.struct_motor)
         # print("\nFils: ", self.struct_wire)
@@ -312,7 +312,8 @@ class Circuit:
         Initialise et affiche les capteurs.
         Effectue également les bindings.
         """
-        l_name = ["nord_c.png", "west_c.png", "est_c.png", "sud_c.png"]
+        l_img = ["nord_c.png", "west_c.png", "est_c.png", "sud_c.png"]
+        l_name = ["N", "W", "E", "S"]
         placement = (y2_circuit - y1_circuit) // 5
         y1 = y1_circuit + placement - (sensor_height // 2)
         x1 = 0
@@ -320,8 +321,9 @@ class Circuit:
             ids = self.cav.create_rectangle(x1, y1, x1 + sensor_width,
                                             y1 + sensor_height,
                                             fill="deeppink", tags=("sensor", "obj"))
+            self.cav.create_text(x1 + sensor_width, y1, anchor="se", text=l_name[i])
             self.cav.create_image(x1, y1, anchor="nw",
-                                  image=self.img[l_name[i]],
+                                  image=self.img[l_img[i]],
                                   state="disabled",
                                   tags=("sensor", "obj"))
             self.cav.tag_bind(ids, "<Button-3>",
@@ -341,7 +343,8 @@ class Circuit:
         Initialise et affiche les moteurs.
         Effectue également les bindings.
         """
-        l_name = ["nord_m.png", "west_m.png", "est_m.png", "sud_m.png"]
+        l_img = ["nord_m.png", "west_m.png", "est_m.png", "sud_m.png"]
+        l_name = ["N", "W", "E", "S"]
         placement = (y2_circuit - y1_circuit) // 5
         y1 = y1_circuit + placement - (motor_height // 2)
         x1 = x2_circuit - motor_width
@@ -349,8 +352,9 @@ class Circuit:
             idm = self.cav.create_rectangle(x1, y1, x1 + motor_width,
                                             y1 + motor_height,
                                             fill="white", tags=("motor", "obj"))
+            self.cav.create_text(x1, y1, anchor="sw", text=l_name[i])
             self.cav.create_image(x1, y1, anchor="nw",
-                                  image=self.img[l_name[i]],
+                                  image=self.img[l_img[i]],
                                   state="disabled",
                                   tags=("motor", "obj"))
             self.cav.tag_bind(idm, "<Button-3>",

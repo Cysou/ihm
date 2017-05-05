@@ -30,13 +30,11 @@ créer un circuit à l'aide de portes logiques. Le robot possède 4 capteurs \
 situés à gauche de l'écran. Ces capteurs sont à l'état "activé" seuleument si \
 ils sont situés à un bloc d'un mur. C'est grâce à cela que vous devrez\
 dessiner le circuit jusqu'aux moteurs sur la partie gauche pour faire avancer \
-votre robot.\
-\n\
-Clic gauche de la souris sur une porte permet de la placer/déplacer en \
-maintenant le clic tout en bougeant la souris.\
-Clic droit de la souris sur une porte, un moteur ou un capteur permet de \
-tracer un fil en maintenant le clic tout en bougeant la souris.\
-Ctrl + clic droit sur une porte ou un fil permet de la/le supprimer.\
+votre robot.\n\n\
+Commandes:\n\t\
+-Clic gauche: Place/déplace une porte.\n\t\
+-Clic droit: Trace un fil.\n\t\
+-Ctrl + clic droit: Supprime un fil ou une porte.\
         """
         idd = self.cav.create_text(x, y, text=text, width=max_width, fill=color, font=(help_font_name, help_font_size))
         self.idd = idd
