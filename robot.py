@@ -166,7 +166,7 @@ class Robot():
         self.detect_murs(robot_position)
         l_val = self.circuit.struct_val
         if (self.read_structure()):
-            for i in range(self.circuit.l_motor[0], self.circuit.l_motor[3]+1):
+            for i in range(self.circuit.l_motor[0], self.circuit.l_motor[3]+1, 2):
                 if (self.circuit.struct_val[i] == 1):
                     self.matrix[robot_position[1]][robot_position[0]] = 0
                     if ((i == self.circuit.l_motor[0]) and (l_val[self.circuit.l_sensor[0]] == 0)):

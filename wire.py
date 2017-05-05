@@ -43,7 +43,7 @@ class Wire:
                 self.tags_io_wire[0] = "input"
 
             # On commence à tracer le fil.
-            wire_id = self.cav.create_line(x, y, x, y, tags="line",
+            wire_id = self.cav.create_line(x, y, x, y, tags=("line", "obj"),
                                            activefill='red')
             self.begin_wire = [wire_id, x, y]
 
@@ -67,11 +67,11 @@ class Wire:
             # Si on ne relâche pas le fil dans le vide:
             ident = self.cav.find_overlapping(event.x, event.y,
                                               event.x, event.y)
-            if (len(ident) > 2):
+            if (len(ident) > 3):
 
                 # On récupère l'objet juste en dessous du fil.
                 # Ainsi que son tags et ses coordonnées.
-                self.id_extremites_wire.append(ident[-2])
+                self.id_extremites_wire.append(ident[-3])
                 tag = self.cav.gettags(self.id_extremites_wire[1])[0]
                 coords = self.cav.coords(self.id_extremites_wire[1])
 
