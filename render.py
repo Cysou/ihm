@@ -25,17 +25,27 @@ class Render():
         self.layout_display = layout_display
 
     def load_img(self):
-        path_all="level/img/start.png"
-        pilimg = Image.open(path_all)
-        tkimg = ImageTk.PhotoImage(pilimg)
-        self.img["start"] = tkimg
-
         path_all="level/img/end.png"
         pilimg = Image.open(path_all)
         tkimg = ImageTk.PhotoImage(pilimg)
         self.img["end"] = tkimg
 
-    def level(self, path, x, y, lenght, bind):
+        path_all="level/img/start.png"
+        pilimg = Image.open(path_all)
+        tkimg = ImageTk.PhotoImage(pilimg)
+        self.img["start"] = tkimg
+
+        path_all="level/img/start_b.png"
+        pilimg = Image.open(path_all)
+        tkimg = ImageTk.PhotoImage(pilimg)
+        self.img["start_b"] = tkimg
+
+        path_all="level/img/end_b.png"
+        pilimg = Image.open(path_all)
+        tkimg = ImageTk.PhotoImage(pilimg)
+        self.img["end_b"] = tkimg
+
+    def level(self, path, x, y, lenght, bind, big=False):
         with open(path, "r") as fd:
             i = 0
             for line in fd:
@@ -49,32 +59,39 @@ class Render():
                     elif circle == "1":
                         self.create_rec(i, j, x, y, lenght, "wall", path, bind)
                     elif circle == "2":
-                        self.create_img(i, j, x, y, lenght, "start", path, bind)
+                        self.create_img(i, j, x, y, lenght, "start", path, bind, big)
                     elif circle == "3":
-                        self.create_img(i, j, x, y, lenght, "end", path, bind)
+                        self.create_img(i, j, x, y, lenght, "end", path, bind, big)
                     j += 1
                 i += 1
         self.cav.create_rectangle(x, y, x + lenght*map_nb_square,
                                         y + lenght*map_nb_square,
                                         fill=None, width=2, outline="grey80",
-                                        tags="square_render")
+                                        tags=("square_render", "map"))
         self.cav.lift("img_render")
 
     def create_rec(self, i, j, x, y, lenght, name, path, bind):
         x = x + lenght * j
         y = y + lenght * i
         idd = self.cav.create_rectangle(x, y, x + lenght, y + lenght,
-                                        fill=self.rec[name], width=0, tags="square_render")
+                                        fill=self.rec[name], width=0, tags=("square_render", "map"))
         if bind:
             self.cav.tag_bind(idd, "<Button-1>", lambda event, path=path: self.init_launch(path))
 
-    def create_img(self, i, j, x, y, lenght, name, path, bind):
+    def create_img(self, i, j, x, y, lenght, name, path, bind, big):
         x = x + lenght * j
         y = y + lenght * i
-        self.cav.create_rectangle(x, y, x + lenght, y + lenght,
-                                  fill="white", width=0, tags="square_render")
-        idd = self.cav.create_image(x, y, ancho="nw", image=self.img[name],
-                                    tags=("square", "img_render"))
+        if (big):
+            self.cav.create_rectangle(x, y, x + lenght, y + lenght,
+                                      fill="white", width=0, tags=("square_render", "map"))
+            idd = self.cav.create_image(x, y, ancho="nw", image=self.img[name+"_b"],
+                                    tags=("square", "img_render", "map"))
+            self.cav.create_circle(x, y, 10, fill="grey60", tags=("map", "robot"))
+        else:
+            self.cav.create_rectangle(x, y, x + lenght, y + lenght,
+                                      fill="white", width=0, tags=("square_render"))
+            idd = self.cav.create_image(x, y, ancho="nw", image=self.img[name],
+                                    tags=("square", "img_render", "map"))
         if bind:
             self.cav.tag_bind(idd, "<Button-1>", lambda event, path=path: self.init_launch(path))
 

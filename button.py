@@ -97,6 +97,7 @@ class Button():
     def delete_taken(self):
         for idd in self.idd:
             self.cav.delete(idd)
+        self.idd = None
 
 
 if __name__ == "__main__":

@@ -311,6 +311,7 @@ class Circuit:
         Initialise et affiche les capteurs.
         Effectue également les bindings.
         """
+        l_name = ["nord_c.png", "west_c.png", "est_c.png", "sud_c.png"]
         placement = (y2_circuit - y1_circuit) // 5
         y1 = y1_circuit + placement - (sensor_height // 2)
         x1 = 0
@@ -319,7 +320,7 @@ class Circuit:
                                             y1 + sensor_height,
                                             fill="deeppink", tags=("sensor", "obj"))
             self.cav.create_image(x1, y1, anchor="nw",
-                                  image=self.img["start.png"],
+                                  image=self.img[l_name[i]],
                                   state="disabled",
                                   tags=("sensor", "obj"))
             self.cav.tag_bind(ids, "<Button-3>",
@@ -339,15 +340,16 @@ class Circuit:
         Initialise et affiche les moteurs.
         Effectue également les bindings.
         """
+        l_name = ["nord_m.png", "west_m.png", "est_m.png", "sud_m.png"]
         placement = (y2_circuit - y1_circuit) // 5
         y1 = y1_circuit + placement - (motor_height // 2)
         x1 = x2_circuit - motor_width
         for i in range(0, 4):
             idm = self.cav.create_rectangle(x1, y1, x1 + motor_width,
                                             y1 + motor_height,
-                                            fill="yellow", tags=("motor", "obj"))
+                                            fill="white", tags=("motor", "obj"))
             self.cav.create_image(x1, y1, anchor="nw",
-                                  image=self.img["end.png"],
+                                  image=self.img[l_name[i]],
                                   state="disabled",
                                   tags=("motor", "obj"))
             self.cav.tag_bind(idm, "<Button-3>",

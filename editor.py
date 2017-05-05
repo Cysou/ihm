@@ -372,14 +372,18 @@ class Editor:
         self.idd_popup = []
 
     def delete_map(self, i):
+        self.button.take()
         os.remove("level/custom/" + os.listdir("level/custom")[i])
         self.delete_popup()
         self.display_delete()
+        self.button.delete_taken()
 
     def open_map(self, i):
+        self.button.take()
         self.indicator_popup = "level/custom/" + os.listdir("level/custom")[i]
         self.delete_popup()
         self.layout_uncover()
+        self.button.delete_taken()
 
     def save_map(self):
         matrix = self.transform_matrix()
