@@ -17,23 +17,27 @@ class Gate:
         """
         self.cav.create_rectangle(width - gates_window_width,
                                   height - gates_window_height, width, height,
-                                  fill="grey50", tag="base")
+                                  fill="grey50", tag="obj")
         gate_a = self.cav.create_rectangle(1075, 280, 1075 + dico_gates["gate_and"][0], 280 + dico_gates["gate_and"][1],
-                                           fill="red",
-                                           tags=("gate_and", 1, "base"))
+                                           fill="white",
+                                           tags=("gate_and", 1, "obj"))
         gate_o = self.cav.create_rectangle(1075, 360, 1075 + dico_gates["gate_or"][0], 360 + dico_gates["gate_or"][1],
-                                           fill="blue",
-                                           tags=("gate_or", 1, "base"))
+                                           fill="white",
+                                           tags=("gate_or", 1, "obj"))
         gate_xo = self.cav.create_rectangle(1075, 440, 1075 + dico_gates["gate_xor"][0], 440 + dico_gates["gate_xor"][1],
-                                            fill="seagreen",
-                                            tags=("gate_xor", 1, "base"))
+                                            fill="white",
+                                            tags=("gate_xor", 1, "obj"))
         gate_n = self.cav.create_rectangle(1075, 520, 1075 + dico_gates["gate_not"][0], 520 + dico_gates["gate_not"][1],
-                                           fill="purple",
-                                           tags=("gate_not", 1, "base"))
+                                           fill="white",
+                                           tags=("gate_not", 1, "obj"))
         self.cav.tag_bind(gate_a, "<ButtonRelease-1>", self.release)
         self.cav.tag_bind(gate_o, "<ButtonRelease-1>", self.release)
         self.cav.tag_bind(gate_xo, "<ButtonRelease-1>", self.release)
         self.cav.tag_bind(gate_n, "<ButtonRelease-1>", self.release)
+        gate_and = self.cav.create_image(1075, 280, anchor="nw", image=self.circuit.img["and.png"], state="disabled", tags=("gate_and", 1, "obj"))
+        gate_or = self.cav.create_image(1075, 360, anchor="nw", image=self.circuit.img["or.png"], state="disabled", tags=("gate_or", 1, "obj"))
+        gate_xor = self.cav.create_image(1075, 440, anchor="nw", image=self.circuit.img["xor.png"], state="disabled", tags=("gate_xor", 1, "obj"))
+        gate_not = self.cav.create_image(1075, 520, anchor="nw", image=self.circuit.img["not.png"], state="disabled", tags=("gate_not", 1, "obj"))
 
     def release(self, event):
         """
@@ -46,7 +50,7 @@ class Gate:
         y = event.y
         self.circuit.check_placement(x, y, gate_key, sens)
 
-    #Fonction de rotation pas opérationnelle
+    # Fonction de rotation pas opérationnelle
     # avec les fils et la base de donnée.
 
     # def rotate(self, event, id_gate):
@@ -70,6 +74,7 @@ class Gate:
         self.coord_move.append(event.x - self.cav.coords(gate_id)[0])
         self.coord_move.append(event.y - self.cav.coords(gate_id)[1])
         self.cav.lift(gate_id)
+        self.cav.lift(self.circuit.struct_img[gate_id])
 
     def move_gate(self, event, gate_id, sens):
         """
@@ -102,6 +107,7 @@ class Gate:
             y2 = y2_circuit
             y1 = y2 - lengthy
         self.cav.coords(gate_id, x1, y1, x1 + lengthx, y1 + lengthy)
+        self.cav.coords(self.circuit.struct_img[gate_id], x1, y1)
 
         self.wire.move_wire_gate(gate_id, gate_key, x1, y1)
         self.circuit.robot.simulation()

@@ -1,4 +1,6 @@
 import tkinter as tk
+from PIL import Image, ImageTk
+import os
 from const import *
 from gates import *
 from wire import *
@@ -27,6 +29,10 @@ class Circuit:
         # Dictionnaire utilisé pour conserver
         # les valeurs de chaque objets.
         self.struct_val = {}
+
+        self.img = {}
+        self.load_img()
+        self.struct_img = {}
 
     def check_placement(self, x, y, gate_key, sens):
         """
@@ -107,12 +113,34 @@ class Circuit:
         # Affiche selon son sens.
         if (int(sens) % 2) != 0:
             gate_id = self.cav.create_rectangle(x - x1, y - y1, x + x1, y + y1,
-                                                fill=dico_gates[gate_key][2],
-                                                tags=(gate_key, sens))
+                                                fill="white",
+                                                tags=(gate_key, sens, "obj"))
         else:
             gate_id = self.cav.create_rectangle(x - y1, y - x1, x + y1, y + x1,
-                                                fill=dico_gates[gate_key][2],
-                                                tags=(gate_key, sens))
+                                                fill="white",
+                                                tags=(gate_key, sens, "obj"))
+
+        if (gate_key == "gate_and"):
+            img_id = self.cav.create_image(x - x1, y - y1, anchor="nw",
+                                             image=self.img["and.png"],
+                                             state="disabled",
+                                             tags=("obj"))
+        elif (gate_key == "gate_or"):
+            img_id = self.cav.create_image(x - x1, y - y1, anchor="nw",
+                                             image=self.img["or.png"],
+                                             state="disabled",
+                                             tags=("obj"))
+        elif (gate_key == "gate_xor"):
+            img_id = self.cav.create_image(x - x1, y - y1, anchor="nw",
+                                             image=self.img["xor.png"],
+                                             state="disabled",
+                                             tags=("obj"))
+        else:
+            img_id = self.cav.create_image(x - x1, y - y1, anchor="nw",
+                                             image=self.img["not.png"],
+                                             state="disabled",
+                                             tags=("obj"))
+        self.struct_img[gate_id] = img_id
         self.bindings(gate_id, gate_key, sens)
         return gate_id
 
@@ -260,6 +288,10 @@ class Circuit:
 
         # Puis on supprime les données de la structure
         # de la porte ainsi que la porte.
+        img = self.struct_img[gate_id]
+        del self.struct_img[gate_id]
+        self.cav.delete(img)
+
         del self.struct_gate[gate_id]
         self.cav.delete(gate_id)
 
@@ -269,7 +301,7 @@ class Circuit:
         """
         self.cav.create_rectangle(x1_circuit, y1_circuit,
                                   x2_circuit, y2_circuit,
-                                  fill="grey60", tag="base")
+                                  fill="grey60", tag="obj")
         self.init_sensor()
         self.init_motor()
 
@@ -284,7 +316,11 @@ class Circuit:
         for i in range(4):
             ids = self.cav.create_rectangle(x1, y1, x1 + sensor_width,
                                             y1 + sensor_height,
-                                            fill="deeppink", tags="sensor")
+                                            fill="deeppink", tags=("sensor", "obj"))
+            self.cav.create_image(x1, y1, anchor="nw",
+                                  image=self.img["start.png"],
+                                  state="disabled",
+                                  tags=("sensor", "obj"))
             self.cav.tag_bind(ids, "<Button-3>",
                               lambda event, y1=y1: self.wire.init_wire(event, x1 + sensor_width,
                                                                        y1 + (sensor_height // 2)))
@@ -308,7 +344,11 @@ class Circuit:
         for i in range(0, 4):
             idm = self.cav.create_rectangle(x1, y1, x1 + motor_width,
                                             y1 + motor_height,
-                                            fill="yellow", tags="motor")
+                                            fill="yellow", tags=("motor", "obj"))
+            self.cav.create_image(x1, y1, anchor="nw",
+                                  image=self.img["end.png"],
+                                  state="disabled",
+                                  tags=("motor", "obj"))
             self.cav.tag_bind(idm, "<Button-3>",
                               lambda event, y1=y1: self.wire.init_wire(event, x1,
                                                                        y1 + (motor_height // 2)))
@@ -316,6 +356,7 @@ class Circuit:
                               lambda event: self.wire.move_wire(event))
             self.cav.tag_bind(idm, "<ButtonRelease-3>",
                               lambda event: self.wire.end_wire(event))
+
             self.l_motor.append(idm)
             self.struct_motor[idm] = []
             self.struct_val[idm] = 0
@@ -459,12 +500,27 @@ class Circuit:
         """
         Clean le canevas.
         """
-        l_id = list(self.struct_gate.keys())
-        for gate in l_id:
-            self.empty_gate_structure(gate)
+        self.struct_wire = {}
+        self.struct_gate = {}
         self.struct_motor = {}
         self.struct_sensor = {}
+        self.gates.coord_move = []
+        self.tags_io_wire = ["", ""]
+        self.begin_wire = []
+        self.id_extremites_wire = []
         self.struct_val = {}
-        self.cav.delete("motor")
-        self.cav.delete("sensor")
-        self.cav.delete("base")
+        self.cav.delete("obj")
+
+    def load_img(self):
+        """
+        Récupère la liste d'images
+        situées dans 'img_divers/'.
+        """
+        for path in os.listdir("img_divers/"):
+            path_all="img_divers/" + path
+            pilimg = Image.open(path_all)
+            tkimg = ImageTk.PhotoImage(pilimg)
+            self.img[path] = tkimg
+
+    def save(self):
+        pass
