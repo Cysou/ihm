@@ -135,7 +135,6 @@ class Layout():
         """
         layout_name : nom du plan à afficher
         """
-        print(layout_name)
         self.delete_layout(self.actual)
         self.actual = layout_name
         self.display_objects(self.actual)

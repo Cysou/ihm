@@ -26,6 +26,10 @@ rec 0 0 1000 75 grey10
 rec 1000 0 1200 200 grey10
 # gates
 rec 1000 200 1200 675 grey10
+# circuit
+rec 0 75 1000 675 white
+txt 30 100 Capteurs grey10 ubuntu 10
+txt 970 100 Moteurs grey10 ubuntu 10
 fun circuit.init
 fun circuit.mini_map
 fun gate.create

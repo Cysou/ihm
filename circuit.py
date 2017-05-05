@@ -301,9 +301,9 @@ class Circuit:
         """
         Initialise la partie du circuit lors du lancement.
         """
-        self.cav.create_rectangle(x1_circuit, y1_circuit,
-                                  x2_circuit, y2_circuit,
-                                  fill="white", tag="obj")
+        #self.cav.create_rectangle(x1_circuit, y1_circuit,
+                                #   x2_circuit, y2_circuit,
+                                #   fill="white", tag="obj")
         self.init_sensor()
         self.init_motor()
 
@@ -321,9 +321,9 @@ class Circuit:
             ids = self.cav.create_rectangle(x1, y1, x1 + sensor_width,
                                             y1 + sensor_height,
                                             fill="deeppink", tags=("sensor", "obj"))
-            self.cav.create_text(x1 + sensor_width, y1, anchor="se", text=l_name[i])
+            self.cav.create_text(x1 + sensor_width, y1, anchor="se", text=l_name[i], tags="obj")
             self.cav.create_image(x1, y1, anchor="nw",
-                                  image=self.img[l_img[i]],
+                                  image=self.img["motor.png"],
                                   state="disabled",
                                   tags=("sensor", "obj"))
             self.cav.tag_bind(ids, "<Button-3>",
@@ -352,9 +352,9 @@ class Circuit:
             idm = self.cav.create_rectangle(x1, y1, x1 + motor_width,
                                             y1 + motor_height,
                                             fill="white", tags=("motor", "obj"))
-            self.cav.create_text(x1, y1, anchor="sw", text=l_name[i])
+            self.cav.create_text(x1, y1, anchor="sw", text=l_name[i], tags="obj")
             self.cav.create_image(x1, y1, anchor="nw",
-                                  image=self.img[l_img[i]],
+                                  image=self.img["motor2.png"],
                                   state="disabled",
                                   tags=("motor", "obj"))
             self.cav.tag_bind(idm, "<Button-3>",
