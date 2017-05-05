@@ -14,6 +14,7 @@ class Button():
         self.cav = cav
         self.load_img()
         self.clicked = None
+        self.idd = None
 
 
     def create(self, name, x, y, commands):
@@ -25,6 +26,7 @@ class Button():
         *params : paramètres éventuels de la fonction associée
         Returne rien
         """
+        print(name)
         x = int(x)
         y = int(y)
         idd = self.cav.create_image(x, y, image=self.dico_img[name][0], tags="button")
@@ -89,8 +91,12 @@ class Button():
     def in_bbox(self, x, y, bbox):
         return (bbox[0] < x < bbox[2]) and (bbox[1] < y < bbox[3])
 
-    def delete(self):
-        self.cav.delete("button")
+    def take(self):
+        self.idd = self.cav.find_withtag("button")
+
+    def delete_taken(self):
+        for idd in self.idd:
+            self.cav.delete(idd)
 
 
 if __name__ == "__main__":

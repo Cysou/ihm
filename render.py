@@ -83,8 +83,9 @@ class Render():
     def init_launch(self, path):
         self.robot.path_matrix = path
         self.delete()
+        self.button.take()
         self.layout_display("game")
-        self.button.delete()
+        self.button.delete_taken()
 
 if __name__ == '__main__':
     root = tk.Tk()
