@@ -176,17 +176,17 @@ class Robot():
                 if (self.circuit.struct_val[i] == 1):
                     self.matrix[robot_position[1]][robot_position[0]] = 0
                     if ((i == self.circuit.l_motor[0]) and (l_val[self.circuit.l_sensor[0]] == 0)):
-                        robot_position[1] -= 1
-                        self.cav.move("robot", 0, -30)
-                    elif ((i == self.circuit.l_motor[1]) and (l_val[self.circuit.l_sensor[1]] == 0)):
-                        robot_position[0] -= 1
-                        self.cav.move("robot", -30, 0)
-                    elif ((i == self.circuit.l_motor[2]) and (l_val[self.circuit.l_sensor[2]] == 0)):
-                        robot_position[0] += 1
-                        self.cav.move("robot", 30, 0)
-                    elif ((i == self.circuit.l_motor[3]) and (l_val[self.circuit.l_sensor[3]] == 0)):
                         robot_position[1] += 1
                         self.cav.move("robot", 0, 30)
+                    elif ((i == self.circuit.l_motor[1]) and (l_val[self.circuit.l_sensor[1]] == 0)):
+                        robot_position[0] += 1
+                        self.cav.move("robot", 30, 0)
+                    elif ((i == self.circuit.l_motor[2]) and (l_val[self.circuit.l_sensor[2]] == 0)):
+                        robot_position[0] -= 1
+                        self.cav.move("robot", -30, 0)
+                    elif ((i == self.circuit.l_motor[3]) and (l_val[self.circuit.l_sensor[3]] == 0)):
+                        robot_position[1] -= 1
+                        self.cav.move("robot", 0, -30)
                     self.cav.lift("robot")
                     self.cav.update()
                     if (self.matrix[robot_position[1]][robot_position[0]] == 3):
