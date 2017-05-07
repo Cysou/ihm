@@ -517,6 +517,8 @@ class Circuit:
         self.begin_wire = []
         self.id_extremites_wire = []
         self.struct_val = {}
+        self.l_motor = []
+        self.l_sensor = []
         self.cav.delete("obj")
 
     def load_img(self):

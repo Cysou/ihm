@@ -25,12 +25,13 @@ labyrinthe.\n\
 Le jeu se déroule en 3 phases :\n\
 \t-Le choix du niveau : c'est le labyrinthe dans lequel notre robot pourra \
 évoluer.\n\
-\t-La construction du circuit : c'est dans cette partie que vous aller devoir \
+\t-La construction du circuit : c'est dans cette partie que vous allez devoir \
 créer un circuit à l'aide de portes logiques. Le robot possède 4 capteurs \
 situés à gauche de l'écran. Ces capteurs sont à l'état "activé" seuleument si \
 ils sont situés à un bloc d'un mur. C'est grâce à cela que vous devrez\
 dessiner le circuit jusqu'aux moteurs sur la partie gauche pour faire avancer \
-votre robot.\n\n\
+votre robot. Le moteur nord faisant aller le robot vers le sud, le moteur \
+est vers l'ouest, etc ...\n\n\
 Commandes:\n\t\
 -Clic gauche: Place/déplace une porte.\n\t\
 -Clic droit: Trace un fil.\n\t\
