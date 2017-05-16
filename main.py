@@ -16,7 +16,7 @@ from const import *
 
 def main_loop():
     """
-    fonction récurssive pour gérer les animations et autres
+    fonction recurssive pour gerer les animations et autres
     """
     highlight.find()
     aid.update()
